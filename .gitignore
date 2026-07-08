@@ -1,5 +1,29 @@
-### PROJECT
-plan/
-references/
-prompts/
-CLAUDE.md
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Next.js / build output
+.next/
+out/
+build/
+dist/
+
+# Environment / secrets  (keeps .env.example tracked)
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
