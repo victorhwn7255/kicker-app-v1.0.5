@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-width:1520px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;">
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">P1 · Screen 08</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;">Explore · accounts directory</h1>
+    <p style="margin:6px 0 0;font-family:'Space Mono',monospace;font-size:12px;color:#5a5342;">browse ~140 accounts by kind and domain. showing the AI-datacenter domain.</p>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:44px;">
+
+    <!-- ============ MOBILE ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Mobile · 375</div>
+      <div style="width:393px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;"><span>9:41</span><span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:16px;height:9px;border:1.5px solid #000;"></span>100%</span></div>
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;padding:0 14px;">
+          <div style="display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #000;padding:6px 10px;flex:1;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:#767676;">Search accounts…</span>
+          </div>
+        </div>
+        <div style="background:#FFF8E7;border-bottom:2px solid #000;padding:10px 14px;display:flex;gap:7px;flex-wrap:wrap;">
+          <span style="border:2px solid #000;background:#FF6B9D;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">All</span>
+          <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">Companies</span>
+          <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">Chokepoints</span>
+          <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">Themes</span>
+        </div>
+        <div style="padding:14px;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6B6B6B;margin-bottom:10px;">Companies</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ companies }}" as="a" hint-placeholder-count="3"><dc-import name="AccountTile" account="{{ a }}" hint-size="100%,86px"></dc-import></sc-for>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6B6B6B;margin:18px 0 10px;">Chokepoints</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ chokepoints }}" as="a" hint-placeholder-count="2"><dc-import name="AccountTile" account="{{ a }}" hint-size="100%,86px"></dc-import></sc-for>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6B6B6B;margin:18px 0 10px;">Themes</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ themes }}" as="a" hint-placeholder-count="1"><dc-import name="AccountTile" account="{{ a }}" hint-size="100%,86px"></dc-import></sc-for>
+          </div>
+        </div>
+        <div style="position:sticky;bottom:0;background:#FFD700;border-top:2px solid #000;display:flex;justify-content:space-between;padding:8px 12px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">FEED</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;background:#FF6B9D;border:2px solid #000;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polygon points="16 8 10.5 10.5 8 16 13.5 13.5"></polygon></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">EXPLORE</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1.5" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22.5" y2="12"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">KILL</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L22 20 H2 Z"></path><line x1="12" y1="10" x2="12" y2="14"></line><line x1="12" y1="16.8" x2="12" y2="16.8"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">TRIP</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21 c0-5 4-7 8-7 s8 2 8 7"></path></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">PROFILE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESKTOP ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Desktop · 1280</div>
+      <div style="width:1020px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;">
+          <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;">TICKER</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">/ explore</span></div>
+          <div style="display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #000;padding:6px 12px;width:260px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg><span style="font-family:'Space Mono',monospace;font-size:12px;color:#767676;">Search accounts…</span></div>
+        </div>
+        <div style="padding:26px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B;">Kind:</span>
+            <span style="border:2px solid #000;background:#FF6B9D;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;box-shadow:2px 2px 0 0 #000;">All</span>
+            <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;">Companies</span>
+            <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;">Chokepoints</span>
+            <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;">Themes</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:22px;">
+            <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B;">Domain:</span>
+            <span style="border:2px solid #000;background:#FFD700;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;">AI datacenter</span>
+            <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;color:#6B6B6B;">Defense</span>
+            <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 11px;text-transform:uppercase;letter-spacing:0.04em;color:#6B6B6B;">Robotics</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;">Companies</span><div style="flex:1;height:2px;background:#000;"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <sc-for list="{{ companies }}" as="a" hint-placeholder-count="4"><dc-import name="AccountTile" account="{{ a }}" hint-size="100%,86px"></dc-import></sc-for>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;margin:24px 0 14px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;">Chokepoints</span><div style="flex:1;height:2px;background:#000;"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <sc-for list="{{ chokepoints }}" as="a" hint-placeholder-count="2"><dc-import name="AccountTile" account="{{ a }}" hint-size="100%,86px"></dc-import></sc-for>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;margin:24px 0 14px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;">Themes</span><div style="flex:1;height:2px;background:#000;"></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <sc-for list="{{ themes }}" as="a" hint-placeholder-count="1"><dc-import name="AccountTile" account="{{ a }}" hint-size="100%,86px"></dc-import></sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      companies: [
+        { handle: '@NVDA', kind: 'company', avatar: 'NVDA', desc: 'The imperial chip giant.', following: true },
+        { handle: '@CRWV', kind: 'company', avatar: 'CRWV', desc: 'The scrappy, debt-loaded GPU landlord.', following: true },
+        { handle: '@CORZ', kind: 'company', avatar: 'CORZ', desc: 'The bitcoin miner that pivoted to colocation.', following: false },
+        { handle: '@TSM', kind: 'company', avatar: 'TSM', desc: 'The foundry at the base of the stack.', following: false }
+      ],
+      chokepoints: [
+        { handle: '@transformer-supply', kind: 'chokepoint', avatar: 'TRF', desc: 'The weary bottleneck nobody listens to.', following: true },
+        { handle: '@HBM-memory', kind: 'chokepoint', avatar: 'HBM', desc: 'Three companies on earth make me at scale.', following: false }
+      ],
+      themes: [
+        { handle: '@who-holds-the-risk', kind: 'theme', avatar: '', desc: "Who's actually holding the risk when it breaks.", following: false }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

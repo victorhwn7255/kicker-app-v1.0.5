@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-width:1640px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;">
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">P1 · Screen 13</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;">Landing page</h1>
+    <p style="margin:6px 0 0;font-family:'Space Mono',monospace;font-size:12px;color:#5a5342;">hero · live feed preview · the trust story · pricing teaser. logged-out first visit.</p>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:44px;">
+
+    <!-- ============ MOBILE ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Mobile · 375</div>
+      <div style="width:393px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:-0.02em;">TICKER</span>
+          <button style="border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:6px 12px;box-shadow:2px 2px 0 0 #000;cursor:pointer;">Sign up</button>
+        </div>
+        <!-- hero -->
+        <div style="padding:24px 16px;border-bottom:2px solid #000;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#000;background:#FFD700;border:2px solid #000;padding:2px 8px;display:inline-block;">The anti-FinTwit</div>
+          <h2 style="margin:14px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;line-height:1.05;letter-spacing:-0.02em;">Sourced. Confidence-labeled. Allowed to say "we don't know."</h2>
+          <p style="margin:12px 0 0;font-size:15px;line-height:1.55;">Every account is a company, a chokepoint, or a theme. Every post is built only from verified research — with a receipt. No hype, no advice, and the feed actually ends.</p>
+          <button style="margin-top:18px;border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;padding:12px;box-shadow:2px 2px 0 0 #000;cursor:pointer;width:100%;">Read the feed — free</button>
+        </div>
+        <!-- feed preview -->
+        <div style="padding:18px 16px;background:#FFF8E7;">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6B6B6B;margin-bottom:12px;">This is the actual feed ↓</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <dc-import name="PostCard" post="{{ post1 }}" hint-size="100%,190px"></dc-import>
+            <dc-import name="PostCard" post="{{ post2 }}" hint-size="100%,190px"></dc-import>
+          </div>
+        </div>
+        <!-- trust trio -->
+        <div style="padding:18px 16px;border-top:2px solid #000;background:#fff;display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;">Every claim wears its confidence.</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+              <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;text-transform:uppercase;line-height:1;"><span style="padding:3px 6px;background:#7FE08A;border-right:2px solid #000;font-size:11px;">✓</span><span style="padding:3px 7px;background:#7FE08A;font-size:10px;">Solid</span></span>
+              <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;text-transform:uppercase;line-height:1;"><span style="padding:3px 6px;background:#FFD700;border-right:2px solid #000;font-size:11px;">~</span><span style="padding:3px 7px;background:#FFD700;font-size:10px;">Needs checking</span></span>
+              <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;text-transform:uppercase;line-height:1;"><span style="padding:3px 6px;background:#FF7A7A;border-right:2px solid #000;font-size:11px;">✕</span><span style="padding:3px 7px;background:#FF7A7A;font-size:10px;">Disputed</span></span>
+            </div>
+          </div>
+          <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;">Receipts, one tap away.</div><a href="#" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;color:#000;text-decoration:none;border-bottom:2px solid #000;">source: CRWV / customer concentration →</a></div>
+          <div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;">A Kill List for viral nonsense.</div><div style="margin-top:8px;"><span style="border:2px solid #000;background:#FF7A7A;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;padding:2px 10px;box-shadow:2px 2px 0 0 #000;">KILLED</span></div></div>
+        </div>
+        <!-- pricing teaser -->
+        <div style="padding:20px 16px;border-top:2px solid #000;background:#000;color:#FFF8E7;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;">The feed is free. Depth is $20.</div>
+          <p style="margin:6px 0 12px;font-family:'Space Mono',monospace;font-size:11px;color:#A0A0A0;line-height:1.5;">Reader unlocks the research pages + digest. Pro ($40) adds chat + tripwire push.</p>
+          <button style="border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:10px;box-shadow:2px 2px 0 0 #FFD700;cursor:pointer;width:100%;">See plans</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESKTOP ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Desktop · 1280</div>
+      <div style="width:1180px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <!-- nav -->
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;">
+          <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:23px;letter-spacing:-0.02em;">TICKER</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">the anti-fintwit</span></div>
+          <div style="display:flex;align-items:center;gap:18px;">
+            <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">Explore</span>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">Kill List</span>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">Pricing</span>
+            <button style="border:2px solid #000;background:#000;color:#FFD700;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:7px 14px;box-shadow:2px 2px 0 0 #000;cursor:pointer;">Sign up</button>
+          </div>
+        </div>
+        <!-- hero -->
+        <div style="display:flex;align-items:stretch;border-bottom:2px solid #000;">
+          <div style="flex:1;padding:44px 40px;border-right:2px solid #000;">
+            <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#000;background:#FFD700;border:2px solid #000;padding:3px 10px;display:inline-block;box-shadow:2px 2px 0 0 #000;">The anti-FinTwit</div>
+            <h2 style="margin:22px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;line-height:1.02;letter-spacing:-0.03em;">Sourced. Confidence-labeled. Allowed to say "we don't know."</h2>
+            <p style="margin:20px 0 0;font-size:18px;line-height:1.6;max-width:520px;">Every account is a company, a chokepoint, or a theme. Every post is built only from verified, primary-source research — and carries a receipt. No hype. No buy/sell. And the feed actually ends.</p>
+            <div style="margin-top:28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+              <button style="border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;padding:13px 24px;box-shadow:2px 2px 0 0 #000;cursor:pointer;transition:all 50ms;" style-hover="background:#4AAFDA;" style-active="box-shadow:none;transform:translate(2px,2px);">Read the feed — free</button>
+              <button style="border:2px solid #000;background:#fff;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;padding:13px 24px;box-shadow:2px 2px 0 0 #000;cursor:pointer;" style-hover="background:#FFF4CC;">See how it works</button>
+            </div>
+            <div style="margin-top:24px;font-family:'Space Mono',monospace;font-size:12px;color:#6B6B6B;line-height:1.6;">No account needed to read · you never post · the feed says "you're caught up" and stops.</div>
+          </div>
+          <!-- feed preview -->
+          <div style="width:460px;flex:none;background:#EDE4CF;padding:28px 26px;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6B6B6B;margin-bottom:12px;">This is the actual feed — not a mockup</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <dc-import name="PostCard" post="{{ post1 }}" hint-size="100%,200px"></dc-import>
+              <dc-import name="PostCard" post="{{ post2 }}" hint-size="100%,200px"></dc-import>
+            </div>
+          </div>
+        </div>
+        <!-- trust trio -->
+        <div style="padding:40px;border-bottom:2px solid #000;">
+          <h3 style="margin:0 0 24px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.02em;">Trust is the product. So it's the UI.</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+            <div style="border:2px solid #000;background:#fff;padding:22px;box-shadow:2px 2px 0 0 #000;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;">Every claim wears its confidence.</div>
+              <p style="margin:8px 0 16px;font-size:14px;line-height:1.55;color:#000;">Green when it's in the filings. Yellow when it's an estimate. Red when it's disputed. Never color alone — always a label.</p>
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+                <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;text-transform:uppercase;line-height:1;"><span style="padding:4px 7px;background:#7FE08A;border-right:2px solid #000;font-size:12px;">✓</span><span style="padding:4px 9px;background:#7FE08A;font-size:11px;">Solid — from the filings</span></span>
+                <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;text-transform:uppercase;line-height:1;"><span style="padding:4px 7px;background:#FFD700;border-right:2px solid #000;font-size:12px;">~</span><span style="padding:4px 9px;background:#FFD700;font-size:11px;">Needs checking — estimate</span></span>
+              </div>
+            </div>
+            <div style="border:2px solid #000;background:#fff;padding:22px;box-shadow:2px 2px 0 0 #000;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;">Receipts, one tap away.</div>
+              <p style="margin:8px 0 16px;font-size:14px;line-height:1.55;color:#000;">From any claim to the exact research section it came from — a single tap. No "trust me." Just the source.</p>
+              <div style="border:2px solid #000;background:#FDF6E3;padding:12px;">
+                <a href="#" style="display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.03em;color:#000;text-decoration:none;border-bottom:2px solid #000;padding-bottom:1px;">source: CRWV / customer concentration →</a>
+                <div style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;margin-top:6px;">verified 1d ago</div>
+              </div>
+            </div>
+            <div style="border:2px solid #000;background:#fff;padding:22px;box-shadow:2px 2px 0 0 #000;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;">A Kill List for viral nonsense.</div>
+              <p style="margin:8px 0 16px;font-size:14px;line-height:1.55;color:#000;">When a claim goes viral on real X, we check it against primary sources and publish the verdict — with receipts.</p>
+              <div style="border-left:4px solid #000;padding-left:10px;font-size:13px;font-weight:700;line-height:1.35;">"WUS makes ~45% of NVIDIA's switch PCBs"</div>
+              <div style="margin-top:10px;"><span style="border:2px solid #000;background:#FF7A7A;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;padding:3px 13px;box-shadow:2px 2px 0 0 #000;">KILLED</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- pricing teaser -->
+        <div style="padding:40px;background:#000;color:#FFF8E7;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;">
+          <div>
+            <h3 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.02em;">The feed is free. Depth is the upgrade.</h3>
+            <p style="margin:8px 0 0;font-family:'Space Mono',monospace;font-size:13px;color:#A0A0A0;">Reader $20/mo — every research page + digest · Pro $40/mo — chat + tripwire push.</p>
+          </div>
+          <div style="display:flex;gap:12px;">
+            <button style="border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;padding:13px 22px;box-shadow:2px 2px 0 0 #FFD700;cursor:pointer;">See plans</button>
+            <button style="border:2px solid #FFF8E7;background:transparent;color:#FFF8E7;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;padding:13px 22px;cursor:pointer;" style-hover="background:#FFF8E7;color:#000;">Read the feed</button>
+          </div>
+        </div>
+        <!-- footer -->
+        <div style="border-top:2px solid #000;background:#FFD700;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;">TICKER</span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;">Research, not advice · you're caught up · go outside</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      post1: {
+        handle: '@CORZ', kind: 'company', time: '2h',
+        body: "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.",
+        tier: 'solid', qualifier: 'from the 10-Q', source: 'CORZ / financials', freshness: 'verified 2d ago', avatar: 'CORZ', variant: 'original', following: false
+      },
+      post2: {
+        handle: '@NVDA', kind: 'company', time: '6h',
+        body: "Analysts think my next architecture doubles memory bandwidth again. They've been right before. They've also been early before. Filed under: we'll see.",
+        tier: 'needs', qualifier: 'estimate', source: 'analyst consensus', freshness: 'verified 3d ago', avatar: 'NVDA', variant: 'original', following: false
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</helmet>
+
+<div style="border:2px solid #000;background:#fff;padding:12px;display:flex;align-items:flex-start;gap:11px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;box-shadow:2px 2px 0 0 #000;">
+  <div style="flex:none;width:40px;height:40px;border:2px solid #000;background:{{ avatarBg }};color:{{ avatarColor }};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">
+    <sc-if value="{{ avatarGlyph }}" hint-placeholder-val="{{ false }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="18" cy="6" r="2.4"></circle><circle cx="12" cy="18" r="2.4"></circle><line x1="7.6" y1="7.6" x2="10.6" y2="15.8"></line><line x1="16.4" y1="7.6" x2="13.4" y2="15.8"></line><line x1="8" y1="6" x2="16" y2="6"></line></svg></sc-if>
+    <sc-if value="{{ avatarText }}" hint-placeholder-val="NV">{{ avatarText }}</sc-if>
+  </div>
+  <div style="flex:1;min-width:0;">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+      <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:13px;">{{ handle }}</span>
+      <span style="border:2px solid #000;background:#fff;padding:0px 5px;font-family:'Space Mono',monospace;font-weight:700;font-size:8px;letter-spacing:0.05em;text-transform:uppercase;">{{ kindLabel }}</span>
+    </div>
+    <div style="font-size:12.5px;line-height:1.4;color:#000;margin-top:5px;">{{ desc }}</div>
+  </div>
+  <button style="flex:none;border:2px solid #000;background:{{ followBg }};color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;padding:5px 11px;box-shadow:2px 2px 0 0 #000;cursor:pointer;transition:all 50ms;" style-hover="background:#FF6B9D;" style-active="box-shadow:none;transform:translate(2px,2px);">{{ followLabel }}</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 380, &quot;height&quot;: 90 },
+  &quot;account&quot;: { &quot;editor&quot;: null, &quot;tsType&quot;: &quot;{ handle: string; kind: 'company'|'chokepoint'|'theme'; avatar?: string; desc: string; following?: boolean }&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const demo = { handle: '@NVDA', kind: 'company', avatar: 'NVDA', desc: 'The imperial chip giant.', following: false };
+    const a = this.props.account || demo;
+    const kind = a.kind || 'company';
+    const avaMap = { company: { bg: '#fff', col: '#000' }, chokepoint: { bg: '#000', col: '#fff' }, theme: { bg: '#FDF6E3', col: '#000' } };
+    const ava = avaMap[kind] || avaMap.company;
+    return {
+      handle: a.handle, desc: a.desc,
+      kindLabel: { company: 'Company', chokepoint: 'Chokepoint', theme: 'Theme' }[kind] || 'Company',
+      avatarText: a.avatar || '', avatarBg: ava.bg, avatarColor: ava.col, avatarGlyph: kind === 'theme',
+      followBg: a.following ? '#FF6B9D' : '#fff',
+      followLabel: a.following ? 'Following' : 'Follow'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-width:1640px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;">
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">P0 · Screen 01 + 02</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;">Home feed</h1>
+    <p style="margin:6px 0 0;font-family:'Space Mono',monospace;font-size:12px;color:#5a5342;">reverse-chron · calm · ends on purpose — mobile shows logged-out / Everything · desktop shows logged-in / Following</p>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:44px;">
+
+    <!-- ============ MOBILE (logged out) ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Mobile · 375 · logged out</div>
+      <div style="width:393px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <!-- status bar -->
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;">
+          <span>9:41</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:16px;height:9px;border:1.5px solid #000;"></span>100%</span>
+        </div>
+        <!-- app top bar -->
+        <div style="position:sticky;top:0;background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:-0.02em;">TICKER</span>
+          <button style="border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:6px 12px;box-shadow:2px 2px 0 0 #000;cursor:pointer;">Sign up</button>
+        </div>
+        <!-- toggle -->
+        <div style="background:#FFF8E7;border-bottom:2px solid #000;padding:9px 14px;display:flex;align-items:center;gap:8px;">
+          <div style="display:inline-flex;border:2px solid #000;background:#fff;">
+            <span style="border-right:2px solid #000;background:#fff;color:#9E9E9E;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:5px 12px;display:inline-flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9E9E9E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9"></rect><path d="M8 11 V7 a4 4 0 0 1 8 0 v4"></path></svg>Following</span>
+            <span style="background:#FF6B9D;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:5px 12px;">Everything</span>
+          </div>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;margin-left:auto;">all 140 accounts</span>
+        </div>
+        <!-- feed -->
+        <div style="padding:14px;">
+          <sc-for list="{{ postsLoggedOut }}" as="post" hint-placeholder-count="4">
+            <div style="margin:0 0 12px;">
+              <dc-import name="PostCard" post="{{ post }}" hint-size="100%,190px"></dc-import>
+            </div>
+          </sc-for>
+          <!-- terminator -->
+          <div style="border:2px solid #000;background:#000;color:#FFF8E7;padding:22px 18px;box-shadow:2px 2px 0 0 #000;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#FFD700;">End of feed</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;line-height:1.1;margin-top:10px;">You're caught up.</div>
+            <p style="margin:9px 0 0;font-size:14px;line-height:1.5;color:#E0E0E0;">That's everything real. Nothing else happened. Go outside.</p>
+          </div>
+        </div>
+        <!-- bottom nav -->
+        <div style="position:sticky;bottom:0;background:#FFD700;border-top:2px solid #000;display:flex;justify-content:space-between;padding:8px 12px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;">
+            <div style="width:42px;height:32px;background:#FF6B9D;border:2px solid #000;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg></div>
+            <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">FEED</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;">
+            <div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polygon points="16 8 10.5 10.5 8 16 13.5 13.5"></polygon></svg></div>
+            <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">EXPLORE</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;">
+            <div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1.5" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22.5" y2="12"></line></svg></div>
+            <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">KILL</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;">
+            <div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L22 20 H2 Z"></path><line x1="12" y1="10" x2="12" y2="14"></line><line x1="12" y1="16.8" x2="12" y2="16.8"></line></svg></div>
+            <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">TRIP</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;">
+            <div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21 c0-5 4-7 8-7 s8 2 8 7"></path></svg></div>
+            <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">PROFILE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESKTOP (logged in, following) ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Desktop · 1280 · logged in / following</div>
+      <div style="width:1180px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <!-- top chrome -->
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;">
+          <div style="display:flex;align-items:baseline;gap:10px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;">TICKER</span>
+            <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">the anti-fintwit</span>
+          </div>
+          <div style="display:inline-flex;border:2px solid #000;box-shadow:2px 2px 0 0 #000;background:#fff;">
+            <button onClick="{{ setFollowing }}" style="border:none;border-right:2px solid #000;background:{{ followingBg }};color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:8px 20px;cursor:pointer;">Following</button>
+            <button onClick="{{ setEverything }}" style="border:none;background:{{ everythingBg }};color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:8px 20px;cursor:pointer;">Everything</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:36px;height:36px;border:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg></div>
+            <div style="width:36px;height:36px;border:2px solid #000;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">YOU</div>
+          </div>
+        </div>
+
+        <!-- content row -->
+        <div style="display:flex;align-items:flex-start;gap:24px;padding:24px;justify-content:center;">
+          <!-- feed column -->
+          <div style="width:640px;flex:none;">
+            <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;margin-bottom:14px;">{{ ctxLabel }}</div>
+            <sc-for list="{{ postsFollowing }}" as="post" hint-placeholder-count="4">
+              <div style="margin:0 0 14px;">
+                <dc-import name="PostCard" post="{{ post }}" hint-size="100%,190px"></dc-import>
+              </div>
+            </sc-for>
+            <!-- terminator -->
+            <div style="border:2px solid #000;background:#000;color:#FFF8E7;padding:30px 26px;box-shadow:2px 2px 0 0 #000;">
+              <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#FFD700;">End of feed</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;line-height:1.1;margin-top:12px;">You're caught up.</div>
+              <p style="margin:11px 0 0;font-size:16px;line-height:1.55;color:#E0E0E0;">That's everything real. Nothing else happened. Go outside.</p>
+              <div style="font-family:'Space Mono',monospace;font-size:12px;color:#767676;margin-top:16px;border-top:2px solid #333;padding-top:13px;">No infinite scroll. No filler. We'll wake you when something breaks.</div>
+            </div>
+          </div>
+
+          <!-- right rail -->
+          <div style="width:300px;flex:none;display:flex;flex-direction:column;gap:16px;">
+            <!-- kill list highlight -->
+            <div style="border:2px solid #000;background:#fff;box-shadow:2px 2px 0 0 #000;">
+              <div style="background:#FFD700;border-bottom:2px solid #000;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;">KILL LIST</span>
+                <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">latest</span>
+              </div>
+              <div style="padding:12px;">
+                <div style="border-left:4px solid #000;padding-left:9px;font-size:13px;line-height:1.35;font-weight:700;">"WUS makes ~45% of NVIDIA's switch PCBs"</div>
+                <div style="margin-top:10px;"><span style="border:2px solid #000;background:#FF7A7A;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;padding:3px 11px;box-shadow:2px 2px 0 0 #000;">KILLED</span></div>
+                <a href="#" style="display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;letter-spacing:0.03em;text-transform:uppercase;color:#000;text-decoration:none;border-bottom:2px solid #000;padding-bottom:1px;" style-hover="background:#FFD700;">the receipts →</a>
+              </div>
+            </div>
+            <!-- tripwires -->
+            <div style="border:2px solid #000;background:#fff;box-shadow:2px 2px 0 0 #000;">
+              <div style="background:#FFD700;border-bottom:2px solid #000;padding:7px 12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;">TRIPWIRES</div>
+              <div style="padding:6px 12px 10px;">
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:2px solid #eee;">
+                  <div style="flex:none;width:14px;height:14px;border:2px solid #000;background:#FF7A7A;"></div>
+                  <div style="flex:1;font-size:12px;line-height:1.3;">Colocation beats bitcoin mining <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">@CORZ</span></div>
+                  <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:9px;">FIRED</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:2px solid #eee;">
+                  <div style="flex:none;width:14px;height:14px;border:2px solid #000;background:#fff;"></div>
+                  <div style="flex:1;font-size:12px;line-height:1.3;">Second customer ends concentration <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">@CRWV</span></div>
+                  <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:9px;color:#6B6B6B;">ARMED</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 0;">
+                  <div style="flex:none;width:14px;height:14px;border:2px solid #000;background:#fff;"></div>
+                  <div style="flex:1;font-size:12px;line-height:1.3;">Transformer lead times fall <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">@transformer-supply</span></div>
+                  <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:9px;color:#6B6B6B;">ARMED</span>
+                </div>
+              </div>
+            </div>
+            <!-- reader nudge -->
+            <div style="border:2px solid #000;background:#FDF6E3;padding:14px;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;">Read the receipts in full.</div>
+              <p style="margin:6px 0 12px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.5;color:#6B6B6B;">Reader unlocks every research page + a daily digest. $20/mo.</p>
+              <button style="border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:8px 14px;box-shadow:2px 2px 0 0 #000;cursor:pointer;width:100%;">Unlock Reader</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { mode: 'following' };
+  renderVals() {
+    const posts = [
+      { handle: '@CORZ', kind: 'company', time: '2h', body: "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.", tier: 'solid', qualifier: 'from the 10-Q', source: 'CORZ / financials', freshness: 'verified 2d ago', avatar: 'CORZ', variant: 'original' },
+      { handle: '@CRWV', kind: 'company', time: '1h', body: "That colocation revenue? 100% of it is us. One customer. Their filing says it, not us. Sleep well, bondholders.", tier: 'solid', qualifier: 'from the 10-K', source: 'CRWV / customer concentration', freshness: 'verified 1d ago', avatar: 'CRWV', variant: 'quote', quoted: { handle: '@CORZ', kind: 'company', avatar: 'CORZ', time: '2h', body: "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.", tier: 'solid' } },
+      { handle: '@who-holds-the-risk', kind: 'theme', time: '52m', body: "And that one customer relationship is financed by a $3.3B project bond at 7.75%. When one tenant is your whole business AND your lender's collateral, the word \"diversified\" does not apply.", tier: 'solid', qualifier: 'from filings', source: 'project bond / terms', freshness: 'verified 1d ago', avatar: '', variant: 'reply', replyTo: '@CRWV' },
+      { handle: '@transformer-supply', kind: 'chokepoint', time: '4h', body: "Lead times for large power transformers: still 128–144 weeks. That's ~3 years to get the thing every new datacenter needs. Nobody panicked. They probably should.", tier: 'solid', qualifier: '', source: 'lead-time tracker', freshness: 'verified 5d ago', avatar: 'TRF', variant: 'thread', thread: '1/6', threadNext: '2/6 → why nobody can build them faster' },
+      { handle: '@NVDA', kind: 'company', time: '6h', body: "Analysts think my next architecture doubles memory bandwidth again. They've been right before. They've also been early before. Filed under: we'll see.", tier: 'needs', qualifier: 'estimate', source: 'analyst consensus', freshness: 'verified 3d ago', avatar: 'NVDA', variant: 'original' },
+      { handle: '@HBM-memory', kind: 'chokepoint', time: '6h', body: "My page's open question #2 is still open: can anyone besides three companies on earth actually make me at scale? So far: no.", tier: 'open', qualifier: '', source: 'HBM page / open Q#2', freshness: 'verified 6d ago', avatar: 'HBM', variant: 'original' }
+    ];
+    const mode = this.state.mode;
+    return {
+      postsFollowing: posts.map(p => ({ ...p, following: true })),
+      postsLoggedOut: posts.map(p => ({ ...p, following: false })),
+      setFollowing: () => this.setState({ mode: 'following' }),
+      setEverything: () => this.setState({ mode: 'everything' }),
+      followingBg: mode === 'following' ? '#FF6B9D' : '#fff',
+      everythingBg: mode === 'everything' ? '#FF6B9D' : '#fff',
+      ctxLabel: mode === 'following' ? 'FOLLOWING · your 6 accounts · newest first' : 'EVERYTHING · all 140 accounts · newest first'
+    };
+  }
+}
+</script>
+</body>
+</html>

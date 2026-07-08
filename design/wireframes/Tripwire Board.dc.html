@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-width:1500px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;">
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">P1 · Screen 07</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;">Tripwire board</h1>
+    <p style="margin:6px 0 0;font-family:'Space Mono',monospace;font-size:12px;color:#5a5342;">a warning-lights panel — every pre-registered thesis-breaker, grouped by account. calm until it isn't.</p>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:44px;">
+
+    <!-- ============ MOBILE ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Mobile · 375</div>
+      <div style="width:393px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;"><span>9:41</span><span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:16px;height:9px;border:1.5px solid #000;"></span>100%</span></div>
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-0.02em;">Tripwires</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;"><span style="color:#000;background:#FF7A7A;border:2px solid #000;padding:1px 6px;">1 fired</span> · 5 armed</span>
+        </div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:16px;">
+          <p style="font-size:13px;line-height:1.55;margin:0;color:#000;">We write the alarm <b>before</b> it can ring. Each tripwire is a specific fact that, if it happened, would break a thesis. No advice — just the light.</p>
+          <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+            <div style="border:2px solid #000;background:#fff;">
+              <div style="border-bottom:2px solid #000;background:#FDF6E3;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+                <div style="width:26px;height:26px;border:2px solid #000;background:{{ g.avatarBg }};color:{{ g.avatarColor }};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:9px;">{{ g.avatar }}</div>
+                <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:13px;">{{ g.account }}</span>
+              </div>
+              <sc-for list="{{ g.tripwires }}" as="t" hint-placeholder-count="1">
+                <div style="display:flex;align-items:flex-start;gap:11px;padding:12px;border-bottom:2px solid #f0ece0;background:{{ t.rowBg }};">
+                  <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;width:52px;">
+                    <div style="width:16px;height:16px;border:2px solid #000;background:{{ t.statusBg }};"></div>
+                    <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:9px;letter-spacing:0.05em;color:{{ t.labelColor }};">{{ t.status }}</span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:13.5px;line-height:1.4;font-weight:{{ t.weight }};">{{ t.label }}</div>
+                    <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:6px;">
+                      <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">{{ t.when }}</span>
+                      <sc-if value="{{ t.isFired }}" hint-placeholder-val="{{ false }}"><a href="#" style="font-family:'Space Mono',monospace;font-weight:700;font-size:10px;letter-spacing:0.03em;text-transform:uppercase;color:#000;text-decoration:none;border-bottom:2px solid #000;" style-hover="background:#FFD700;">the post →</a></sc-if>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:sticky;bottom:0;background:#FFD700;border-top:2px solid #000;display:flex;justify-content:space-between;padding:8px 12px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">FEED</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polygon points="16 8 10.5 10.5 8 16 13.5 13.5"></polygon></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">EXPLORE</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1.5" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22.5" y2="12"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">KILL</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;background:#FF6B9D;border:2px solid #000;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L22 20 H2 Z"></path><line x1="12" y1="10" x2="12" y2="14"></line><line x1="12" y1="16.8" x2="12" y2="16.8"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">TRIP</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21 c0-5 4-7 8-7 s8 2 8 7"></path></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">PROFILE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESKTOP ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Desktop · 1280</div>
+      <div style="width:1000px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;">
+          <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;">TICKER</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">/ tripwires</span></div>
+          <div style="width:36px;height:36px;border:2px solid #000;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">YOU</div>
+        </div>
+        <div style="padding:26px;">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
+            <div>
+              <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.02em;">Tripwires</h2>
+              <p style="margin:6px 0 0;font-size:15px;line-height:1.5;max-width:560px;">Every pre-registered thesis-breaker. We write the alarm before it can ring — a specific, checkable fact that would break the story. The board is calm on purpose. When a light turns red, that's the whole message. No advice follows.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;">
+              <div style="display:flex;align-items:center;gap:7px;"><div style="width:16px;height:16px;border:2px solid #000;background:#FF7A7A;"></div><span style="font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.05em;">FIRED · 1</span></div>
+              <div style="display:flex;align-items:center;gap:7px;"><div style="width:16px;height:16px;border:2px solid #000;background:#fff;"></div><span style="font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.05em;color:#6B6B6B;">ARMED · 5</span></div>
+            </div>
+          </div>
+
+          <div style="border:2px solid #000;background:#fff;">
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+              <div style="border-bottom:2px solid #000;">
+                <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:9px 16px;display:flex;align-items:center;gap:10px;">
+                  <div style="width:28px;height:28px;border:2px solid #000;background:{{ g.avatarBg }};color:{{ g.avatarColor }};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:9px;">{{ g.avatar }}</div>
+                  <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;">{{ g.account }}</span>
+                  <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;">{{ g.kindLabel }}</span>
+                </div>
+                <sc-for list="{{ g.tripwires }}" as="t" hint-placeholder-count="1">
+                  <div style="display:flex;align-items:center;gap:16px;padding:15px 16px;border-bottom:2px solid #f0ece0;background:{{ t.rowBg }};">
+                    <div style="flex:none;display:flex;align-items:center;gap:10px;width:110px;">
+                      <div style="width:18px;height:18px;border:2px solid #000;background:{{ t.statusBg }};"></div>
+                      <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.06em;color:{{ t.labelColor }};">{{ t.status }}</span>
+                    </div>
+                    <div style="flex:1;font-size:15px;line-height:1.4;font-weight:{{ t.weight }};">{{ t.label }}</div>
+                    <div style="flex:none;display:flex;align-items:center;gap:14px;">
+                      <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">{{ t.when }}</span>
+                      <sc-if value="{{ t.isFired }}" hint-placeholder-val="{{ false }}"><a href="#" style="font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.03em;text-transform:uppercase;color:#000;text-decoration:none;border-bottom:2px solid #000;" style-hover="background:#FFD700;">the post →</a></sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  renderVals() {
+    const ava = { company: { bg: '#fff', col: '#000' }, chokepoint: { bg: '#000', col: '#fff' }, theme: { bg: '#FDF6E3', col: '#000' } };
+    const kindLabel = { company: 'Company', chokepoint: 'Chokepoint', theme: 'Theme' };
+    const rawGroups = [
+      { account: '@CORZ', kind: 'company', avatar: 'CORZ', tripwires: [
+        { label: 'Colocation revenue overtakes bitcoin mining revenue.', status: 'FIRED', when: 'fired Q1' }
+      ]},
+      { account: '@CRWV', kind: 'company', avatar: 'CRWV', tripwires: [
+        { label: 'A second customer ends single-tenant concentration.', status: 'ARMED', when: 'watching' },
+        { label: 'The one customer stops being both the whole business and the collateral.', status: 'ARMED', when: 'watching' }
+      ]},
+      { account: '@transformer-supply', kind: 'chokepoint', avatar: 'TRF', tripwires: [
+        { label: 'Large-power-transformer lead times drop below 128–144 weeks.', status: 'ARMED', when: 'watching' }
+      ]},
+      { account: '@HBM-memory', kind: 'chokepoint', avatar: 'HBM', tripwires: [
+        { label: 'A fourth company reaches HBM production at scale.', status: 'ARMED', when: 'watching' }
+      ]},
+      { account: '@NVDA', kind: 'company', avatar: 'NVDA', tripwires: [
+        { label: 'Next architecture is confirmed to double memory bandwidth.', status: 'ARMED', when: 'watching' }
+      ]}
+    ];
+    const groups = rawGroups.map(g => ({
+      account: g.account, avatar: g.avatar,
+      avatarBg: ava[g.kind].bg, avatarColor: ava[g.kind].col, kindLabel: kindLabel[g.kind],
+      tripwires: g.tripwires.map(t => {
+        const fired = t.status === 'FIRED';
+        return { label: t.label, status: t.status, when: t.when, isFired: fired,
+          statusBg: fired ? '#FF7A7A' : '#fff', rowBg: fired ? '#FFF3F3' : '#fff',
+          labelColor: fired ? '#000' : '#6B6B6B', weight: fired ? 700 : 400 };
+      })
+    }));
+    return { groups };
+  }
+}
+</script>
+</body>
+</html>

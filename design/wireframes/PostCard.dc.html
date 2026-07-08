@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</helmet>
+
+<article style="border:2px solid #000;border-left:{{ leftBorder }};background:#fff;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;box-shadow:{{ cardShadow }};">
+
+  <sc-if value="{{ isHigh }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#000;color:#fff;padding:7px 16px;display:flex;align-items:center;gap:8px;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF7A7A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L22 20 H2 Z"></path><line x1="12" y1="10" x2="12" y2="14"></line><line x1="12" y1="16.8" x2="12" y2="16.8"></line></svg>
+      <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">{{ highLabel }}</span>
+    </div>
+  </sc-if>
+
+  <div style="padding:14px 16px 12px;">
+    <div style="display:flex;align-items:flex-start;gap:11px;">
+      <div style="flex:none;width:42px;height:42px;border:2px solid #000;background:{{ avatarBg }};color:{{ avatarColor }};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:12px;">
+        <sc-if value="{{ avatarGlyph }}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="18" cy="6" r="2.4"></circle><circle cx="12" cy="18" r="2.4"></circle><line x1="7.6" y1="7.6" x2="10.6" y2="15.8"></line><line x1="16.4" y1="7.6" x2="13.4" y2="15.8"></line><line x1="8" y1="6" x2="16" y2="6"></line></svg></sc-if>
+        <sc-if value="{{ avatarText }}" hint-placeholder-val="CORZ">{{ avatarText }}</sc-if>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+          <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;">{{ handle }}</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;border:2px solid #000;background:#fff;padding:1px 6px;font-family:'Space Mono',monospace;font-weight:700;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;">
+            <sc-if value="{{ isCompany }}" hint-placeholder-val="{{ true }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18"></rect><line x1="5" y1="9" x2="19" y2="9"></line><line x1="5" y1="15" x2="19" y2="15"></line><rect x="10" y="17" width="4" height="4"></rect></svg></sc-if>
+            <sc-if value="{{ isChokepoint }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"><polygon points="21 4 3 4 10 12.5 10 19 14 21 14 12.5"></polygon></svg></sc-if>
+            <sc-if value="{{ isTheme }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"></circle><circle cx="18" cy="6" r="2.4"></circle><circle cx="12" cy="18" r="2.4"></circle><line x1="7.6" y1="7.6" x2="10.6" y2="15.8"></line><line x1="16.4" y1="7.6" x2="13.4" y2="15.8"></line><line x1="8" y1="6" x2="16" y2="6"></line></svg></sc-if>
+            {{ kindLabel }}
+          </span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">· {{ time }}</span>
+          <sc-if value="{{ isThread }}" hint-placeholder-val="{{ false }}"><span style="border:2px solid #000;background:#000;color:#fff;padding:1px 7px;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;">{{ thread }}</span></sc-if>
+        </div>
+        <sc-if value="{{ isReply }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Space Mono',monospace;font-size:11px;color:#F4845F;margin-top:3px;">↳ replying to {{ replyTo }}</div></sc-if>
+      </div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;">
+        <div style="width:34px;height:34px;border:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;" style-hover="background:#FFF4CC;" title="Copy link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line></svg></div>
+        <button style="border:2px solid #000;background:{{ followBg }};color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:6px 12px;box-shadow:2px 2px 0 0 #000;cursor:pointer;transition:all 50ms;" style-hover="background:#FF6B9D;" style-active="box-shadow:none;transform:translate(2px,2px);">{{ followLabel }}</button>
+      </div>
+    </div>
+
+    <p style="margin:11px 0 0;font-size:16px;line-height:1.55;text-wrap:pretty;">{{ body }}</p>
+
+    <sc-if value="{{ hasQuoted }}" hint-placeholder-val="{{ false }}">
+      <div style="border:2px solid #000;background:#FDF6E3;padding:10px 12px;margin-top:11px;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <div style="width:22px;height:22px;border:2px solid #000;background:{{ qAvatarBg }};color:{{ qAvatarColor }};display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:8px;">{{ qAvatar }}</div>
+          <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:12px;">{{ qHandle }}</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">· {{ qTime }}</span>
+          <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;line-height:1;margin-left:auto;">
+            <span style="padding:2px 5px;background:{{ qTierGlyphBg }};color:{{ qTierGlyphColor }};border-right:2px solid #000;font-size:9px;">{{ qTierGlyph }}</span>
+            <span style="padding:2px 6px;background:{{ qTierLabelBg }};color:{{ qTierLabelColor }};font-size:9px;">{{ qTierLabel }}</span>
+          </span>
+        </div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;">{{ qBody }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isThread }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+        <div style="width:2px;height:16px;background:#F4845F;"></div>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">{{ threadNext }}</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="border-top:2px solid #000;background:#FDF6E3;padding:11px 16px;">
+    <span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;line-height:1;">
+      <span style="display:flex;align-items:center;justify-content:center;padding:4px 7px;background:{{ tierGlyphBg }};color:{{ tierGlyphColor }};border-right:2px solid #000;font-size:12px;">{{ tierGlyph }}</span>
+      <span style="display:flex;align-items:center;padding:4px 9px;background:{{ tierLabelBg }};color:{{ tierLabelColor }};font-size:11px;">{{ tierLabel }}</span>
+    </span>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:9px;">
+      <a href="#" onClick="{{ onReceipt }}" style="display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.03em;text-transform:uppercase;color:#000;text-decoration:none;border-bottom:2px solid #000;padding-bottom:1px;min-height:22px;cursor:pointer;" style-hover="background:#FFD700;">source: {{ source }} <span style="font-size:13px;">→</span></a>
+      <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">{{ freshness }}</span>
+    </div>
+  </div>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 560, &quot;height&quot;: 250 },
+  &quot;post&quot;: { &quot;editor&quot;: null, &quot;tsType&quot;: &quot;{ handle: string; kind: 'company'|'chokepoint'|'theme'; time: string; body: string; tier: 'solid'|'needs'|'disputed'|'open'; qualifier?: string; source: string; freshness: string; avatar?: string; variant?: 'original'|'quote'|'reply'|'thread'|'high'; following?: boolean; replyTo?: string; thread?: string; threadNext?: string; highLabel?: string; quoted?: object }&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const demo = {
+      handle: '@CORZ', kind: 'company', time: '2h',
+      body: "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.",
+      tier: 'solid', qualifier: 'from the 10-Q', source: 'CORZ / financials',
+      freshness: 'verified 2d ago', avatar: 'CORZ', variant: 'original', following: false
+    };
+    const p = this.props.post || demo;
+    const kind = p.kind || 'company';
+
+    const tierDefs = {
+      solid:    { glyph: '✓', gBg: '#7FE08A', gCol: '#000', lBg: '#7FE08A', lCol: '#000', base: 'Solid' },
+      needs:    { glyph: '~', gBg: '#FFD700', gCol: '#000', lBg: '#FFD700', lCol: '#000', base: 'Needs checking' },
+      disputed: { glyph: '✕', gBg: '#FF7A7A', gCol: '#000', lBg: '#FF7A7A', lCol: '#000', base: 'Disputed' },
+      open:     { glyph: '?', gBg: '#000',    gCol: '#fff', lBg: '#fff',    lCol: '#000', base: 'Open question' }
+    };
+    const t = tierDefs[p.tier] || tierDefs.solid;
+    const tierLabel = p.tier === 'open'
+      ? 'Open question — unresolved'
+      : (p.qualifier ? t.base + ' — ' + p.qualifier : t.base);
+
+    const avaMap = {
+      company:    { bg: '#fff',     col: '#000' },
+      chokepoint: { bg: '#000',     col: '#fff' },
+      theme:      { bg: '#FDF6E3',  col: '#000' }
+    };
+    const ava = avaMap[kind] || avaMap.company;
+    const kindLabel = { company: 'Company', chokepoint: 'Chokepoint', theme: 'Theme' }[kind] || 'Company';
+
+    const q = p.quoted || null;
+    let qv = {};
+    if (q) {
+      const qt = tierDefs[q.tier] || tierDefs.solid;
+      const qkind = q.kind || 'company';
+      const qava = avaMap[qkind] || avaMap.company;
+      qv = {
+        qHandle: q.handle, qBody: q.body, qTime: q.time || '', qAvatar: q.avatar || '',
+        qAvatarBg: qava.bg, qAvatarColor: qava.col,
+        qTierGlyph: qt.glyph, qTierGlyphBg: qt.gBg, qTierGlyphColor: qt.gCol,
+        qTierLabelBg: qt.lBg, qTierLabelColor: qt.lCol,
+        qTierLabel: q.tier === 'open' ? 'Open' : qt.base
+      };
+    }
+
+    return {
+      handle: p.handle, time: p.time || '', body: p.body,
+      tierGlyph: t.glyph, tierGlyphBg: t.gBg, tierGlyphColor: t.gCol,
+      tierLabelBg: t.lBg, tierLabelColor: t.lCol, tierLabel,
+      avatarText: p.avatar || '', avatarBg: ava.bg, avatarColor: ava.col, avatarGlyph: kind === 'theme',
+      kindLabel, isCompany: kind === 'company', isChokepoint: kind === 'chokepoint', isTheme: kind === 'theme',
+      source: p.source || '', freshness: p.freshness || '',
+      onReceipt: (e) => { if (e && e.preventDefault) e.preventDefault(); if (typeof this.props.onReceipt === 'function') this.props.onReceipt(p); },
+      isReply: p.variant === 'reply', replyTo: p.replyTo || '',
+      isThread: p.variant === 'thread', thread: p.thread || '', threadNext: p.threadNext || '',
+      isHigh: p.variant === 'high', highLabel: p.highLabel || 'Tripwire fired',
+      hasQuoted: !!q,
+      followBg: p.following ? '#FF6B9D' : '#fff',
+      followLabel: p.following ? 'Following' : 'Follow',
+      leftBorder: p.variant === 'reply' ? '4px solid #F4845F' : '2px solid #000',
+      cardShadow: p.variant === 'high' ? '2px 2px 0 0 #000' : 'none',
+      ...qv
+    };
+  }
+}
+</script>
+</body>
+</html>

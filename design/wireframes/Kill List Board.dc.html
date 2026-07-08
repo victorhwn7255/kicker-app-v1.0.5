@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-width:1560px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;">
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">P1 · Screen 06</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;">Kill List board</h1>
+    <p style="margin:6px 0 0;font-family:'Space Mono',monospace;font-size:12px;color:#5a5342;">viral claims, checked against primary sources — designed to be screenshotted with the brand visible.</p>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:44px;">
+
+    <!-- ============ MOBILE ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Mobile · 375</div>
+      <div style="width:393px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;"><span>9:41</span><span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:16px;height:9px;border:1.5px solid #000;"></span>100%</span></div>
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-0.02em;">Kill List</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">4 verdicts</span>
+        </div>
+        <!-- filters -->
+        <div style="background:#FFF8E7;border-bottom:2px solid #000;padding:10px 14px;display:flex;gap:7px;flex-wrap:wrap;">
+          <span style="border:2px solid #000;background:#FF6B9D;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">All</span>
+          <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">Killed</span>
+          <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">Survived</span>
+          <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:3px 9px;text-transform:uppercase;letter-spacing:0.04em;">Partly</span>
+        </div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ claims }}" as="c" hint-placeholder-count="3">
+            <div style="border:2px solid #000;background:#fff;box-shadow:2px 2px 0 0 #000;">
+              <div style="background:#FFD700;border-bottom:2px solid #000;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;">TICKER · KILL LIST</span>
+                <span style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">{{ c.id }}</span>
+              </div>
+              <div style="padding:13px 12px;">
+                <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B;margin-bottom:6px;">claim, as circulated</div>
+                <div style="border-left:4px solid #000;padding-left:10px;font-size:14px;line-height:1.35;font-weight:700;">{{ c.claim }}</div>
+                <div style="margin-top:12px;"><span style="border:2px solid #000;background:{{ c.verdictBg }};color:{{ c.verdictColor }};font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:0.02em;padding:3px 13px;box-shadow:2px 2px 0 0 #000;display:inline-block;">{{ c.verdict }}</span></div>
+                <p style="margin:13px 0 0;font-size:13px;line-height:1.55;">{{ c.why }}</p>
+              </div>
+              <div style="border-top:2px solid #000;background:#FDF6E3;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <a href="#" style="display:inline-flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;letter-spacing:0.03em;text-transform:uppercase;color:#000;text-decoration:none;border-bottom:2px solid #000;padding-bottom:1px;" style-hover="background:#FFD700;">{{ c.receipts }} →</a>
+                <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                  <sc-for list="{{ c.related }}" as="acct" hint-placeholder-count="1"><span style="border:2px solid #000;background:#C4B5FD;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:1px 6px;">{{ acct }}</span></sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="position:sticky;bottom:0;background:#FFD700;border-top:2px solid #000;display:flex;justify-content:space-between;padding:8px 12px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">FEED</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polygon points="16 8 10.5 10.5 8 16 13.5 13.5"></polygon></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">EXPLORE</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;background:#FF6B9D;border:2px solid #000;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1.5" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22.5" y2="12"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">KILL</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L22 20 H2 Z"></path><line x1="12" y1="10" x2="12" y2="14"></line><line x1="12" y1="16.8" x2="12" y2="16.8"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">TRIP</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21 c0-5 4-7 8-7 s8 2 8 7"></path></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">PROFILE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESKTOP ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Desktop · 1280</div>
+      <div style="width:1080px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;">
+          <div style="display:flex;align-items:baseline;gap:10px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;">TICKER</span><span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">/ kill list</span></div>
+          <div style="width:36px;height:36px;border:2px solid #000;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">YOU</div>
+        </div>
+        <div style="padding:26px;">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;">
+            <div>
+              <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.02em;">The Kill List</h2>
+              <p style="margin:6px 0 0;font-size:15px;line-height:1.5;color:#000;max-width:520px;">Claims that went viral on real X, checked against primary sources. We publish the verdict and the receipt — whether it helps the narrative or not.</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span style="border:2px solid #000;background:#FF6B9D;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:5px 12px;text-transform:uppercase;letter-spacing:0.04em;box-shadow:2px 2px 0 0 #000;">All</span>
+              <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:5px 12px;text-transform:uppercase;letter-spacing:0.04em;">Killed</span>
+              <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:5px 12px;text-transform:uppercase;letter-spacing:0.04em;">Survived</span>
+              <span style="border:2px solid #000;background:#fff;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:5px 12px;text-transform:uppercase;letter-spacing:0.04em;">Partly true</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+            <sc-for list="{{ claims }}" as="c" hint-placeholder-count="4">
+              <div style="border:2px solid #000;background:#fff;box-shadow:2px 2px 0 0 #000;">
+                <div style="background:#FFD700;border-bottom:2px solid #000;padding:7px 14px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;">TICKER · KILL LIST</span>
+                  <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">{{ c.id }}</span>
+                </div>
+                <div style="padding:16px;">
+                  <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B;margin-bottom:7px;">claim, as circulated</div>
+                  <div style="border-left:4px solid #000;padding-left:12px;font-size:16px;line-height:1.35;font-weight:700;">{{ c.claim }}</div>
+                  <div style="margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                    <span style="border:2px solid #000;background:{{ c.verdictBg }};color:{{ c.verdictColor }};font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;letter-spacing:0.02em;padding:5px 16px;box-shadow:2px 2px 0 0 #000;">{{ c.verdict }}</span>
+                    <span style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;line-height:1.4;">{{ c.tag }}</span>
+                  </div>
+                  <p style="margin:15px 0 0;font-size:14px;line-height:1.6;">{{ c.why }}</p>
+                </div>
+                <div style="border-top:2px solid #000;background:#FDF6E3;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                  <a href="#" style="display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;letter-spacing:0.03em;text-transform:uppercase;color:#000;text-decoration:none;border-bottom:2px solid #000;padding-bottom:1px;" style-hover="background:#FFD700;">{{ c.receipts }} →</a>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-family:'Space Mono',monospace;font-size:9px;color:#6B6B6B;text-transform:uppercase;letter-spacing:0.06em;">related</span>
+                    <sc-for list="{{ c.related }}" as="acct" hint-placeholder-count="1"><span style="border:2px solid #000;background:#C4B5FD;font-family:'Space Mono',monospace;font-weight:700;font-size:10px;padding:1px 7px;">{{ acct }}</span></sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  renderVals() {
+    const V = {
+      KILLED: { bg: '#FF7A7A', color: '#000' },
+      SURVIVED: { bg: '#7FE08A', color: '#000' },
+      'PARTLY TRUE': { bg: '#FFD700', color: '#000' }
+    };
+    const raw = [
+      { id: 'claim #041', claim: '"WUS makes ~45% of NVIDIA\'s switch PCBs"', verdict: 'KILLED', tag: "not in the company's own listing documents", why: "The number circulating isn't in the company's own listing documents. Verified figures: 10.3% of datacenter PCBs, 12.5% of switch/router — a strong #1, not a near-monopoly.", receipts: 'listing docs / PCB mix', related: ['@NVDA'] },
+      { id: 'claim #038', claim: '"CoreWeave\'s colocation business is really just one customer"', verdict: 'SURVIVED', tag: 'their own 10-K says so', why: "Confirmed by their own filing: 100% of colocation revenue is attributable to a single customer, financed by a $3.3B project bond at 7.75%.", receipts: 'CRWV 10-K / customer concentration', related: ['@CRWV', '@CORZ'] },
+      { id: 'claim #033', claim: '"There\'s a 3-year wait for the transformers every datacenter needs"', verdict: 'PARTLY TRUE', tag: 'the wait is real; the panic is editorial', why: "Lead times of 128–144 weeks (~2.5–3 years) are confirmed. The wait is real. The conclusion that nobody should build is a narrative, not a filing.", receipts: 'lead-time tracker', related: ['@transformer-supply'] },
+      { id: 'claim #029', claim: '"CORZ colocation revenue now beats its bitcoin mining"', verdict: 'SURVIVED', tag: 'first quarter it did', why: "The 10-Q confirms it: colocation revenue $77.5M — the first quarter it beat the company's own bitcoin mining.", receipts: 'CORZ 10-Q / financials', related: ['@CORZ'] }
+    ];
+    const claims = raw.map(c => ({ ...c, verdictBg: V[c.verdict].bg, verdictColor: V[c.verdict].color }));
+    return { claims };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-width:1400px;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;">
+
+  <div style="margin-bottom:26px;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">P2 · Screen 12 · layout sketch</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;">Settings &amp; subscription</h1>
+    <p style="margin:6px 0 0;font-family:'Space Mono',monospace;font-size:12px;color:#5a5342;">profile · email prefs · manage subscription (hands off to Stripe portal).</p>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:44px;">
+
+    <!-- ============ MOBILE ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Mobile · 375</div>
+      <div style="width:393px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;"><span>9:41</span><span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:16px;height:9px;border:1.5px solid #000;"></span>100%</span></div>
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;gap:10px;padding:0 14px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;">Settings</span></div>
+        <div style="padding:16px 14px;display:flex;flex-direction:column;gap:16px;">
+          <!-- account -->
+          <div style="border:2px solid #000;background:#fff;">
+            <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:9px 14px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Account</div>
+            <div style="padding:14px;">
+              <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">Signed in as</div>
+              <div style="font-size:15px;font-weight:700;margin-top:2px;">you@example.com</div>
+              <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;margin-top:8px;line-height:1.5;">Magic-link only — no password to manage. You only ever read; Ticker never posts as you.</div>
+            </div>
+          </div>
+          <!-- email prefs -->
+          <div style="border:2px solid #000;background:#fff;">
+            <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:9px 14px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Email &amp; alerts</div>
+            <div style="padding:6px 14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:2px solid #f0ece0;">
+                <div><div style="font-size:14px;font-weight:700;">Daily digest</div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">what actually changed</div></div>
+                <span style="width:44px;height:24px;border:2px solid #000;background:#FFD700;border-radius:9999px;position:relative;display:inline-block;"><span style="position:absolute;top:1px;right:1px;width:18px;height:18px;background:#000;border-radius:9999px;"></span></span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                <div><div style="font-size:14px;font-weight:700;">Tripwire push <span style="font-family:'Space Mono',monospace;font-size:9px;background:#000;color:#FFD700;padding:1px 5px;">PRO</span></div><div style="font-family:'Space Mono',monospace;font-size:10px;color:#6B6B6B;">only when a light turns red</div></div>
+                <span style="width:44px;height:24px;border:2px solid #000;background:#FFD700;border-radius:9999px;position:relative;display:inline-block;"><span style="position:absolute;top:1px;right:1px;width:18px;height:18px;background:#000;border-radius:9999px;"></span></span>
+              </div>
+            </div>
+          </div>
+          <!-- subscription -->
+          <div style="border:2px solid #000;background:#fff;">
+            <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:9px 14px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Subscription</div>
+            <div style="padding:14px;">
+              <div style="display:flex;align-items:center;gap:8px;"><span style="border:2px solid #000;background:#5BC0EB;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:2px 10px;box-shadow:2px 2px 0 0 #000;">Reader</span><span style="font-family:'Space Mono',monospace;font-size:12px;">$20/mo · renews Aug 3</span></div>
+              <button style="margin-top:14px;border:2px solid #000;background:#fff;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:10px;box-shadow:2px 2px 0 0 #000;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;" style-hover="background:#FFF4CC;">Manage billing (Stripe) <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></button>
+              <div style="display:flex;gap:10px;margin-top:10px;">
+                <button style="flex:1;border:2px solid #000;background:#000;color:#FFD700;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:9px;box-shadow:2px 2px 0 0 #000;cursor:pointer;">Upgrade to Pro</button>
+                <button style="flex:none;border:2px solid transparent;background:transparent;color:#6B6B6B;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:9px 12px;cursor:pointer;" style-hover="border:2px solid #000;color:#000;">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <button style="border:2px solid #000;background:#fff;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:11px;box-shadow:2px 2px 0 0 #000;cursor:pointer;width:100%;" style-hover="background:#E63946;color:#fff;">Sign out</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESKTOP ============ -->
+    <div style="flex:none;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5a5342;margin-bottom:10px;">Desktop · 1280</div>
+      <div style="width:900px;border:2px solid #000;background:#FFF8E7;box-shadow:4px 4px 0 0 #000;overflow:hidden;">
+        <div style="background:#FFD700;border-bottom:2px solid #000;height:58px;display:flex;align-items:center;gap:14px;padding:0 22px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;">TICKER</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">/ settings</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:24px;padding:26px;">
+          <!-- nav -->
+          <div style="width:180px;flex:none;display:flex;flex-direction:column;gap:2px;">
+            <div style="padding:8px 12px;border-left:3px solid #000;background:#fff;font-weight:700;font-size:14px;">Account</div>
+            <div style="padding:8px 12px;border-left:3px solid transparent;color:#6B6B6B;font-size:14px;">Email &amp; alerts</div>
+            <div style="padding:8px 12px;border-left:3px solid transparent;color:#6B6B6B;font-size:14px;">Subscription</div>
+            <div style="padding:8px 12px;border-left:3px solid transparent;color:#6B6B6B;font-size:14px;">Privacy</div>
+          </div>
+          <!-- content -->
+          <div style="flex:1;display:flex;flex-direction:column;gap:18px;">
+            <div style="border:2px solid #000;background:#fff;">
+              <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:10px 16px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Account</div>
+              <div style="padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                <div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">Signed in as</div><div style="font-size:16px;font-weight:700;">you@example.com</div></div>
+                <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;max-width:280px;line-height:1.5;text-align:right;">Magic-link only — no password. You only ever read; Ticker never posts as you.</div>
+              </div>
+            </div>
+            <div style="border:2px solid #000;background:#fff;">
+              <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:10px 16px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Email &amp; alerts</div>
+              <div style="padding:4px 16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:2px solid #f0ece0;">
+                  <div><div style="font-size:15px;font-weight:700;">Daily digest</div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">a calm summary of what actually changed</div></div>
+                  <span style="width:44px;height:24px;border:2px solid #000;background:#FFD700;border-radius:9999px;position:relative;display:inline-block;"><span style="position:absolute;top:1px;right:1px;width:18px;height:18px;background:#000;border-radius:9999px;"></span></span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;">
+                  <div><div style="font-size:15px;font-weight:700;">Tripwire push <span style="font-family:'Space Mono',monospace;font-size:9px;background:#000;color:#FFD700;padding:1px 5px;">PRO</span></div><div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">a single push the moment a light turns red — nothing else</div></div>
+                  <span style="width:44px;height:24px;border:2px solid #000;background:#FFD700;border-radius:9999px;position:relative;display:inline-block;"><span style="position:absolute;top:1px;right:1px;width:18px;height:18px;background:#000;border-radius:9999px;"></span></span>
+                </div>
+              </div>
+            </div>
+            <div style="border:2px solid #000;background:#fff;">
+              <div style="background:#FDF6E3;border-bottom:2px solid #000;padding:10px 16px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Subscription</div>
+              <div style="padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                <div style="display:flex;align-items:center;gap:10px;"><span style="border:2px solid #000;background:#5BC0EB;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;padding:3px 12px;box-shadow:2px 2px 0 0 #000;">Reader</span><span style="font-family:'Space Mono',monospace;font-size:13px;">$20/mo · renews Aug 3, 2026</span></div>
+                <div style="display:flex;gap:10px;">
+                  <button style="border:2px solid #000;background:#000;color:#FFD700;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:9px 16px;box-shadow:2px 2px 0 0 #000;cursor:pointer;" style-hover="background:#FF6B9D;color:#000;">Upgrade to Pro</button>
+                  <button style="border:2px solid #000;background:#fff;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:9px 16px;box-shadow:2px 2px 0 0 #000;cursor:pointer;display:flex;align-items:center;gap:7px;" style-hover="background:#FFF4CC;">Manage billing (Stripe) <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}"></script>
+</body>
+</html>

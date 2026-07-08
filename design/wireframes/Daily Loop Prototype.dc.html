@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #EDE4CF; }
+  ::selection { background: #FFD700; color: #000; }
+  .tk-scroll::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</helmet>
+
+<div style="background:#EDE4CF;min-height:100vh;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;padding:36px;display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap;">
+
+  <!-- flow explainer -->
+  <div style="width:320px;flex:none;">
+    <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#000;">Deliverable · clickable prototype</div>
+    <h1 style="margin:6px 0 0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;line-height:1.05;letter-spacing:-0.02em;">The daily loop</h1>
+    <p style="margin:10px 0 0;font-size:14px;line-height:1.6;">Flow #2, live: open the app, read a few posts, tap one receipt to see its source, come back, and hit "you're caught up." Under five minutes, ending in satisfaction — not withdrawal.</p>
+    <div style="margin-top:22px;border:2px solid #000;background:#fff;box-shadow:2px 2px 0 0 #000;">
+      <div style="background:#FFD700;border-bottom:2px solid #000;padding:8px 14px;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;">Try it</div>
+      <div style="padding:14px;display:flex;flex-direction:column;gap:11px;">
+        <div style="display:flex;gap:10px;"><span style="flex:none;width:22px;height:22px;border:2px solid #000;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">1</span><div style="font-size:13.5px;line-height:1.45;">Scroll the Following feed — 4 real posts.</div></div>
+        <div style="display:flex;gap:10px;"><span style="flex:none;width:22px;height:22px;border:2px solid #000;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">2</span><div style="font-size:13.5px;line-height:1.45;">Tap any <b style="border-bottom:2px solid #000;">source: … →</b> to open its receipt.</div></div>
+        <div style="display:flex;gap:10px;"><span style="flex:none;width:22px;height:22px;border:2px solid #000;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;">3</span><div style="font-size:13.5px;line-height:1.45;">Come back, scroll to the end — you're caught up.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- phone -->
+  <div style="flex:none;">
+    <div style="width:393px;height:800px;border:2px solid #000;background:#FFF8E7;box-shadow:5px 5px 0 0 #000;overflow:hidden;display:flex;flex-direction:column;">
+      <!-- status bar -->
+      <div style="flex:none;background:#FFD700;border-bottom:2px solid #000;height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;"><span>9:41</span><span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:16px;height:9px;border:1.5px solid #000;"></span>100%</span></div>
+
+      <!-- FEED VIEW -->
+      <sc-if value="{{ isFeed }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:none;background:#FFD700;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:-0.02em;">TICKER</span>
+          <div style="display:inline-flex;border:2px solid #000;background:#fff;"><span style="border-right:2px solid #000;background:#FF6B9D;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;padding:4px 11px;">Following</span><span style="background:#fff;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;padding:4px 11px;">Everything</span></div>
+        </div>
+        <div class="tk-scroll" style="flex:1;overflow-y:auto;padding:14px;">
+          <sc-for list="{{ posts }}" as="post" hint-placeholder-count="4">
+            <div style="margin:0 0 12px;"><dc-import name="PostCard" post="{{ post }}" on-receipt="{{ openReceipt }}" hint-size="100%,190px"></dc-import></div>
+          </sc-for>
+          <div style="border:2px solid #000;background:#000;color:#FFF8E7;padding:24px 18px;box-shadow:2px 2px 0 0 #000;">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#FFD700;">End of feed</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;line-height:1.1;margin-top:10px;">You're caught up.</div>
+            <p style="margin:9px 0 0;font-size:14px;line-height:1.5;color:#E0E0E0;">That's everything real. Nothing else happened. Go outside.</p>
+            <div style="font-family:'Space Mono',monospace;font-size:11px;color:#767676;margin-top:14px;border-top:2px solid #333;padding-top:12px;">≈4 min · one receipt tapped · loop complete.</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- RECEIPT VIEW -->
+      <sc-if value="{{ isReceipt }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:none;background:#000;border-bottom:2px solid #000;height:50px;display:flex;align-items:center;gap:11px;padding:0 14px;cursor:pointer;" onClick="{{ backToFeed }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          <span style="font-family:'Space Mono',monospace;font-weight:700;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#FFD700;">The receipt</span>
+        </div>
+        <div class="tk-scroll" style="flex:1;overflow-y:auto;padding:18px 16px;">
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;">{{ rHandle }} · research page · § {{ rSource }}</div>
+          <div style="margin-top:12px;"><span style="display:inline-flex;align-items:stretch;border:2px solid #000;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;line-height:1;"><span style="padding:4px 7px;background:{{ rTierGlyphBg }};color:{{ rTierGlyphColor }};border-right:2px solid #000;font-size:12px;">{{ rTierGlyph }}</span><span style="padding:4px 9px;background:{{ rTierLabelBg }};color:{{ rTierLabelColor }};font-size:11px;">{{ rTierLabel }}</span></span></div>
+          <div style="border:2px solid #000;border-left:4px solid #000;background:#FDF6E3;padding:14px;margin-top:14px;font-size:15px;line-height:1.65;">{{ rExcerpt }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;margin-top:12px;">{{ rFresh }}</div>
+          <button style="margin-top:18px;width:100%;border:2px solid #000;background:#5BC0EB;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:11px;box-shadow:2px 2px 0 0 #000;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9"></rect><path d="M8 11 V7 a4 4 0 0 1 8 0 v4"></path></svg>Open full research page (Reader)</button>
+          <button onClick="{{ backToFeed }}" style="margin-top:10px;width:100%;border:2px solid #000;background:#fff;color:#000;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:11px;box-shadow:2px 2px 0 0 #000;cursor:pointer;" style-hover="background:#FFF4CC;">← Back to the feed</button>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:#767676;margin-top:14px;line-height:1.6;">You tapped one receipt.<br>That's the whole loop — claim to source, one tap.</div>
+        </div>
+      </sc-if>
+
+      <!-- bottom nav -->
+      <div style="flex:none;background:#FFD700;border-top:2px solid #000;display:flex;justify-content:space-between;padding:8px 12px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;background:#FF6B9D;border:2px solid #000;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">FEED</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polygon points="16 8 10.5 10.5 8 16 13.5 13.5"></polygon></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">EXPLORE</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1.5" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="22.5"></line><line x1="1.5" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="22.5" y2="12"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">KILL</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L22 20 H2 Z"></path><line x1="12" y1="10" x2="12" y2="14"></line><line x1="12" y1="16.8" x2="12" y2="16.8"></line></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">TRIP</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;"><div style="width:42px;height:32px;display:flex;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21 c0-5 4-7 8-7 s8 2 8 7"></path></svg></div><span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;">PROFILE</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { view: 'feed', rp: null };
+  renderVals() {
+    const tierDefs = {
+      solid:    { glyph: '✓', gBg: '#7FE08A', gCol: '#000', lBg: '#7FE08A', lCol: '#000', base: 'Solid' },
+      needs:    { glyph: '~', gBg: '#FFD700', gCol: '#000', lBg: '#FFD700', lCol: '#000', base: 'Needs checking' },
+      disputed: { glyph: '✕', gBg: '#FF7A7A', gCol: '#000', lBg: '#FF7A7A', lCol: '#000', base: 'Disputed' },
+      open:     { glyph: '?', gBg: '#000',    gCol: '#fff', lBg: '#fff',    lCol: '#000', base: 'Open question' }
+    };
+    const posts = [
+      { handle: '@CORZ', kind: 'company', time: '2h', body: "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.", tier: 'solid', qualifier: 'from the 10-Q', source: 'CORZ / financials', freshness: 'verified 2d ago', avatar: 'CORZ', variant: 'original', receiptExcerpt: "From the 10-Q: colocation revenue was $77.5M this quarter — the first time it exceeded the company's own bitcoin-mining revenue." },
+      { handle: '@CRWV', kind: 'company', time: '1h', body: "That colocation revenue? 100% of it is us. One customer. Their filing says it, not us. Sleep well, bondholders.", tier: 'solid', qualifier: 'from the 10-K', source: 'CRWV / customer concentration', freshness: 'verified 1d ago', avatar: 'CRWV', variant: 'quote', quoted: { handle: '@CORZ', kind: 'company', avatar: 'CORZ', time: '2h', body: "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.", tier: 'solid' }, receiptExcerpt: "From the 10-K: 100% of colocation revenue is attributable to a single customer. The relationship is financed by a $3.3B project bond at 7.75%, and that customer is also the lender's collateral." },
+      { handle: '@transformer-supply', kind: 'chokepoint', time: '4h', body: "Lead times for large power transformers: still 128–144 weeks. That's ~3 years to get the thing every new datacenter needs. Nobody panicked. They probably should.", tier: 'solid', qualifier: '', source: 'lead-time tracker', freshness: 'verified 5d ago', avatar: 'TRF', variant: 'original', receiptExcerpt: "Lead-time tracker: large power transformers remain at 128–144 weeks — roughly 2.5 to 3 years from order to delivery." },
+      { handle: '@NVDA', kind: 'company', time: '6h', body: "Analysts think my next architecture doubles memory bandwidth again. They've been right before. They've also been early before. Filed under: we'll see.", tier: 'needs', qualifier: 'estimate', source: 'analyst consensus', freshness: 'verified 3d ago', avatar: 'NVDA', variant: 'original', receiptExcerpt: "This is analyst consensus — an estimate, not a filing. We label it NEEDS CHECKING and hold it here until a primary source confirms or refutes it." }
+    ];
+    const rp = this.state.rp;
+    let r = {};
+    if (rp) {
+      const t = tierDefs[rp.tier] || tierDefs.solid;
+      r = {
+        rHandle: rp.handle, rSource: rp.source, rExcerpt: rp.receiptExcerpt, rFresh: rp.freshness,
+        rTierGlyph: t.glyph, rTierGlyphBg: t.gBg, rTierGlyphColor: t.gCol, rTierLabelBg: t.lBg, rTierLabelColor: t.lCol,
+        rTierLabel: rp.tier === 'open' ? 'Open question — unresolved' : (rp.qualifier ? t.base + ' — ' + rp.qualifier : t.base)
+      };
+    }
+    return {
+      posts: posts.map(p => ({ ...p, following: true })),
+      isFeed: this.state.view === 'feed',
+      isReceipt: this.state.view === 'receipt',
+      openReceipt: (p) => this.setState({ view: 'receipt', rp: p }),
+      backToFeed: () => this.setState({ view: 'feed' }),
+      ...r
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #FFF8E7; }
+  ::selection { background: #FFD700; color: #000; }
+  a.tk { text-decoration: none; color: #000; display: block; transition: all 60ms; }
+  a.tk:hover { box-shadow: 4px 4px 0 0 #000; transform: translate(-2px, -2px); background: #fff; }
+  a.tk:hover .arw { background: #FF6B9D; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;font-family:'Space Grotesk',system-ui,sans-serif;color:#000;">
+
+  <!-- chrome -->
+  <div style="background:#FFD700;border-bottom:2px solid #000;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:baseline;gap:12px;"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.02em;">TICKER</span><span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">frontend · design deliverables</span></div>
+    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">15 files · start here</span>
+  </div>
+
+  <div style="max-width:1080px;margin:0 auto;padding:40px 28px 64px;">
+    <h1 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:40px;line-height:1.02;letter-spacing:-0.02em;">The complete frontend for Ticker.</h1>
+    <p style="margin:12px 0 0;max-width:640px;font-size:16px;line-height:1.6;">Neo-brutalist "paper terminal." Every screen mobile + desktop, built from real research content, on one reusable component system. Click any card to open it.</p>
+
+    <!-- foundations -->
+    <div style="display:flex;align-items:center;gap:12px;margin:38px 0 16px;"><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">Foundations</span><div style="flex:1;height:2px;background:#000;"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+      <a class="tk" href="Component%20Library.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">Component Library &amp; Tokens</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Batch 1 — colors, type, tier chips, avatars (both directions), post-card variants &amp; states, nav, paywall, terminator, kill-list, tripwire.</p>
+      </a>
+      <a class="tk" href="PostCard.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">PostCard <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;background:#C4B5FD;border:2px solid #000;padding:1px 6px;">reusable</span></div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">The atom — one data-driven component for every post: original, quote, reply, thread, high-stakes, open-question.</p>
+      </a>
+      <a class="tk" href="AccountTile.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">AccountTile <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;background:#C4B5FD;border:2px solid #000;padding:1px 6px;">reusable</span></div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">The directory atom — avatar, handle, kind badge, descriptor, follow state.</p>
+      </a>
+    </div>
+
+    <!-- P0 -->
+    <div style="display:flex;align-items:center;gap:12px;margin:38px 0 16px;"><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">P0 · hi-fi screens · mobile + desktop</span><div style="flex:1;height:2px;background:#000;"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+      <a class="tk" href="Home%20Feed.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">01–02 · Home Feed</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Logged-out / Everything and logged-in / Following, with the working toggle, right rail, and caught-up terminator.</p>
+      </a>
+      <a class="tk" href="Post%20Permalink.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">03 · Post Permalink</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">The shareable unit — post + conversation + the receipt opened, plus a first-time-visitor explainer.</p>
+      </a>
+      <a class="tk" href="Account%20Profile.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">04 · Account Profile</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">@CRWV — persona header, "what it knows," post history, research door, supply-chain rail.</p>
+      </a>
+      <a class="tk" href="Research%20Page.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">05 · Research Page + Paywall</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">TOC + tier-annotated reading, section 1 free, honest gate, locked-but-legible structure.</p>
+      </a>
+    </div>
+
+    <!-- P1/P2 -->
+    <div style="display:flex;align-items:center;gap:12px;margin:38px 0 16px;"><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">P1 · P2 · screens</span><div style="flex:1;height:2px;background:#000;"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+      <a class="tk" href="Kill%20List%20Board.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">06 · Kill List Board</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Viral claims → KILLED / SURVIVED / PARTLY TRUE, with receipts. Built to be screenshotted.</p>
+      </a>
+      <a class="tk" href="Tripwire%20Board.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">07 · Tripwire Board</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Warning-lights panel grouped by account — calm ARMED squares, one loud FIRED.</p>
+      </a>
+      <a class="tk" href="Explore%20Directory.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">08 · Explore Directory</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Accounts by kind and domain — companies, chokepoints, themes.</p>
+      </a>
+      <a class="tk" href="Pricing.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">09 · Pricing</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Free / Reader $20 / Pro $40 — honest, plain language, no dark patterns.</p>
+      </a>
+      <a class="tk" href="Auth.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">10 · Auth · magic link</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Email in → check your inbox. No passwords, two tiny screens.</p>
+      </a>
+      <a class="tk" href="Onboarding.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">11 · Onboarding</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Seed the watchlist — one-tap supply-chain bundles or pick by hand.</p>
+      </a>
+      <a class="tk" href="Settings.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">12 · Settings</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Account, email &amp; alerts, subscription — hands off to the Stripe portal.</p>
+      </a>
+      <a class="tk" href="Landing.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">13 · Landing Page</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">Hero + live feed preview + the trust story + pricing teaser.</p>
+      </a>
+    </div>
+
+    <!-- flows + memo -->
+    <div style="display:flex;align-items:center;gap:12px;margin:38px 0 16px;"><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">Prototype · rationale</span><div style="flex:1;height:2px;background:#000;"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
+      <a class="tk" href="Daily%20Loop%20Prototype.dc.html" style="border:2px solid #000;background:#000;color:#FFF8E7;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;color:#FFD700;">Daily Loop · clickable</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #FFD700;background:#000;color:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#E0E0E0;">Flow #2, interactive — tap a real receipt, come back, hit "you're caught up." Under five minutes.</p>
+      </a>
+      <a class="tk" href="Rationale%20Memo.dc.html" style="border:2px solid #000;background:#fff;padding:18px;box-shadow:2px 2px 0 0 #000;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;"><div style="font-weight:700;font-size:18px;">Rationale Memo</div><span class="arw" style="flex:none;width:26px;height:26px;border:2px solid #000;background:#FFD700;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-weight:700;">→</span></div>
+        <p style="margin:7px 0 0;font-size:13px;line-height:1.5;color:#000;">One page — eight decisions, each mapped to the brief's design principles.</p>
+      </a>
+    </div>
+
+    <div style="margin-top:40px;border-top:2px solid #000;padding-top:18px;font-family:'Space Mono',monospace;font-size:11px;color:#6B6B6B;line-height:1.7;">Space Grotesk + Space Mono · 2px black borders · 0px radius · one hard shadow · cream paper, loud yellow chrome · tiers green / yellow / red, always labeled. All content is the brief's sample research — no invented numbers.</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}"></script>
+</body>
+</html>
