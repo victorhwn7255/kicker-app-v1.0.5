@@ -1,0 +1,38 @@
+[
+  {
+    "id": "claim #041",
+    "claim": "\"WUS makes ~45% of NVIDIA's switch PCBs\"",
+    "verdict": "killed",
+    "verdict_note": "not in the company's own listing documents",
+    "explanation": "The number circulating isn't in the company's own listing documents. Verified figures: 10.3% of datacenter PCBs, 12.5% of switch/router — a strong #1, not a near-monopoly.",
+    "receipts": "listing docs / PCB mix",
+    "related_accounts": ["@NVDA"]
+  },
+  {
+    "id": "claim #038",
+    "claim": "\"CoreWeave's colocation business is really just one customer\"",
+    "verdict": "survived",
+    "verdict_note": "their own 10-K says so",
+    "explanation": "Confirmed by their own filing: 100% of colocation revenue is attributable to a single customer, financed by a $3.3B project bond at 7.75%.",
+    "receipts": "CRWV 10-K / customer concentration",
+    "related_accounts": ["@CRWV", "@CORZ"]
+  },
+  {
+    "id": "claim #033",
+    "claim": "\"There's a 3-year wait for the transformers every datacenter needs\"",
+    "verdict": "partly",
+    "verdict_note": "the wait is real; the panic is editorial",
+    "explanation": "Lead times of 128–144 weeks (~2.5–3 years) are confirmed. The wait is real. The conclusion that nobody should build is a narrative, not a filing.",
+    "receipts": "lead-time tracker",
+    "related_accounts": ["@transformer-supply"]
+  },
+  {
+    "id": "claim #029",
+    "claim": "\"CORZ colocation revenue now beats its bitcoin mining\"",
+    "verdict": "survived",
+    "verdict_note": "first quarter it did",
+    "explanation": "The 10-Q confirms it: colocation revenue $77.5M — the first quarter it beat the company's own bitcoin mining.",
+    "receipts": "CORZ 10-Q / financials",
+    "related_accounts": ["@CORZ"]
+  }
+]

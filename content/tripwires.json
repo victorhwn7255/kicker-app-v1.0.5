@@ -1,0 +1,45 @@
+[
+  {
+    "id": "tw-corz-colocation",
+    "account": "@CORZ",
+    "description": "Colocation revenue overtakes bitcoin mining revenue.",
+    "status": "fired",
+    "when": "fired Q1",
+    "post_id": "corz-q1-colocation"
+  },
+  {
+    "id": "tw-crwv-second-customer",
+    "account": "@CRWV",
+    "description": "A second customer ends single-tenant concentration.",
+    "status": "armed",
+    "when": "watching"
+  },
+  {
+    "id": "tw-crwv-collateral",
+    "account": "@CRWV",
+    "description": "The one customer stops being both the whole business and the collateral.",
+    "status": "armed",
+    "when": "watching"
+  },
+  {
+    "id": "tw-transformer-leadtime",
+    "account": "@transformer-supply",
+    "description": "Large-power-transformer lead times drop below 128–144 weeks.",
+    "status": "armed",
+    "when": "watching"
+  },
+  {
+    "id": "tw-hbm-fourth-maker",
+    "account": "@HBM-memory",
+    "description": "A fourth company reaches HBM production at scale.",
+    "status": "armed",
+    "when": "watching"
+  },
+  {
+    "id": "tw-nvda-bandwidth",
+    "account": "@NVDA",
+    "description": "Next architecture is confirmed to double memory bandwidth.",
+    "status": "armed",
+    "when": "watching"
+  }
+]

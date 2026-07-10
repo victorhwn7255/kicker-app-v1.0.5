@@ -40,8 +40,8 @@
 | Phase | Name | Status |
 |---|---|---|
 | 0 | Scaffold & foundations | done |
-| 1 | Design system & core components | not started |
-| 2 | Content layer & fixtures | not started |
+| 1 | Design system & core components | done |
+| 2 | Content layer & fixtures | done |
 | 3 | Static screens (read-only product) | not started |
 | 4 | Database & live content | not started |
 | 5 | The tweet engine | not started |
@@ -77,21 +77,21 @@
 
 **Goal:** every reusable component, pixel-matched to the wireframes, before any screen exists.
 
-- [ ] `TierChip` - the two-cell stamp (glyph cell + label cell, 2px divider), all four tiers (solid `✓` green, needs `~` yellow, disputed `✕` red, open `?` black/white), both sizes. Label always carries meaning; color only reinforces.
-- [ ] Avatar system - kind-keyed monogram tiles: company (white bg, ticker text), chokepoint (black bg, code), theme (cream bg, nodes glyph). Sizes 24-88px, 2px border, 0 radius.
-- [ ] Kind badges (Company / Chokepoint / Theme) with stroke icons.
-- [ ] `PostCard` - the atom of the product. Implement the full data contract from `design/README.md` (the `Post` type) and ALL variants: original, quote (nested inset), reply (salmon left border + `↳ replying to`), thread (`1/6` badge + next-segment pointer), high-stakes (black header bar), plus the trust band (tier chip, receipt link with yellow hover fill and 44px tap target, freshness stamp). `onReceipt` callback drives navigation.
-- [ ] `AccountTile` - directory row per `AccountTile.dc.html`.
-- [ ] Buttons and inputs - default/hover/active/focus states exactly as specified: instant color swaps, stamp-press active (`translate(2px,2px)`, shadow removed), pink focus rings.
-- [ ] Follow / Following button (pink when following).
-- [ ] Feed toggle (Following / Everything segmented control).
-- [ ] The "You're caught up" terminator (black card, yellow mono eyebrow).
-- [ ] Kill-list card (yellow header, claim blockquote, verdict stamps KILLED / SURVIVED / PARTLY TRUE, trust band).
-- [ ] Tripwire row (status square + always-present FIRED/ARMED word, fired-row red tint) and account group header.
-- [ ] Paywall gate card (black card, plain-language contents list, cyan CTA, no blur, no countdown).
-- [ ] Mention chips (lavender) and receipt link as standalone primitives.
-- [ ] Loading skeletons: hard-bordered blocks with opacity pulse. No shimmer sweep.
-- [ ] Build `/dev/components` - a preview page rendering every component and state, side-by-side comparable with `Component Library.dc.html`.
+- [x] `TierChip` - the two-cell stamp (glyph cell + label cell, 2px divider), all four tiers (solid `✓` green, needs `~` yellow, disputed `✕` red, open `?` black/white), both sizes. Label always carries meaning; color only reinforces.
+- [x] Avatar system - kind-keyed monogram tiles: company (white bg, ticker text), chokepoint (black bg, code), theme (cream bg, nodes glyph). Sizes 24-88px, 2px border, 0 radius.
+- [x] Kind badges (Company / Chokepoint / Theme) with stroke icons.
+- [x] `PostCard` - the atom of the product. Implement the full data contract from `design/README.md` (the `Post` type) and ALL variants: original, quote (nested inset), reply (salmon left border + `↳ replying to`), thread (`1/6` badge + next-segment pointer), high-stakes (black header bar), plus the trust band (tier chip, receipt link with yellow hover fill and 44px tap target, freshness stamp). `onReceipt` callback drives navigation.
+- [x] `AccountTile` - directory row per `AccountTile.dc.html`.
+- [x] Buttons and inputs - default/hover/active/focus states exactly as specified: instant color swaps, stamp-press active (`translate(2px,2px)`, shadow removed), pink focus rings.
+- [x] Follow / Following button (pink when following).
+- [x] Feed toggle (Following / Everything segmented control).
+- [x] The "You're caught up" terminator (black card, yellow mono eyebrow).
+- [x] Kill-list card (yellow header, claim blockquote, verdict stamps KILLED / SURVIVED / PARTLY TRUE, trust band).
+- [x] Tripwire row (status square + always-present FIRED/ARMED word, fired-row red tint) and account group header.
+- [x] Paywall gate card (black card, plain-language contents list, cyan CTA, no blur, no countdown).
+- [x] Mention chips (lavender) and receipt link as standalone primitives.
+- [x] Loading skeletons: hard-bordered blocks with opacity pulse. No shimmer sweep.
+- [x] Build `/dev/components` - a preview page rendering every component and state, side-by-side comparable with `Component Library.dc.html`.
 
 **Definition of done:** `/dev/components` visually matches the Component Library wireframe and `screenshots/00-component-library.png` (open both, compare with an obsessive eye per CLAUDE.md); a cropped screenshot of a single PostCard carries handle, kind, tier chip, receipt, freshness; all interactive states work by keyboard.
 
@@ -101,11 +101,11 @@
 
 **Goal:** typed content, validated in CI, seeding the app with the sample research.
 
-- [ ] Define zod schemas + TS types in `src/lib/types.ts`: `Account`, `Post`, `SourceSection`, `KillListEntry`, `Tripwire`, `ResearchPage` (fields per `plan/system-design.html` data model).
-- [ ] Create `content/` fixtures from the design README "Content" section: 6+ accounts (@CORZ, @CRWV, @NVDA, @transformer-supply, @HBM-memory, @who-holds-the-risk), the 6 sample posts (one per variant), 3 kill-list entries (one per verdict), tripwires (1 fired, 5 armed), 1 research page (CRWV: free section 1 + locked section stubs with titles/descriptors/tiers).
-- [ ] Content loaders in `src/lib/content.ts` (read + zod-parse + typed access).
-- [ ] `scripts/validate-content.ts` - fails the build on any schema violation; wire into `pnpm build` / CI.
-- [ ] Persona-card format defined (`Account.persona_card`): voice description + constraints. Write persona cards for the 6 fixture accounts (bios exist in the design files; e.g. @CRWV's bio is in `Account Profile.dc.html`).
+- [x] Define zod schemas + TS types in `src/lib/types.ts`: `Account`, `Post`, `SourceSection`, `KillListEntry`, `Tripwire`, `ResearchPage` (fields per `plan/system-design.html` data model).
+- [x] Create `content/` fixtures from the design README "Content" section: 6+ accounts (@CORZ, @CRWV, @NVDA, @transformer-supply, @HBM-memory, @who-holds-the-risk), the 6 sample posts (one per variant), 3 kill-list entries (one per verdict), tripwires (1 fired, 5 armed), 1 research page (CRWV: free section 1 + locked section stubs with titles/descriptors/tiers).
+- [x] Content loaders in `src/lib/content.ts` (read + zod-parse + typed access).
+- [x] `scripts/validate-content.ts` - fails the build on any schema violation; wire into `pnpm build` / CI.
+- [x] Persona-card format defined (`Account.persona_card`): voice description + constraints. Write persona cards for the 6 fixture accounts (bios exist in the design files; e.g. @CRWV's bio is in `Account Profile.dc.html`).
 
 **Definition of done:** `pnpm validate-content` passes; a deliberately broken fixture fails CI; loaders return typed data consumed by a test page.
 

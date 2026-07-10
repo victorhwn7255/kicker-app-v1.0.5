@@ -1,0 +1,86 @@
+[
+  {
+    "id": "corz-q1-colocation",
+    "handle": "@CORZ",
+    "kind": "company",
+    "time": "2h",
+    "body": "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.",
+    "tier": "solid",
+    "qualifier": "from the 10-Q",
+    "source": "CORZ / financials",
+    "freshness": "verified 2d ago",
+    "avatar": "CORZ",
+    "variant": "original"
+  },
+  {
+    "id": "crwv-quote-corz",
+    "handle": "@CRWV",
+    "kind": "company",
+    "time": "1h",
+    "body": "That colocation revenue? 100% of it is us. One customer. Their filing says it, not us. Sleep well, bondholders.",
+    "tier": "solid",
+    "qualifier": "from the 10-K",
+    "source": "CRWV / customer concentration",
+    "freshness": "verified 1d ago",
+    "avatar": "CRWV",
+    "variant": "quote",
+    "quoted": {
+      "handle": "@CORZ",
+      "kind": "company",
+      "avatar": "CORZ",
+      "time": "2h",
+      "body": "Q1 numbers are in. Colocation revenue $77.5M — first quarter it beat our own bitcoin mining. The pivot is real.",
+      "tier": "solid"
+    }
+  },
+  {
+    "id": "whr-reply-crwv",
+    "handle": "@who-holds-the-risk",
+    "kind": "theme",
+    "time": "1h",
+    "body": "And that one customer relationship is financed by a $3.3B project bond at 7.75%. When one tenant is your whole business AND your lender's collateral, the word \"diversified\" does not apply.",
+    "tier": "solid",
+    "qualifier": "from filings",
+    "source": "project bond / terms",
+    "freshness": "verified 1d ago",
+    "variant": "reply",
+    "replyTo": "@CRWV"
+  },
+  {
+    "id": "trf-thread-leadtimes",
+    "handle": "@transformer-supply",
+    "kind": "chokepoint",
+    "time": "4h",
+    "body": "Lead times for large power transformers: still 128–144 weeks. That's ~3 years to get the thing every new datacenter needs. Nobody panicked. They probably should.",
+    "tier": "solid",
+    "source": "lead-time tracker",
+    "freshness": "verified 5d ago",
+    "avatar": "TRF",
+    "variant": "thread",
+    "thread": "1/6",
+    "threadNext": "2/6 → next segment"
+  },
+  {
+    "id": "nvda-bandwidth-estimate",
+    "handle": "@NVDA",
+    "kind": "company",
+    "time": "3h",
+    "body": "Analysts think my next architecture doubles memory bandwidth again. They've been right before. They've also been early before. Filed under: we'll see.",
+    "tier": "needs",
+    "qualifier": "estimate",
+    "source": "NVDA / analyst estimates",
+    "freshness": "verified 3h ago",
+    "avatar": "NVDA"
+  },
+  {
+    "id": "hbm-open-question",
+    "handle": "@HBM-memory",
+    "kind": "chokepoint",
+    "time": "6h",
+    "body": "My page's open question #2 is still open: can anyone besides three companies on earth actually make me at scale? So far: no.",
+    "tier": "open",
+    "source": "HBM page / open Q#2",
+    "freshness": "verified 6d ago",
+    "avatar": "HBM"
+  }
+]

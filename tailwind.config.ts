@@ -64,6 +64,16 @@ const config: Config = {
         sans: ['var(--font-grotesk)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
+      // Loading skeletons pulse opacity - no shimmer sweep.
+      keyframes: {
+        tkpulse: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.45' },
+        },
+      },
+      animation: {
+        tkpulse: 'tkpulse 1.4s ease-in-out infinite',
+      },
       // Default border is 2px solid ink; `border-4` (4px) stays available for
       // reply left borders and blockquote/inset accents.
       borderWidth: {

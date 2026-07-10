@@ -1,0 +1,11 @@
+[
+  {
+    "id": "src-crwv-customer-concentration",
+    "account": "@CRWV",
+    "section_title": "Customer concentration",
+    "body_text": "Colocation revenue is 100% attributable to a single customer. The relationship is financed by a $3.3B project bond at 7.75%, and that same customer is also the lender's collateral. When one tenant is both your entire business and your lender's security, \"diversified\" is not the word that applies.",
+    "tier": "solid",
+    "qualifier": "from the 10-K",
+    "vault_ref": "CRWV 10-K / customer concentration"
+  }
+]

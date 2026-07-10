@@ -15,18 +15,19 @@ test('home page renders with chrome on both breakpoints and loads brand fonts', 
     await expect(nav.getByText(label, { exact: true })).toBeVisible();
   }
 
-  // Both brand families are actually downloaded (not just declared, and not the
-  // local fallback face) - proves next/font is wired for Grotesk and Mono.
-  const loaded = await page.evaluate(async () => {
-    await document.fonts.ready;
-    const families = Array.from(document.fonts)
-      .filter((f) => f.status === 'loaded' && !/Fallback/i.test(f.family))
-      .map((f) => f.family);
-    return {
-      grotesk: families.some((f) => /Space.?Grotesk/i.test(f)),
-      mono: families.some((f) => /Space.?Mono/i.test(f)),
-    };
-  });
-  expect(loaded.grotesk).toBeTruthy();
-  expect(loaded.mono).toBeTruthy();
+  // Both brand families actually finish downloading (not just declared, and not
+  // the local fallback face) - proves next/font is wired for Grotesk and Mono.
+  // Polls rather than reading once, so a dev cold-compile can't race the check.
+  await page.waitForFunction(
+    () => {
+      const families = Array.from(document.fonts)
+        .filter((f) => f.status === 'loaded' && !/Fallback/i.test(f.family))
+        .map((f) => f.family);
+      return (
+        families.some((f) => /Space.?Grotesk/i.test(f)) && families.some((f) => /Space.?Mono/i.test(f))
+      );
+    },
+    undefined,
+    { timeout: 10_000 },
+  );
 });

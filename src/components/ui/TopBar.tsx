@@ -9,7 +9,10 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-40 hidden h-[58px] items-center border-b bg-yellow px-6 md:flex">
       <div className="flex items-baseline gap-3">
-        <Link href="/" className="text-2xl font-bold tracking-tight text-ink">
+        <Link
+          href="/"
+          className="text-2xl font-bold tracking-tight text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink focus-visible:outline-offset-2"
+        >
           TICKER
         </Link>
         <span className="font-mono text-xs uppercase tracking-[0.15em] text-ink">

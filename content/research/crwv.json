@@ -1,0 +1,45 @@
+{
+  "slug": "crwv",
+  "account": "@CRWV",
+  "title": "CoreWeave — the single-tenant landlord",
+  "kind": "company",
+  "domain": "AI datacenter",
+  "freshness": "research verified 1d ago",
+  "section_count": 7,
+  "sections": [
+    {
+      "slug": "customer-concentration",
+      "title": "Customer concentration",
+      "tier": "solid",
+      "qualifier": "from the 10-K",
+      "locked": false,
+      "body": "Colocation revenue is 100% attributable to a single customer. The relationship is financed by a $3.3B project bond at 7.75%, and that same customer is also the lender's collateral. When one tenant is both your entire business and your lender's security, \"diversified\" is not the word that applies.\n\nThis is the whole first section, readable free — and it ends here, in plain text. No blur, no teaser, no countdown.",
+      "receipt": "CRWV 10-K / customer concentration"
+    },
+    {
+      "slug": "debt-liquidity",
+      "title": "Debt & liquidity",
+      "tier": "solid",
+      "locked": true,
+      "descriptor": "$25B+ debt · the $3.3B project bond, in full"
+    },
+    {
+      "slug": "single-tenant-thesis",
+      "title": "Single-tenant thesis",
+      "locked": true
+    },
+    {
+      "slug": "open-questions",
+      "title": "Open questions",
+      "tier": "open",
+      "locked": true,
+      "descriptor": "Is \"diversified\" ever the right word here?"
+    },
+    {
+      "slug": "what-would-prove-this-wrong",
+      "title": "What would prove this wrong",
+      "locked": true,
+      "descriptor": "A second customer large enough to end single-tenant concentration."
+    }
+  ]
+}

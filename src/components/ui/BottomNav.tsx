@@ -36,10 +36,10 @@ export function BottomNav() {
             // prefetch noise in the console for the not-yet-existing screens.
             prefetch={false}
             aria-current={active ? 'page' : undefined}
-            className="flex flex-1 flex-col items-center justify-center gap-1 text-ink"
+            className="flex flex-1 flex-col items-center justify-center gap-1 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink focus-visible:-outline-offset-2"
           >
             <span className={cn('flex h-8 w-8 items-center justify-center', active && 'bg-pink')}>
-              <Icon />
+              <Icon size={20} />
             </span>
             <span className="font-mono text-[10px] font-bold uppercase tracking-wider">{label}</span>
           </Link>
