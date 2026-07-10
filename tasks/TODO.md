@@ -39,7 +39,7 @@
 
 | Phase | Name | Status |
 |---|---|---|
-| 0 | Scaffold & foundations | not started |
+| 0 | Scaffold & foundations | awaiting [HUMAN] Vercel deploy |
 | 1 | Design system & core components | not started |
 | 2 | Content layer & fixtures | not started |
 | 3 | Static screens (read-only product) | not started |
@@ -58,15 +58,16 @@
 
 **Goal:** a deployable skeleton with the design tokens installed, so every later phase builds on rails.
 
-- [ ] Initialize Next.js 15 (App Router) + TypeScript + Tailwind CSS in the repo root. Package manager: pnpm.
-- [ ] Translate the design tokens into the Tailwind config: colors, spacing scale (4/8/12/16/24/32), shadow (`2px 2px 0 0 #000`), border defaults, zero radius. Source: `design/README.md` "Design Tokens (quick reference)".
-- [ ] Load Space Grotesk (400/700) + Space Mono (400/700) via `next/font` (self-hosted, not runtime Google Fonts).
-- [ ] Global CSS: cream page background `#FFF8E7`, base type 16px/1.55, `text-wrap: pretty` for post bodies.
-- [ ] Folder structure per `plan/system-design.html`: `src/app`, `src/components/{feed,wiki,ui}`, `src/lib`, `content/`, `e2e/`, `scripts/`.
-- [ ] App shell layout: desktop yellow top chrome bar (56-58px, logo "TICKER" + mono tagline) and mobile yellow bottom nav (5 tabs: FEED / EXPLORE / KILL / TRIP / PROFILE, active tab = pink square). Static links only for now.
-- [ ] `.env.example` documenting every env var the project will use (Supabase, Stripe, Resend, model API); nothing secret committed.
-- [ ] Playwright installed with one smoke test: home page renders, chrome visible, fonts loaded.
+- [x] Initialize Next.js 15 (App Router) + TypeScript + Tailwind CSS in the repo root. Package manager: pnpm.
+- [x] Translate the design tokens into the Tailwind config: colors, spacing scale (4/8/12/16/24/32), shadow (`2px 2px 0 0 #000`), border defaults, zero radius. Source: `design/README.md` "Design Tokens (quick reference)".
+- [x] Load Space Grotesk (400/700) + Space Mono (400/700) via `next/font` (self-hosted, not runtime Google Fonts).
+- [x] Global CSS: cream page background `#FFF8E7`, base type 16px/1.55, `text-wrap: pretty` for post bodies.
+- [x] Folder structure per `plan/system-design.html`: `src/app`, `src/components/{feed,wiki,ui}`, `src/lib`, `content/`, `e2e/`, `scripts/`.
+- [x] App shell layout: desktop yellow top chrome bar (56-58px, logo "TICKER" + mono tagline) and mobile yellow bottom nav (5 tabs: FEED / EXPLORE / KILL / TRIP / PROFILE, active tab = pink square). Static links only for now.
+- [x] `.env.example` documenting every env var the project will use (Supabase, Stripe, Resend, model API); nothing secret committed.
+- [x] Playwright installed with one smoke test: home page renders, chrome visible, fonts loaded.
 - [ ] `[HUMAN]` Create the Vercel project (separate from any other project, user's account) and confirm a hello-world deploy. Agent prepares the repo; user connects it to Vercel.
+  - Note: repo is deploy-ready (`pnpm build` passes clean). Awaiting user to connect the repo to Vercel and confirm the hello-world deploy.
 
 **Definition of done:** `pnpm build` passes; the deployed skeleton shows the chrome on mobile and desktop; tokens verifiably present (a test page rendering token swatches matches the Component Library).
 

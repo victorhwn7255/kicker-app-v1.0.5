@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: theme('colors.page');
+    color: theme('colors.ink');
+    font-family: var(--font-grotesk), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+}
+
+@layer components {
+  /* Reading text for post bodies - balanced ragging, no orphaned last word. */
+  .post-body {
+    text-wrap: pretty;
+  }
+}
