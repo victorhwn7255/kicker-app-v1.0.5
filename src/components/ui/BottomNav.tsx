@@ -32,6 +32,9 @@ export function BottomNav() {
           <Link
             key={label}
             href={href}
+            // prefetch off until later phases build these routes - avoids 404
+            // prefetch noise in the console for the not-yet-existing screens.
+            prefetch={false}
             aria-current={active ? 'page' : undefined}
             className="flex flex-1 flex-col items-center justify-center gap-1 text-ink"
           >

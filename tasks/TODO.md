@@ -39,7 +39,7 @@
 
 | Phase | Name | Status |
 |---|---|---|
-| 0 | Scaffold & foundations | awaiting [HUMAN] Vercel deploy |
+| 0 | Scaffold & foundations | done |
 | 1 | Design system & core components | not started |
 | 2 | Content layer & fixtures | not started |
 | 3 | Static screens (read-only product) | not started |
@@ -66,8 +66,8 @@
 - [x] App shell layout: desktop yellow top chrome bar (56-58px, logo "TICKER" + mono tagline) and mobile yellow bottom nav (5 tabs: FEED / EXPLORE / KILL / TRIP / PROFILE, active tab = pink square). Static links only for now.
 - [x] `.env.example` documenting every env var the project will use (Supabase, Stripe, Resend, model API); nothing secret committed.
 - [x] Playwright installed with one smoke test: home page renders, chrome visible, fonts loaded.
-- [ ] `[HUMAN]` Create the Vercel project (separate from any other project, user's account) and confirm a hello-world deploy. Agent prepares the repo; user connects it to Vercel.
-  - Note: repo is deploy-ready (`pnpm build` passes clean). Awaiting user to connect the repo to Vercel and confirm the hello-world deploy.
+- [x] `[HUMAN]` Create the Vercel project (separate from any other project, user's account) and confirm a hello-world deploy. Agent prepares the repo; user connects it to Vercel.
+  - Deployed & verified at https://kicker-app-v1-0-5.vercel.app/ (chrome on both breakpoints, tokens page live, cream bg, fonts loaded).
 
 **Definition of done:** `pnpm build` passes; the deployed skeleton shows the chrome on mobile and desktop; tokens verifiably present (a test page rendering token swatches matches the Component Library).
 
