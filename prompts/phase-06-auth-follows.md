@@ -22,6 +22,9 @@ Set the status row to "in progress", tick boxes, set it "done" at the end.
 
 ## How to execute (strategy + gotchas)
 
+- FREE-FIRST CHANGE (user decision 2026-07-12): monetization is deferred - Phases 7 and 10 will NOT run.
+  This phase therefore also owns two tasks that were previously Phase 7's: unlocking FULL research pages for logged-in users (server-side: entitlements + RLS, with the Phase 3 gate becoming a "create a free account to read the rest" gate), and repurposing the money surfaces (/pricing becomes a "free while in beta" page; the Reader-upsell rail card becomes a free-account card).
+  See the updated Phase 6 checklist in tasks/TODO.md - it is authoritative.
 - Use Supabase magic-link auth; no passwords anywhere.
   The reassurance copy matters and is in the design: "you only ever read", "we never post as you", 15-minute link expiry.
 - Following mode on the feed toggle becomes a real server query filtered to the user's follows.

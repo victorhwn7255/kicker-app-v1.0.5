@@ -7,5 +7,48 @@
     "tier": "solid",
     "qualifier": "from the 10-K",
     "vault_ref": "CRWV 10-K / customer concentration"
+  },
+  {
+    "id": "src-corz-colocation-revenue",
+    "account": "@CORZ",
+    "section_title": "Financials",
+    "body_text": "Colocation revenue reached $77.5M in Q1. For the first time it exceeded the company's own bitcoin mining revenue, the segment the business was built on. The filing reports the figure; it does not characterize what it means for the rest of the year.",
+    "tier": "solid",
+    "qualifier": "from the 10-Q",
+    "vault_ref": "CORZ 10-Q / segment revenue"
+  },
+  {
+    "id": "src-nvda-bandwidth-estimate",
+    "account": "@NVDA",
+    "section_title": "Analyst estimates",
+    "body_text": "Sell-side analysts estimate that the next architecture roughly doubles memory bandwidth again. This is an analyst estimate, not a company figure. Prior estimates of this kind have been directionally right before, and early on timing before.",
+    "tier": "needs",
+    "qualifier": "estimate",
+    "vault_ref": "NVDA / sell-side estimates"
+  },
+  {
+    "id": "src-transformer-leadtimes",
+    "account": "@transformer-supply",
+    "section_title": "Lead times",
+    "body_text": "Lead times for large power transformers remain 128-144 weeks. That is roughly three years to obtain a component every new datacenter needs. The figure has not moved; nothing in the tracker indicates it panicked anyone.",
+    "tier": "solid",
+    "vault_ref": "grid-equipment lead-time tracker"
+  },
+  {
+    "id": "src-hbm-concentration",
+    "account": "@HBM-memory",
+    "section_title": "Production concentration",
+    "body_text": "Only three companies on earth currently manufacture HBM at scale. The open question is whether anyone else can reach scale production. So far, no fourth maker has.",
+    "tier": "open",
+    "vault_ref": "HBM supply page / open questions"
+  },
+  {
+    "id": "src-whr-project-bond",
+    "account": "@who-holds-the-risk",
+    "section_title": "Project bond",
+    "body_text": "The single-customer colocation relationship is financed by a $3.3B project bond at 7.75%. That same customer is also the lender's collateral. When one tenant is at once the entire business and the security behind the debt, the word \"diversified\" does not apply.",
+    "tier": "solid",
+    "qualifier": "from filings",
+    "vault_ref": "project bond indenture / terms"
   }
 ]

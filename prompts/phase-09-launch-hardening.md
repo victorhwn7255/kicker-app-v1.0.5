@@ -21,7 +21,7 @@ Set the status row to "in progress", tick boxes, set it "done" at the end.
 
 ## How to execute (strategy + gotchas)
 
-- Prove the five core flows end to end: first-visit hook, daily loop, hype-check, conversion, tripwire fire.
+- Prove the five core flows end to end (free-first variant): first-visit hook, daily loop, hype-check, free-signup (replaces conversion - monetization is deferred), tripwire fire.
 - Accessibility is WCAG 2.1 AA and keyboard-complete, and tier meaning must survive grayscale (produce the screenshot proof, like the Component Library's).
 - Error monitoring must make engine failures loud.
   The engine failing silently is worse than it stopping - wire alerts so a broken generation run is seen, not swallowed.
@@ -33,7 +33,7 @@ Set the status row to "in progress", tick boxes, set it "done" at the end.
 
 ## `[HUMAN]` stops in this phase
 
-- Production domain and SSL, production Stripe keys, and the production model provider account are `[HUMAN]` tasks.
+- Production domain and SSL, and the production model provider account are `[HUMAN]` tasks. (No Stripe - monetization deferred.)
 - Taking the engine out of dry-run for the launch accounts needs explicit user approval.
   Do not flip it live on your own judgment - present the reviewed dry-run results and let the user decide.
 

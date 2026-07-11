@@ -1,5 +1,10 @@
 # Phase 10 - Ask-the-Vault chat (post-launch, Pro tier) - build prompt
 
+> **DEFERRED - DO NOT EXECUTE (free-first decision, 2026-07-12).**
+> Chat has real per-query inference cost and was designed as the premium tier.
+> It re-enters together with Phase 7 if monetization is ever enabled.
+> If you were pointed here by mistake, stop and tell the user.
+
 ## Mission
 
 Add a grounded chat that answers questions from the published corpus only - cited, tier-labeled, and willing to refuse.

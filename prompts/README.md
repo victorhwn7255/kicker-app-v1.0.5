@@ -16,7 +16,9 @@ The agent opens the TODO anyway, because that is where it ticks boxes and update
 
 ## The operating model
 
-- Run ONE phase at a time, in order (0 through 9 to launch; 10 and 11 are post-launch).
+- Run ONE phase at a time, in order.
+  FREE-FIRST DECISION (2026-07-12): Phases 7 (payments) and 10 (chat) are DEFERRED - launch order is 0-6, 8, 9, with 11 post-launch.
+  Research pages unlock with a free login (Phase 6); nothing charges money anywhere.
 - Do not start a phase until the previous phase's Definition of done fully passes.
 - A phase can be one agent or a small team.
   Most phases are a single agent.

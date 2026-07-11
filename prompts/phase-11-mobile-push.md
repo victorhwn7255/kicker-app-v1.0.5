@@ -24,7 +24,7 @@ Set the status row to "in progress", tick boxes, set it "done" at the end.
 - Restructure to a Turborepo monorepo (`apps/web`, `apps/mobile`, `packages/shared`) only when this phase actually starts.
   Do not pre-build the monorepo earlier - it adds friction for no benefit until mobile is real.
 - Share what should be shared: types, content schemas, and the trust primitives (tier logic, the receipt/freshness contract) move to `packages/shared` so the app and web cannot drift on the thing that matters most.
-- The tripwire push is the Pro retention feature.
+- The tripwire push is the retention feature, available to all logged-in users (free-first: no tier gating).
   It fires to followers of an account when that account's tripwire flips to fired - the same cohort logic as the Phase 8 email, on a different channel.
 - Keep the design system intact on native: 0px radius, 2px borders, the mono/grotesk split.
   A rounded native re-skin would break the brand.

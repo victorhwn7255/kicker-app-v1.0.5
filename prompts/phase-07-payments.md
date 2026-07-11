@@ -1,5 +1,10 @@
 # Phase 7 - Payments & paywall - build prompt
 
+> **DEFERRED - DO NOT EXECUTE (free-first decision, 2026-07-12).**
+> The product launches free; research pages are login-gated in Phase 6, not pay-gated.
+> This prompt is kept intact so monetization can be added later by running this phase as written.
+> If you were pointed here by mistake, stop and tell the user.
+
 ## Mission
 
 Make the Reader tier earn money, with a paywall that is honest to the user and enforced on the server.

@@ -8,7 +8,7 @@ Both are opt-in, on-brand, and never spammy.
 ## Before you start
 
 - You are executing ONLY Phase 8.
-  Confirm Phase 7's Definition of done passes first.
+  Confirm Phase 6's Definition of done passes first (Phase 7 is DEFERRED - free-first decision; the digest goes to ALL opted-in accounts, no tier gating).
 - Read:
   1. `CLAUDE.md`.
   2. `tasks/TODO.md` -> "Phase 8".

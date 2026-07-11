@@ -44,13 +44,18 @@
 | 2 | Content layer & fixtures | done |
 | 3 | Static screens (read-only product) | done |
 | 4 | Database & live content | done |
-| 5 | The tweet engine | not started |
+| 5 | The tweet engine | dry-run (awaiting user review) |
 | 6 | Auth, follows & onboarding | not started |
-| 7 | Payments & paywall | not started |
+| 7 | Payments & paywall | DEFERRED (free-first decision 2026-07-12) |
 | 8 | Email | not started |
 | 9 | Launch hardening | not started |
-| 10 | Ask-the-Vault chat (post-launch) | not started |
+| 10 | Ask-the-Vault chat (post-launch) | DEFERRED (free-first decision 2026-07-12) |
 | 11 | Mobile & push (post-launch) | not started |
+
+> **Free-first decision (user, 2026-07-12).** The product launches FREE - no payments, no paywall.
+> Research pages unlock with a free login (account required, no money).
+> Phases 7 and 10 are DEFERRED, not deleted: the architecture keeps `entitlements.ts`, the `is_paid` flag, and the `subscriptions` table so monetization can be added later by simply running Phase 7.
+> Launch order is now 0-6, 8, 9.
 
 ---
 
@@ -161,17 +166,26 @@ Build each screen against its wireframe + screenshot. Mobile (375px) and desktop
 
 The one non-negotiable rule: **the model never writes from its own memory. It only rewords the source section it is handed.** Fail-closed: unverified posts are dropped, never published.
 
-- [ ] Install the Vercel AI SDK; provider config via env (`MODEL_PROVIDER`, `MODEL_BASE_URL`, `MODEL_API_KEY`). Dev: NVIDIA NIM free endpoint. Prod: a US-hosted provider (Fireworks / Together / OpenRouter). Model choice must be a config change only. `[HUMAN]` provides the API keys.
-- [ ] Planner (`src/lib/engine/planner.ts`, deterministic code): picks account + trigger in priority order: (a) new content in `sources`, (b) event peg, (c) conversation (reply/quote to a recent sibling post), (d) rotation of least-recently-used section. Frequency caps scale with account reservoir size.
-- [ ] Generator: prompt = persona card + ONE source section + the account's last 20 posts. Instruction: re-express THIS in YOUR voice, nothing not in the text, 400-600 chars, no buy/sell language. Produces 2-3 candidates.
-- [ ] Verifier (separate call, adversarial): every claim traceable to the source text? hedges preserved? invented numbers? buy/sell language? Structured JSON verdict. Fail → regenerate (max 2), else drop and log.
-- [ ] Novelty gate: embedding similarity vs `post_history`; too-similar candidates discarded.
-- [ ] Publish: insert into `posts` with tier, source ref, trigger type; trigger feed revalidation.
-- [ ] Vercel Cron route (`/api/engine/tick`, protected by `CRON_SECRET`): processes accounts in batches sized to stay inside function limits.
-- [ ] Kill switch: `ENGINE_ENABLED` env flag; plus a dry-run mode that writes candidates to a review table instead of publishing.
-- [ ] Conversation mechanic: planner can emit reply/quote posts referencing a recent post (renders via the existing PostCard variants).
-- [ ] Engine unit tests with a mocked model: verifier rejection path, novelty rejection path, batching, fail-closed behavior.
+- [x] Install the Vercel AI SDK; provider config via env (`MODEL_PROVIDER`, `MODEL_BASE_URL`, `MODEL_API_KEY`). Dev: NVIDIA NIM free endpoint. Prod: a US-hosted provider (Fireworks / Together / OpenRouter). Model choice must be a config change only. `[HUMAN]` provides the API keys.
+  - AI SDK v7 + `@ai-sdk/groq` / `@ai-sdk/google` / `@ai-sdk/openai-compatible`. Per the user's model decisions: primary Groq `gpt-oss-120b` (reasoning, effort=low + token budget), secondary Groq `llama-3.3-70b`, fallback Gemini `2.5-flash`; premium/OpenRouter as config-only escape hatch; NIM demoted to dev-only. Lane registry in `config.ts` + `MODEL_<LANE>` env overrides = provider swap without code. Groq calls carry a browser User-Agent (Groq 403s Node UAs).
+- [x] Planner (`src/lib/engine/planner.ts`, deterministic code): picks account + trigger in priority order: (a) new content in `sources`, (b) event peg, (c) conversation (reply/quote to a recent sibling post), (d) rotation of least-recently-used section. Frequency caps scale with account reservoir size.
+  - Deterministic; also pre-selects the single KEY FACT (quantitative-sentence heuristic) so the model cannot bury the lede. Event-peg is a hook (no event feed in fixtures).
+- [x] Generator: prompt = persona card + ONE source section + the account's last 20 posts. Instruction: re-express THIS in YOUR voice, nothing not in the text, 400-600 chars, no buy/sell language. Produces 2-3 candidates.
+  - Length is a hard CODE gate (all 3 models broke the range when merely asked). For the blind A/B, the dry-run generates one candidate per (source, model) across the 3 lanes.
+- [x] Verifier (separate call, adversarial): every claim traceable to the source text? hedges preserved? invented numbers? buy/sell language? Structured JSON verdict. Fail → regenerate (max 2), else drop and log.
+  - Scope widened per testing: claims checked against source text + persona bio COMBINED, plus a persona-identity coherence check (a model drifted into speaking AS the subject). Verifier runs on a DIFFERENT model than the generator. A prompt-guard (`llama-prompt-guard-2-86m`) screens each source BEFORE generation and quarantines (never silently drops) injected text.
+- [x] Novelty gate: embedding similarity vs `post_history`; too-similar candidates discarded.
+  - Cosine similarity via Gemini embeddings (Groq has no embedding endpoint); compares against the account's recent posts. Quality gate, so it fails OPEN on embedding-infra error (not a fabrication risk).
+- [x] Publish: insert into `posts` with tier, source ref, trigger type; trigger feed revalidation.
+  - Dry-run writes to `engine_candidates` (review table). The live publish path is hard-gated behind `ENGINE_ENABLED` and is NOT wired to the cron route in this phase; provenance columns (model/provider/prompt_version/engine_run_id/verified/verdict) added to `posts` for when it goes live.
+- [x] Vercel Cron route (`/api/engine/tick`, protected by `CRON_SECRET`): processes accounts in batches sized to stay inside function limits.
+  - `vercel.json` schedules it daily; Bearer-token auth; `?batchSize` bounds the batch; response reports counts only (model hidden to preserve blind review).
+- [x] Kill switch: `ENGINE_ENABLED` env flag; plus a dry-run mode that writes candidates to a review table instead of publishing.
+- [x] Conversation mechanic: planner can emit reply/quote posts referencing a recent post (renders via the existing PostCard variants).
+- [x] Engine unit tests with a mocked model: verifier rejection path, novelty rejection path, batching, fail-closed behavior.
+  - 38 vitest tests, all against a mock model (zero live calls): planner priority, length/novelty/verdict gates, guard quarantine + fail-safe, fail-closed verifier (incl. verifier-throws), and both poisoned-source paths.
 - [ ] Run 1 week in dry-run on the 6 fixture accounts; read every candidate; tune persona cards and prompts.
+  - Pipeline live-verified; a dry-run batch of candidates is generated for the user's blind review (`pnpm engine:review`). The multi-day review + tuning is the user's ongoing gate.
 
 **Definition of done:** cron runs on schedule in staging; every published post has `verified: true`, a source ref, and passes the trust-band render; a poisoned source test (instruction-injection text inside a source section) does not escape the verifier; dry-run week reviewed with zero fabricated-fact escapes.
 
@@ -186,14 +200,18 @@ The one non-negotiable rule: **the model never writes from its own memory. It on
 - [ ] `follows` writes; Follow/Following toggles live on cards, profiles, tiles.
 - [ ] `/onboarding` per `Onboarding.dc.html`: one-tap supply-chain bundles + pick-by-hand list; selection seeds `follows` on continue.
 - [ ] Following mode on the feed toggle: server query filtered to followed accounts; empty state points to Explore.
-- [ ] `/settings` (account section + email prefs UI; subscription section lands in Phase 7). Toggle pill is the ONLY rounded element in the app.
-- [ ] E2E: magic-link flow (Supabase test helpers), follow → Following feed shows only followed accounts, onboarding seeds follows.
+- [ ] `/settings` (account section + email prefs UI; NO subscription section - monetization deferred). Toggle pill is the ONLY rounded element in the app.
+- [ ] Free-login research unlock (free-first change): logged-in users see FULL research pages. Enforce server-side (entitlements + RLS: authenticated read on all `wiki_pages` sections). The Phase 3 gate becomes a "create a free account to read the rest" gate - same honest-gate design, login CTA instead of price.
+- [ ] Repurpose money surfaces (free-first change): `/pricing` becomes a simple "Ticker is free while in beta" page (keep the file/route for future); Reader-upsell rail card becomes a "create a free account" card; remove any $-CTAs.
+- [ ] E2E: magic-link flow (Supabase test helpers), follow → Following feed shows only followed accounts, onboarding seeds follows, signed-out research page shows login gate → signed-in shows full page.
 
-**Definition of done:** a new user can sign up, pick a bundle, and land on a Following feed that ends at the terminator; all Phase 3 E2E still green.
+**Definition of done:** a new user can sign up, pick a bundle, land on a Following feed that ends at the terminator, and read a full research page; signed-out direct-URL access to research sections beyond section 1 shows the login gate; all Phase 3 E2E still green.
 
 ---
 
-## Phase 7 - Payments & paywall
+## Phase 7 - Payments & paywall — DEFERRED
+
+> **DEFERRED (free-first decision 2026-07-12).** Do NOT execute this phase. The product launches free; research pages are login-gated (Phase 6), not pay-gated. This section is kept intact so monetization can be added later by running this phase as written (swap the login gate back to a paid gate at the same single enforcement point).
 
 **Goal:** the Reader tier earns money; the paywall is honest and enforced server-side.
 
@@ -215,8 +233,8 @@ The one non-negotiable rule: **the model never writes from its own memory. It on
 
 - [ ] `[HUMAN]` Resend account + domain DNS records (SPF/DKIM). Then agent moves magic-link emails to the branded domain.
 - [ ] Digest generator: what moved this week (new posts by trigger type, kill-list additions, tripwire changes), rendered in a bordered, on-brand HTML template. "Calm week" is a valid digest.
-- [ ] Weekly cron sends the digest to Reader+ subscribers who opted in.
-- [ ] Tripwire alert: when a tripwire flips to fired, email followers of that account (Pro push comes in Phase 11).
+- [ ] Weekly cron sends the digest to ALL logged-in accounts who opted in (free-first: no tier gating).
+- [ ] Tripwire alert: when a tripwire flips to fired, email followers of that account (push comes in Phase 11).
 - [ ] Preference enforcement from settings toggles + one-click unsubscribe headers.
 
 **Definition of done:** digest renders correctly in major clients (litmus-style manual check); a test tripwire fire emails exactly the right cohort once; unsubscribe works.
@@ -227,23 +245,25 @@ The one non-negotiable rule: **the model never writes from its own memory. It on
 
 **Goal:** production-ready and public.
 
-- [ ] Full E2E pass across the 5 core flows (brief Section 7): first-visit hook, daily loop, hype-check, conversion, tripwire fire.
+- [ ] Full E2E pass across the 5 core flows (brief Section 7, free-first variant): first-visit hook, daily loop, hype-check, free-signup (replaces conversion), tripwire fire.
 - [ ] Accessibility audit: WCAG 2.1 AA; keyboard-complete; tier meaning survives grayscale (screenshot proof like the Component Library's).
 - [ ] Performance: static/ISR verified on all public pages; images/OG budget; no layout shift from font loading.
-- [ ] Analytics: Plausible (or PostHog) wired to page views + the events that matter: receipt taps, follows, gate views, checkouts, caught-up reached.
+- [ ] Analytics: Plausible (or PostHog) wired to page views + the events that matter: receipt taps, follows, gate views, free signups, caught-up reached.
 - [ ] Error monitoring (e.g. Sentry) on app + engine; engine failures alert, never silently stop.
 - [ ] Security pass: env secrets audit, webhook signature tests, rate limiting on auth + API routes, RLS re-verified.
 - [ ] Legal pages: terms, privacy, and the "this is research, not investment advice" disclosure in the footer.
-- [ ] `[HUMAN]` Production domain + SSL on the Vercel project; production Stripe keys; production model provider account.
+- [ ] `[HUMAN]` Production domain + SSL on the Vercel project; production model provider account. (No Stripe - monetization deferred.)
 - [ ] `[HUMAN]` Approve taking the engine out of dry-run for launch accounts.
 - [ ] Content: import the real launch corpus from the vault bridge (external dependency: the vault-side publish skill); backfill historical posts; enable the engine out of dry-run for launch accounts.
 - [ ] Soft launch: share permalinks, watch analytics + error rates for a week, then open up.
 
-**Definition of done:** all E2E green in CI against a production build; a stranger can sign up, subscribe, and read on their phone; the engine has run 7 consecutive days in production without a fabricated-fact escape or a silent failure.
+**Definition of done:** all E2E green in CI against a production build; a stranger can sign up (free) and read a full research page on their phone; the engine has run 7 consecutive days in production without a fabricated-fact escape or a silent failure.
 
 ---
 
-## Phase 10 - Ask-the-Vault chat (post-launch, Pro tier)
+## Phase 10 - Ask-the-Vault chat (post-launch) — DEFERRED
+
+> **DEFERRED (free-first decision 2026-07-12).** Do NOT execute. Chat has real per-query inference cost and was designed as the premium tier; it re-enters together with Phase 7 if monetization is ever enabled.
 
 - [ ] `/api/ask`: agent loop (Anthropic API) with tools `search_corpus`, `read_page`, `follow_links` over the published corpus only.
 - [ ] Grounding rules: cite or refuse; every answer carries tier chips + freshness; out-of-corpus questions refused plainly; no buy/sell language.
@@ -256,7 +276,7 @@ The one non-negotiable rule: **the model never writes from its own memory. It on
 
 - [ ] Restructure to a Turborepo monorepo (`apps/web`, `apps/mobile`, `packages/shared`) only when this phase starts.
 - [ ] Expo app: feed, permalink, profile, research reading.
-- [ ] Push notifications: tripwire fires for followed accounts (the Pro retention feature).
+- [ ] Push notifications: tripwire fires for followed accounts (logged-in feature; free-first - no tier gating).
 - [ ] App store listings.
 
 ---

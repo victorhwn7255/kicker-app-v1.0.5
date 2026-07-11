@@ -1,0 +1,64 @@
+import { describe, it, expect } from 'vitest';
+import { checkLength } from './lengthGate';
+import { cosineSimilarity, checkNovelty } from './novelty';
+import { verdictPasses } from './types';
+import { chunkForGuard, screenSource } from './guard';
+import { mockDeps, PASS_VERDICT, validBody } from './testkit';
+
+describe('lengthGate (enforced in code, never trusted to the model)', () => {
+  it('accepts a 400-600 char body', () => expect(checkLength(validBody(500)).ok).toBe(true));
+  it('rejects too short', () => {
+    const r = checkLength('x'.repeat(399));
+    expect(r.ok).toBe(false);
+    expect(r.len).toBe(399);
+  });
+  it('rejects too long', () => expect(checkLength('x'.repeat(601)).ok).toBe(false));
+});
+
+describe('novelty math', () => {
+  it('cosine of identical vectors is 1', () => expect(cosineSimilarity([1, 2, 3], [1, 2, 3])).toBeCloseTo(1));
+  it('cosine of orthogonal vectors is 0', () => expect(cosineSimilarity([1, 0], [0, 1])).toBe(0));
+  it('rejects a near-duplicate of history', () => expect(checkNovelty([1, 0, 0], [[1, 0, 0]]).novel).toBe(false));
+  it('accepts a novel candidate', () => expect(checkNovelty([1, 0, 0], [[0, 1, 0]]).novel).toBe(true));
+  it('is novel against empty history', () => expect(checkNovelty([1, 0, 0], []).novel).toBe(true));
+});
+
+describe('verdictPasses (fail-closed truth table)', () => {
+  it('passes a clean verdict', () => expect(verdictPasses(PASS_VERDICT)).toBe(true));
+  it('fails on an untraceable claim', () =>
+    expect(verdictPasses({ ...PASS_VERDICT, claims_traceable: false })).toBe(false));
+  it('fails on invented numbers', () =>
+    expect(verdictPasses({ ...PASS_VERDICT, invented_numbers: true })).toBe(false));
+  it('fails on buy/sell language', () =>
+    expect(verdictPasses({ ...PASS_VERDICT, buy_sell_language: true })).toBe(false));
+  it('fails on dropped hedges', () =>
+    expect(verdictPasses({ ...PASS_VERDICT, hedges_preserved: false })).toBe(false));
+  it('fails on persona-identity drift', () =>
+    expect(verdictPasses({ ...PASS_VERDICT, persona_identity_ok: false })).toBe(false));
+});
+
+describe('prompt guard', () => {
+  it('chunks long text to the classifier window', () =>
+    expect(chunkForGuard('a'.repeat(4000), 1500).length).toBe(3));
+  it('flags when a chunk scores at/above threshold (quarantine)', async () => {
+    const g = await screenSource('poison', mockDeps({ guardScore: async () => 0.997 }));
+    expect(g.flagged).toBe(true);
+    expect(g.maxScore).toBeCloseTo(0.997);
+  });
+  it('passes clean text', async () => {
+    const g = await screenSource('clean', mockDeps({ guardScore: async () => 0.0004 }));
+    expect(g.flagged).toBe(false);
+  });
+  it('fails safe (quarantines) when the classifier throws', async () => {
+    const g = await screenSource(
+      'x',
+      mockDeps({
+        guardScore: async () => {
+          throw new Error('down');
+        },
+      }),
+    );
+    expect(g.flagged).toBe(true);
+    expect(g.maxScore).toBe(1);
+  });
+});
