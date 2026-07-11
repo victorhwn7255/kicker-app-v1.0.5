@@ -54,18 +54,20 @@ export async function runCandidate(args: {
   plan: PlanItem;
   genLane: ModelLane;
   recentPosts: Post[];
+  replyToPost?: { handle: string; body: string };
   historyEmbeddings: number[][];
   guard: GuardResult;
   deps: EngineDeps;
   signal?: AbortSignal;
 }): Promise<Candidate> {
-  const { runId, account, source, plan, genLane, recentPosts, historyEmbeddings, guard, deps, signal } = args;
+  const { runId, account, source, plan, genLane, recentPosts, replyToPost, historyEmbeddings, guard, deps, signal } = args;
 
   const base: Base = {
     engineRunId: runId,
     account: account.handle,
     sourceId: source.id,
     trigger: plan.trigger,
+    replyTo: plan.replyToHandle,
     laneKey: genLane.key,
     model: genLane.modelId,
     provider: genLane.provider,
@@ -105,7 +107,7 @@ export async function runCandidate(args: {
     try {
       body = await deps.generate(genLane, {
         system: generatorSystem(),
-        prompt: generatorPrompt({ account, source, keyFact: plan.keyFact, recentPosts, retryHint }),
+        prompt: generatorPrompt({ account, source, keyFact: plan.keyFact, recentPosts, replyingTo: replyToPost, retryHint }),
         signal,
       });
     } catch (e) {
@@ -121,8 +123,8 @@ export async function runCandidate(args: {
     if (!ok) {
       retryHint =
         len < LENGTH.min
-          ? `Your previous attempt was only ${len} characters - too short. Expand to ${LENGTH.min}-${LENGTH.max} characters by drawing more context and detail from the SOURCE (add nothing new).`
-          : `Your previous attempt was ${len} characters - too long. Tighten to ${LENGTH.min}-${LENGTH.max} characters.`;
+          ? `Your previous attempt was only ${len} characters - just below the ${LENGTH.min}-character floor. Include the key fact and its essential context from the SOURCE (add nothing new); do not pad.`
+          : `Your previous attempt was ${len} characters - over the ${LENGTH.max} ceiling. Tighten it; cut restatement, keep the fact.`;
       if (attempts < totalAttempts) continue;
       return dropped(base, { body, charLen: len, verdict: null, attempts, reason: `length ${len} outside ${LENGTH.min}-${LENGTH.max}` });
     }

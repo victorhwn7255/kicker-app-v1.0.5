@@ -20,6 +20,21 @@ export function cosineSimilarity(a: number[], b: number[]): number {
   return dot / (Math.sqrt(na) * Math.sqrt(nb));
 }
 
+/**
+ * Lexical (word-set Jaccard) similarity, for cheap near-duplicate detection
+ * between sibling candidates generated from the SAME source in one run - no
+ * embedding call needed. Two models rewording the same fact score high here.
+ */
+export function jaccardSimilarity(a: string, b: string): number {
+  const tokens = (s: string) => new Set(s.toLowerCase().match(/[a-z0-9$%.]+/g) ?? []);
+  const A = tokens(a);
+  const B = tokens(b);
+  if (A.size === 0 || B.size === 0) return 0;
+  let intersection = 0;
+  for (const t of A) if (B.has(t)) intersection++;
+  return intersection / (A.size + B.size - intersection);
+}
+
 /** Novel when its closest match in history is below the similarity ceiling. */
 export function checkNovelty(
   candidate: number[],

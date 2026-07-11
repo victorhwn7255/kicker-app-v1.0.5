@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { checkLength } from './lengthGate';
-import { cosineSimilarity, checkNovelty } from './novelty';
+import { cosineSimilarity, checkNovelty, jaccardSimilarity } from './novelty';
 import { verdictPasses } from './types';
 import { chunkForGuard, screenSource } from './guard';
 import { mockDeps, PASS_VERDICT, validBody } from './testkit';
 
 describe('lengthGate (enforced in code, never trusted to the model)', () => {
-  it('accepts a 400-600 char body', () => expect(checkLength(validBody(500)).ok).toBe(true));
-  it('rejects too short', () => {
-    const r = checkLength('x'.repeat(399));
+  it('accepts a body within the 140-600 window', () => expect(checkLength(validBody(300)).ok).toBe(true));
+  it('rejects too short (below the 140 floor)', () => {
+    const r = checkLength('x'.repeat(139));
     expect(r.ok).toBe(false);
-    expect(r.len).toBe(399);
+    expect(r.len).toBe(139);
   });
   it('rejects too long', () => expect(checkLength('x'.repeat(601)).ok).toBe(false));
 });
@@ -21,6 +21,18 @@ describe('novelty math', () => {
   it('rejects a near-duplicate of history', () => expect(checkNovelty([1, 0, 0], [[1, 0, 0]]).novel).toBe(false));
   it('accepts a novel candidate', () => expect(checkNovelty([1, 0, 0], [[0, 1, 0]]).novel).toBe(true));
   it('is novel against empty history', () => expect(checkNovelty([1, 0, 0], []).novel).toBe(true));
+});
+
+describe('jaccard (sibling dedup)', () => {
+  it('identical text scores 1', () => expect(jaccardSimilarity('a b c', 'a b c')).toBe(1));
+  it('disjoint text scores 0', () => expect(jaccardSimilarity('a b', 'c d')).toBe(0));
+  it('near-duplicate siblings score high', () =>
+    expect(
+      jaccardSimilarity(
+        'colocation revenue is 100% one customer',
+        'colocation revenue is 100% a single customer',
+      ),
+    ).toBeGreaterThan(0.5));
 });
 
 describe('verdictPasses (fail-closed truth table)', () => {

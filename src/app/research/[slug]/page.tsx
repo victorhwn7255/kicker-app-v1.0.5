@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cn } from '@/lib/cn';
-import { getResearchPage, getResearchPages } from '@/lib/content';
+import { getResearchPage } from '@/lib/content';
+import { getUser, canReadFullResearch } from '@/lib/auth';
 import type { ResearchSection, Tier } from '@/lib/types';
 import { TierChip } from '@/components/ui/TierChip';
 import { ReceiptLink } from '@/components/ui/ReceiptLink';
@@ -10,11 +11,7 @@ import { LockIcon } from '@/components/ui/Icons';
 
 type Params = { slug: string };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const page = await getResearchPage(slug);
   if (!page) return {};
@@ -24,17 +21,13 @@ export async function generateMetadata({
   return { title: page.title, description };
 }
 
-export const revalidate = 300;
-
-export async function generateStaticParams() {
-  const pages = await getResearchPages();
-  return pages.map((p) => ({ slug: p.slug }));
-}
-
 export default async function ResearchPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const page = await getResearchPage(slug);
   if (!page) notFound();
+
+  const user = await getUser();
+  const unlocked = canReadFullResearch(user);
 
   const sections = page.sections;
   const freeIndex = sections.findIndex((s) => !s.locked);
@@ -44,9 +37,7 @@ export default async function ResearchPage({ params }: { params: Promise<Params>
     .filter((x) => x.section.locked);
   const tierLegend = [...new Set(sections.map((s) => s.tier).filter(Boolean))] as Tier[];
 
-  const eyebrow = ['Research page', page.account, page.kind, page.domain]
-    .filter(Boolean)
-    .join(' · ');
+  const eyebrow = ['Research page', page.account, page.kind, page.domain].filter(Boolean).join(' · ');
 
   return (
     <div className="mx-auto flex max-w-[848px] flex-col py-4 md:flex-row md:items-start md:gap-[28px] md:py-7">
@@ -57,7 +48,7 @@ export default async function ResearchPage({ params }: { params: Promise<Params>
         </div>
         <nav className="flex flex-col gap-[2px]">
           {sections.map((s) =>
-            s.locked ? (
+            s.locked && !unlocked ? (
               <div
                 key={s.slug}
                 className="flex items-center gap-[8px] border-l-[3px] border-transparent px-[10px] py-[7px] text-muted"
@@ -92,9 +83,7 @@ export default async function ResearchPage({ params }: { params: Promise<Params>
 
       {/* reading column */}
       <article className="w-full md:w-[600px] md:flex-none">
-        <div className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted">
-          {eyebrow}
-        </div>
+        <div className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted">{eyebrow}</div>
         <h1 className="mt-[9px] text-[26px] font-bold leading-[1.05] tracking-[-0.01em] md:text-[34px] md:tracking-[-0.02em]">
           {page.title}
         </h1>
@@ -103,45 +92,84 @@ export default async function ResearchPage({ params }: { params: Promise<Params>
           {page.freshness} · {page.section_count} sections · every claim sourced
         </div>
 
-        {/* free section - ends on a hard edge, no blur */}
-        {free && (
-          <section id={free.slug} className="mt-[20px] border-t-2 border-ink pt-[20px]">
-            <div className="flex flex-wrap items-center gap-[12px]">
-              <span className="font-mono text-[13px] text-muted">§{freeIndex + 1}</span>
-              <h2 className="text-[22px] font-bold">{free.title}</h2>
-              {free.tier && (
-                <TierChip tier={free.tier} qualifier={free.qualifier} size="post" />
-              )}
-            </div>
-            {free.body && (
-              <p className="post-body mt-[14px] whitespace-pre-line text-[15px] leading-[1.65] md:text-[17px] md:leading-[1.7]">
-                {free.body}
-              </p>
-            )}
-            {free.receipt && (
-              <div className="mt-[16px]">
-                <ReceiptLink size="md">receipt: {free.receipt}</ReceiptLink>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* the honest gate */}
-        <PaywallGate className="mt-[24px]" />
-
-        {/* honest locked list - no blur, just locked */}
-        <div className="mt-[24px]">
-          <div className="mb-[12px] font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
-            Behind the gate - no blur, just locked
-          </div>
-          <div className="flex flex-col gap-[10px]">
-            {lockedSections.map(({ section, number }) => (
-              <LockedRow key={section.slug} section={section} number={number} />
+        {unlocked ? (
+          /* Signed in: the full page - every section, no gate. */
+          <div className="mt-[20px] flex flex-col">
+            {sections.map((s, i) => (
+              <FullSection key={s.slug} section={s} number={i + 1} first={i === freeIndex} />
             ))}
           </div>
-        </div>
+        ) : (
+          <>
+            {/* free section - ends on a hard edge, no blur */}
+            {free && <FullSection section={free} number={freeIndex + 1} first />}
+
+            {/* the honest gate - free-first: create a free account */}
+            <PaywallGate
+              className="mt-[24px]"
+              title="The rest is a free read."
+              subtitle={`${lockedSections.length} more tier-annotated sections + open questions`}
+              includes={[
+                'Full research page with every receipt',
+                '"What would prove this wrong" block',
+                'A calm daily digest of what actually changed',
+              ]}
+              ctaLabel="Create a free account to read the rest"
+              ctaHref="/auth"
+              reassurance="Free · no card · you only read"
+            />
+
+            {/* honest locked list - no blur, just locked */}
+            <div className="mt-[24px]">
+              <div className="mb-[12px] font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
+                Behind the gate - no blur, just locked
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                {lockedSections.map(({ section, number }) => (
+                  <LockedRow key={section.slug} section={section} number={number} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </article>
     </div>
+  );
+}
+
+/** A fully-readable section (free section, or any section once unlocked). */
+function FullSection({
+  section,
+  number,
+  first,
+}: {
+  section: ResearchSection;
+  number: number;
+  first?: boolean;
+}) {
+  return (
+    <section
+      id={section.slug}
+      className={cn('border-t-2 border-ink pt-[20px]', !first && 'mt-[24px]')}
+    >
+      <div className="flex flex-wrap items-center gap-[12px]">
+        <span className="font-mono text-[13px] text-muted">§{number}</span>
+        <h2 className="text-[22px] font-bold">{section.title}</h2>
+        {section.tier && <TierChip tier={section.tier} qualifier={section.qualifier} size="post" />}
+      </div>
+      {section.body ? (
+        <p className="post-body mt-[14px] whitespace-pre-line text-[15px] leading-[1.65] md:text-[17px] md:leading-[1.7]">
+          {section.body}
+        </p>
+      ) : section.descriptor ? (
+        <p className="mt-[14px] text-[15px] leading-[1.6] text-muted">{section.descriptor}</p>
+      ) : null}
+      {section.receipt && (
+        <div className="mt-[16px]">
+          <ReceiptLink size="md">receipt: {section.receipt}</ReceiptLink>
+        </div>
+      )}
+    </section>
   );
 }
 

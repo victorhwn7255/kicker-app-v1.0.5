@@ -33,6 +33,7 @@ function candidateRow(c: Candidate) {
     account: c.account,
     source_id: c.sourceId,
     trigger: c.trigger,
+    reply_to: c.replyTo ?? null,
     body: c.body,
     tier: c.tier,
     qualifier: c.qualifier ?? null,

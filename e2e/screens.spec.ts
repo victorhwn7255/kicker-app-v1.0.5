@@ -10,7 +10,7 @@ const SCREENS = [
   { path: '/kill-list', name: 'kill-list', text: /Kill List/i },
   { path: '/tripwires', name: 'tripwires', text: /ARMED/ },
   { path: '/explore', name: 'explore', text: /Companies/ },
-  { path: '/pricing', name: 'pricing', text: /Reader/ },
+  { path: '/pricing', name: 'pricing', text: /free while in beta/i },
 ];
 
 for (const s of SCREENS) {

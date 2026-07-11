@@ -1,24 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FeedToggle, type FeedMode } from '@/components/ui/FeedToggle';
 
 /**
- * Feed-mode toggle + its mono context label. A small client island: both modes
- * show every post for now (Phase 6 wires real filtering), so the toggle only
- * swaps the descriptor line beneath it.
+ * Feed-mode toggle + its mono context label. Drives a real server query: switching
+ * navigates to /feed (everything) or /feed?mode=following. Choosing Following while
+ * signed out routes to /auth.
  */
-const LABEL: Record<FeedMode, string> = {
-  following: 'FOLLOWING · your 6 accounts · newest first',
-  everything: 'EVERYTHING · all 140 accounts · newest first',
-};
+export function FeedControls({
+  mode,
+  signedIn,
+  followingCount,
+}: {
+  mode: FeedMode;
+  signedIn: boolean;
+  followingCount: number;
+}) {
+  const router = useRouter();
 
-export function FeedControls() {
-  const [mode, setMode] = useState<FeedMode>('following');
+  const onChange = (m: FeedMode) => {
+    if (m === mode) return;
+    if (m === 'following' && !signedIn) {
+      router.push('/auth');
+      return;
+    }
+    router.push(m === 'following' ? '/feed?mode=following' : '/feed');
+  };
+
+  const label =
+    mode === 'following'
+      ? `FOLLOWING · your ${followingCount} ${followingCount === 1 ? 'account' : 'accounts'} · newest first`
+      : 'EVERYTHING · every account · newest first';
+
   return (
     <div className="mb-[14px]">
-      <FeedToggle value={mode} onChange={setMode} />
-      <div className="mt-[14px] font-mono text-[11px] text-muted">{LABEL[mode]}</div>
+      <FeedToggle value={mode} onChange={onChange} />
+      <div className="mt-[14px] font-mono text-[11px] text-muted">{label}</div>
     </div>
   );
 }

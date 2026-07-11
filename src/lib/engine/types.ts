@@ -72,6 +72,8 @@ export interface Candidate {
   account: string;
   sourceId: string;
   trigger: TriggerType;
+  /** For conversation replies: the handle this post replies to. */
+  replyTo?: string;
   laneKey: LaneKey;
   model: string;
   provider: string;

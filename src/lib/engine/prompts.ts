@@ -24,11 +24,10 @@ export function generatorSystem(): string {
     '4. Write in the account\'s VOICE but speak ABOUT the subject. You are the account',
     '   commenting on the fact - never role-play as the company/material/thing itself in a',
     '   way that invents a first-person claim the source does not support.',
-    `5. LENGTH IS STRICT: write between ${LENGTH.min} and ${LENGTH.max} characters - roughly`,
-    '   75 to 110 words, a substantial paragraph, NOT a one-line tweet. A post shorter than',
-    `   ${LENGTH.min} characters is REJECTED, so use the full source (its context, the`,
-    '   relationship, why it matters) to reach the length - without adding anything not in it.',
-    '   Lead with the single most important fact (given as KEY FACT). No hashtags, no emoji, no @-handles.',
+    `5. LENGTH: between ${LENGTH.min} and ${LENGTH.max} characters - as long as the fact`,
+    '   needs, and no longer. Do NOT pad, restate, or add filler to reach a length; a tight',
+    '   post is better than a padded one. Lead with the single most important fact (given as',
+    '   KEY FACT). No hashtags, no emoji, no @-handles.',
     '',
     'Output ONLY the post text. No preamble, no quotes around it, no explanation.',
   ].join('\n');
@@ -39,12 +38,22 @@ export function generatorPrompt(args: {
   source: SourceSection;
   keyFact: string;
   recentPosts: Post[];
+  replyingTo?: { handle: string; body: string };
   retryHint?: string;
 }): string {
-  const { account, source, keyFact, recentPosts, retryHint } = args;
+  const { account, source, keyFact, recentPosts, replyingTo, retryHint } = args;
   const recent = recentPosts.slice(0, 20).map((p) => `- ${p.body}`).join('\n') || '- (none yet)';
   return [
     ...(retryHint ? [`REVISION NOTE: ${retryHint}`, ''] : []),
+    ...(replyingTo
+      ? [
+          `YOU ARE REPLYING to ${replyingTo.handle}, who posted:`,
+          `  "${replyingTo.body}"`,
+          'Answer them in your own voice, grounded ONLY in your SOURCE below. Do not repeat',
+          'their post; add your angle on it. Still obey every absolute rule.',
+          '',
+        ]
+      : []),
     `ACCOUNT: ${account.handle}`,
     `VOICE: ${account.persona_card.voice}`,
     `VOICE CONSTRAINTS:`,

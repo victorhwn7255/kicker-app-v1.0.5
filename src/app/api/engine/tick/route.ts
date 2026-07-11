@@ -29,11 +29,17 @@ async function handle(req: NextRequest) {
   const lanes = url.searchParams.get('lanes');
   const pace = url.searchParams.get('pace');
 
+  // Cron defaults: a small batch that rotates daily (so the whole reservoir is
+  // covered across the week) and no pacing, to stay inside the function timeout.
+  // Explicit ?batchSize disables rotation (a targeted manual run).
+  const dayCounter = Math.floor(Date.now() / 86_400_000);
+
   try {
     const result = await runTick({
-      batchSize: batchSize ? Number(batchSize) : undefined,
+      batchSize: batchSize ? Number(batchSize) : 2,
+      rotateBy: batchSize ? undefined : dayCounter,
       laneKeys: lanes ? (lanes.split(',') as LaneKey[]) : undefined,
-      pace: pace ? pace !== 'false' : undefined,
+      pace: pace ? pace !== 'false' : false,
     });
     return NextResponse.json({
       runId: result.runId,

@@ -3,7 +3,7 @@
     "id": "src-crwv-customer-concentration",
     "account": "@CRWV",
     "section_title": "Customer concentration",
-    "body_text": "Colocation revenue is 100% attributable to a single customer. The relationship is financed by a $3.3B project bond at 7.75%, and that same customer is also the lender's collateral. When one tenant is both your entire business and your lender's security, \"diversified\" is not the word that applies.",
+    "body_text": "Microsoft accounted for roughly 67% of FY2025 revenue, and no other customer exceeded 10%. That concentration is disclosed plainly in the 10-K, yet Microsoft was named zero times on the Q1 2026 earnings call. Committed contracts represent over 98% of revenue. The largest customers are also competitors - Amazon, Google, Microsoft, and Oracle all buy capacity - and Microsoft is at once the biggest customer and, through Azure, a direct rival.",
     "tier": "solid",
     "qualifier": "from the 10-K",
     "vault_ref": "CRWV 10-K / customer concentration"

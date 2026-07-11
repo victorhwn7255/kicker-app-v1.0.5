@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cn } from '@/lib/cn';
-import { getAccount, getAccounts, getPosts, getResearchPage, attachReceipts } from '@/lib/content';
+import { getAccount, getPosts, getResearchPage, attachReceipts } from '@/lib/content';
+import { getUser } from '@/lib/auth';
+import { getFollowedHandles } from '@/lib/follows';
 import { profileHref, researchHref } from '@/lib/links';
 import type { Account } from '@/lib/types';
 import { Avatar } from '@/components/ui/Avatar';
@@ -9,7 +11,7 @@ import { KindBadge } from '@/components/ui/KindBadge';
 import { MentionChip } from '@/components/ui/MentionChip';
 import { TierChip } from '@/components/ui/TierChip';
 import { Button } from '@/components/ui/Button';
-import { FollowButton } from '@/components/ui/FollowButton';
+import { FollowToggle } from '@/components/ui/FollowToggle';
 import { RailCard } from '@/components/ui/RailCard';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { PostCard } from '@/components/feed/PostCard';
@@ -27,12 +29,7 @@ export async function generateMetadata({
   return { title: `${account.handle} on Ticker`, description: account.bio };
 }
 
-export const revalidate = 300;
-
-export async function generateStaticParams() {
-  const accounts = await getAccounts();
-  return accounts.map((a) => ({ handle: a.handle.replace(/^@/, '') }));
-}
+export const dynamic = 'force-dynamic';
 
 /** "What @X knows" panel - the account's key claims, each tier-chipped. */
 function KnowsCard({ account, className }: { account: Account; className?: string }) {
@@ -93,6 +90,7 @@ export default async function ProfilePage({ params }: { params: Promise<Params> 
   const items = await attachReceipts(posts);
   const research = account.research_slug ? await getResearchPage(account.research_slug) : undefined;
   const doorHref = account.research_slug ? researchHref(account.research_slug) : undefined;
+  const [user, followed] = await Promise.all([getUser(), getFollowedHandles()]);
 
   return (
     <div className="mx-auto flex max-w-[924px] flex-col gap-[14px] py-4 md:gap-6 md:py-6">
@@ -126,7 +124,13 @@ export default async function ProfilePage({ params }: { params: Promise<Params> 
             )}
           </div>
 
-          <FollowButton size="md" className="flex-none" />
+          <FollowToggle
+            handle={account.handle}
+            following={followed.has(account.handle)}
+            signedIn={!!user}
+            size="md"
+            className="flex-none"
+          />
         </div>
       </header>
 

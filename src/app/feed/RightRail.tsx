@@ -17,7 +17,7 @@ const VERDICT: Record<KillVerdict, { label: string; bg: string }> = {
  * reader upsell. Pulls the latest kill-list entry and the first few tripwires so
  * the rail always reflects real content.
  */
-export async function RightRail() {
+export async function RightRail({ signedIn = false }: { signedIn?: boolean }) {
   const latest = (await getKillList())[0];
   const verdict = VERDICT[latest.verdict];
   const tripwires = (await getTripwires()).slice(0, 3);
@@ -84,16 +84,18 @@ export async function RightRail() {
         })}
       </RailCard>
 
-      {/* Reader upsell */}
-      <div className="border bg-band p-[14px]">
-        <div className="font-bold text-[15px]">Read the receipts in full.</div>
-        <p className="mt-[6px] mb-[12px] font-mono text-[11px] leading-[1.5] text-muted">
-          Reader unlocks every research page + a daily digest. $20/mo.
-        </p>
-        <Button variant="subscribe" href="/pricing" className="w-full">
-          Unlock Reader
-        </Button>
-      </div>
+      {/* Free-account card (free-first). Hidden once signed in. */}
+      {!signedIn && (
+        <div className="border bg-band p-[14px]">
+          <div className="font-bold text-[15px]">Read the receipts in full.</div>
+          <p className="mt-[6px] mb-[12px] font-mono text-[11px] leading-[1.5] text-muted">
+            Create a free account to follow accounts, unlock every research page, and get a calm digest. No card.
+          </p>
+          <Button variant="subscribe" href="/auth" className="w-full">
+            Create a free account
+          </Button>
+        </div>
+      )}
     </aside>
   );
 }

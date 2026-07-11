@@ -1,10 +1,40 @@
-import { GENERATION_LANES, lane, engineEnabled, type LaneKey } from './config';
+import { GENERATION_LANES, lane, engineEnabled, SIBLING_MAX_SIMILARITY, type LaneKey } from './config';
 import { planBatch } from './planner';
 import { screenSource } from './guard';
 import { runCandidate } from './pipeline';
+import { jaccardSimilarity } from './novelty';
 import { liveDeps, type EngineDeps } from './deps';
 import { loadAccounts, loadPosts, loadSources, saveCandidates } from './data';
 import type { Candidate, EngineRunResult, GuardResult } from './types';
+
+/**
+ * Collapse near-identical siblings from the same source in one run: two models
+ * that reword the same fact almost identically add no value, so keep the first
+ * and mark the rest dropped (they still passed the gates - verdict_pass stays
+ * true - but they are redundant). Distinct takes are kept, so model comparison
+ * survives. Ordered primary -> secondary -> fallback, so the kept one is stable.
+ */
+function dedupeSiblings(candidates: Candidate[]): void {
+  const groups = new Map<string, Candidate[]>();
+  for (const c of candidates) {
+    if (c.status !== 'verified') continue;
+    const key = `${c.account}::${c.sourceId}::${c.trigger}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(c);
+  }
+  for (const group of groups.values()) {
+    const kept: Candidate[] = [];
+    for (const c of group) {
+      const dup = kept.find((k) => jaccardSimilarity(c.body, k.body) >= SIBLING_MAX_SIMILARITY);
+      if (dup) {
+        c.status = 'dropped';
+        c.droppedReason = `sibling-duplicate (~${jaccardSimilarity(c.body, dup.body).toFixed(2)} of ${dup.model})`;
+      } else {
+        kept.push(c);
+      }
+    }
+  }
+}
 
 /**
  * The engine tick. Deterministic planner picks the work; the pipeline runs each
@@ -20,6 +50,9 @@ function sleep(ms: number): Promise<void> {
 export async function runTick(opts?: {
   deps?: EngineDeps;
   batchSize?: number;
+  /** Rotate the plan by this offset before slicing, so a nightly cron covers a
+   *  different slice each run (pass a day counter). */
+  rotateBy?: number;
   laneKeys?: LaneKey[];
   persist?: boolean;
   pace?: boolean;
@@ -35,7 +68,11 @@ export async function runTick(opts?: {
   const accountBy = new Map(accounts.map((a) => [a.handle, a]));
   const sourceBy = new Map(sources.map((s) => [s.id, s]));
 
-  const plan = planBatch({ accounts, sources, posts, batchSize: opts?.batchSize });
+  const allPlan = planBatch({ accounts, sources, posts });
+  const n = allPlan.length || 1;
+  const offset = (((opts?.rotateBy ?? 0) % n) + n) % n;
+  const rotated = offset ? [...allPlan.slice(offset), ...allPlan.slice(0, offset)] : allPlan;
+  const plan = opts?.batchSize ? rotated.slice(0, opts.batchSize) : rotated;
 
   const guardCache = new Map<string, GuardResult>();
   const candidates: Candidate[] = [];
@@ -57,6 +94,8 @@ export async function runTick(opts?: {
     // repeat, so we do not treat the human fixtures as history.
     const historyEmbeddings: number[][] = [];
     const recentPosts = posts.filter((p) => p.handle === account.handle);
+    const sibling = item.replyToHandle ? posts.find((p) => p.handle === item.replyToHandle) : undefined;
+    const replyToPost = sibling ? { handle: sibling.handle, body: sibling.body } : undefined;
 
     for (const key of laneKeys) {
       const genLane = lane(key);
@@ -68,6 +107,7 @@ export async function runTick(opts?: {
           plan: item,
           genLane,
           recentPosts,
+          replyToPost,
           historyEmbeddings,
           guard,
           deps,
@@ -77,6 +117,8 @@ export async function runTick(opts?: {
       if (pace && !guard.flagged) await sleep(genLane.pacingMs);
     }
   }
+
+  dedupeSiblings(candidates);
 
   if (persist) await saveCandidates(candidates);
 

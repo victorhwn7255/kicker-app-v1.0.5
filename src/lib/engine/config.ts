@@ -140,14 +140,22 @@ export const EMBEDDING = {
 /** Version stamped onto every candidate so provenance survives prompt edits. */
 export const PROMPT_VERSION = 'p5.2026-07-11';
 
-/** Hard gates enforced in code, never trusted to the model. */
-export const LENGTH = { min: 400, max: 600 };
+/**
+ * Hard length gate, enforced in code. Floor is deliberately low (140) so posts
+ * are "as long as the fact needs, no longer" - the old 400 floor forced padding
+ * tails. Ceiling stays 600.
+ */
+export const LENGTH = { min: 140, max: 600 };
 
 /** Candidates per (source, model). Generator produces this many, best passes win. */
 export const CANDIDATES_PER_SOURCE = 2;
 
 /** Cosine-similarity ceiling for the novelty gate (>= this = too similar, discard). */
 export const NOVELTY_MAX_SIMILARITY = 0.9;
+
+/** Lexical (Jaccard) ceiling for sibling dedup: near-identical candidates from the
+ *  same source in one run collapse to one, so a run does not accumulate repeats. */
+export const SIBLING_MAX_SIMILARITY = 0.6;
 
 /** Regeneration attempts after a length/verifier failure before dropping (fail-closed). */
 export const MAX_REGENERATIONS = 3;

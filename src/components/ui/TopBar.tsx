@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { SearchIcon } from './Icons';
-import { Button } from './Button';
+import { AuthNav } from './AuthNav';
 
 const focusRing =
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink focus-visible:outline-offset-2';
@@ -27,9 +27,7 @@ export function TopBar() {
           <SearchIcon size={16} />
           <span className="font-mono text-[12px] text-muted-alt">Search a claim, ticker…</span>
         </Link>
-        <Button variant="subscribe" size="sm" href="/pricing">
-          Sign up
-        </Button>
+        <AuthNav />
       </div>
     </header>
   );

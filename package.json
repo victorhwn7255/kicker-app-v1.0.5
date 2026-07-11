@@ -15,6 +15,7 @@
     "test:watch": "vitest",
     "engine:dry-run": "tsx scripts/engine-dry-run.ts",
     "engine:poison": "tsx scripts/engine-poison-test.ts",
+    "engine:audit-sources": "tsx scripts/engine-audit-sources.ts",
     "engine:review": "tsx scripts/engine-review.ts",
     "engine:reveal": "tsx scripts/engine-reveal.ts",
     "test:e2e": "playwright test"
@@ -23,6 +24,7 @@
     "@ai-sdk/google": "^4.0.12",
     "@ai-sdk/groq": "^4.0.7",
     "@ai-sdk/openai-compatible": "^3.0.7",
+    "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.2",
     "ai": "^7.0.22",
     "next": "^15.1.6",

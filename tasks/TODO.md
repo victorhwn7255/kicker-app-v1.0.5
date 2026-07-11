@@ -44,8 +44,8 @@
 | 2 | Content layer & fixtures | done |
 | 3 | Static screens (read-only product) | done |
 | 4 | Database & live content | done |
-| 5 | The tweet engine | dry-run (awaiting user review) |
-| 6 | Auth, follows & onboarding | not started |
+| 5 | The tweet engine | dry-run accumulating (user reviewing) |
+| 6 | Auth, follows & onboarding | done |
 | 7 | Payments & paywall | DEFERRED (free-first decision 2026-07-12) |
 | 8 | Email | not started |
 | 9 | Launch hardening | not started |
@@ -185,7 +185,9 @@ The one non-negotiable rule: **the model never writes from its own memory. It on
 - [x] Engine unit tests with a mocked model: verifier rejection path, novelty rejection path, batching, fail-closed behavior.
   - 38 vitest tests, all against a mock model (zero live calls): planner priority, length/novelty/verdict gates, guard quarantine + fail-safe, fail-closed verifier (incl. verifier-throws), and both poisoned-source paths.
 - [ ] Run 1 week in dry-run on the 6 fixture accounts; read every candidate; tune persona cards and prompts.
-  - Pipeline live-verified; a dry-run batch of candidates is generated for the user's blind review (`pnpm engine:review`). The multi-day review + tuning is the user's ongoing gate.
+  - First batch reviewed by the user; fixes applied from the audit: length floor 140 ("as long as the fact needs"), sibling-similarity dedup within a run, conversation candidates carry `reply_to` + reply framing, and - critical - `@CRWV`'s source was rewritten to CoreWeave's own facts (it had held @CORZ's colocation/bond facts, which invert in first person).
+  - **Source-attribution gate added** (`src/lib/engine/attribution.ts`, `pnpm engine:audit-sources`): a curation-time model check that first-person facts belong to the account - the one error class the verifier structurally cannot catch. MUST run on every future source import (the vault corpus in Phase 9). Verified live: it flags the old misattributed source and passes the corrected reservoir.
+  - Nightly dry-run runs on Vercel Cron (`/api/engine/tick`, 13:00 UTC) with a rotating small batch; `ENGINE_ENABLED` stays false, candidates accumulate in `engine_candidates`. The multi-day review + tuning is the user's ongoing gate.
 
 **Definition of done:** cron runs on schedule in staging; every published post has `verified: true`, a source ref, and passes the trust-band render; a poisoned source test (instruction-injection text inside a source section) does not escape the verifier; dry-run week reviewed with zero fabricated-fact escapes.
 
@@ -195,15 +197,21 @@ The one non-negotiable rule: **the model never writes from its own memory. It on
 
 **Goal:** users, watchlists, and the Following feed.
 
-- [ ] Supabase magic-link auth; `/auth` per `Auth.dc.html` (email state + check-inbox state; 15-minute expiry copy; "we never post as you" reassurance).
-- [ ] Session handling in Next.js middleware; signed-in chrome states (avatar in top bar, PROFILE tab).
-- [ ] `follows` writes; Follow/Following toggles live on cards, profiles, tiles.
-- [ ] `/onboarding` per `Onboarding.dc.html`: one-tap supply-chain bundles + pick-by-hand list; selection seeds `follows` on continue.
-- [ ] Following mode on the feed toggle: server query filtered to followed accounts; empty state points to Explore.
-- [ ] `/settings` (account section + email prefs UI; NO subscription section - monetization deferred). Toggle pill is the ONLY rounded element in the app.
-- [ ] Free-login research unlock (free-first change): logged-in users see FULL research pages. Enforce server-side (entitlements + RLS: authenticated read on all `wiki_pages` sections). The Phase 3 gate becomes a "create a free account to read the rest" gate - same honest-gate design, login CTA instead of price.
-- [ ] Repurpose money surfaces (free-first change): `/pricing` becomes a simple "Ticker is free while in beta" page (keep the file/route for future); Reader-upsell rail card becomes a "create a free account" card; remove any $-CTAs.
-- [ ] E2E: magic-link flow (Supabase test helpers), follow → Following feed shows only followed accounts, onboarding seeds follows, signed-out research page shows login gate → signed-in shows full page.
+- [x] Supabase magic-link auth; `/auth` per `Auth.dc.html` (email state + check-inbox state; 15-minute expiry copy; "we never post as you" reassurance).
+  - `/auth` (client, `signInWithOtp`) + `/auth/callback` (PKCE `exchangeCodeForSession`, cookie set on the redirect). `@supabase/ssr` browser client reads NEXT_PUBLIC vars as literals (dynamic env access does not inline for the client bundle - E2E caught this).
+- [x] Session handling in Next.js middleware; signed-in chrome states (avatar in top bar, PROFILE tab).
+  - `src/middleware.ts` refreshes the session per request. `AuthNav` (client) reads auth client-side so the layout stays static: monogram avatar → /profile + Sign out when in, "Sign up" when out. `/profile` makes the PROFILE tab real (signed-out → /auth).
+- [x] `follows` writes; Follow/Following toggles live on cards, profiles, tiles.
+  - `FollowToggle` wraps the Phase 1 `FollowButton` (not forked) + a server action, RLS-scoped to the user. Wired on the profile header + onboarding. NOTE: not yet placed on feed cards / explore tiles (would make those surfaces per-user dynamic) - same component drops in when wanted.
+- [x] `/onboarding` per `Onboarding.dc.html`: one-tap supply-chain bundles + pick-by-hand list; selection seeds `follows` on continue.
+- [x] Following mode on the feed toggle: server query filtered to followed accounts; empty state points to Explore.
+- [x] `/settings` (account section + email prefs UI; NO subscription section - monetization deferred). Toggle pill is the ONLY rounded element in the app.
+  - Account + email-pref toggles (digest, tripwire) + sign out. Pref persistence lands with email (Phase 8); the toggles are the UI it will read.
+- [x] Free-login research unlock (free-first change): logged-in users see FULL research pages. Enforce server-side (entitlements + RLS: authenticated read on all `wiki_pages` sections). The Phase 3 gate becomes a "create a free account to read the rest" gate - same honest-gate design, login CTA instead of price.
+  - Server-side entitlement (`canReadFullResearch(user)`, the seam Phase 7 would extend): signed-out → §1 + the free-account gate; signed-in → every section, no gate. (wiki_pages is one JSONB row per page with per-section flags, so the enforcement is the server component, not per-section RLS; the locked sections currently carry stub descriptors until the vault corpus lands.)
+- [x] Repurpose money surfaces (free-first change): `/pricing` becomes a simple "Ticker is free while in beta" page (keep the file/route for future); Reader-upsell rail card becomes a "create a free account" card; remove any $-CTAs.
+- [x] E2E: magic-link flow (Supabase test helpers), follow → Following feed shows only followed accounts, onboarding seeds follows, signed-out research page shows login gate → signed-in shows full page.
+  - `e2e/auth.spec.ts` (6 tests): admin-minted session helper; onboarding-seeds-follows → Following feed shows only followed → terminator; signed-in full research; signed-out gate + /profile + /settings redirects. All 13 Phase 3 E2E still green (19 total).
 
 **Definition of done:** a new user can sign up, pick a bundle, land on a Following feed that ends at the terminator, and read a full research page; signed-out direct-URL access to research sections beyond section 1 shows the login gate; all Phase 3 E2E still green.
 
