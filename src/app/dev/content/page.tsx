@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { getPosts, getAccounts, getAccount, getKillList, getTripwires, getResearchPage } from '@/lib/content';
+import { getPosts, getAccounts, getKillList, getTripwires, getResearchPage } from '@/lib/content';
 import { TIER } from '@/lib/tiers';
 import { PostCard } from '@/components/feed/PostCard';
 import { Terminator } from '@/components/feed/Terminator';
@@ -28,12 +28,16 @@ function Section({ title, note, children }: { title: string; note: string; child
   );
 }
 
-export default function ContentTestPage() {
-  const posts = getPosts();
-  const accounts = getAccounts();
-  const killList = getKillList();
-  const tripwires = getTripwires();
-  const research = getResearchPage('crwv');
+export const revalidate = 300;
+
+export default async function ContentTestPage() {
+  const [posts, accounts, killList, tripwires, research] = await Promise.all([
+    getPosts(),
+    getAccounts(),
+    getKillList(),
+    getTripwires(),
+    getResearchPage('crwv'),
+  ]);
 
   // Group tripwires by account, preserving fixture order.
   const groups: { handle: string; rows: typeof tripwires }[] = [];
@@ -94,7 +98,7 @@ export default function ContentTestPage() {
       <Section title="Tripwires" note={`${tripwires.length} tripwires · getTripwires()`}>
         <div className="max-w-[620px] border bg-card">
           {groups.map((g) => {
-            const account = getAccount(g.handle);
+            const account = accounts.find((a) => a.handle === g.handle);
             return (
               <div key={g.handle}>
                 <TripwireGroupHeader

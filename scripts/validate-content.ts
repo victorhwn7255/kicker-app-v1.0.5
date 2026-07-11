@@ -1,29 +1,31 @@
 /**
  * Content validator - fails the build on any bad fixture.
- * Runs every loader (so every file is zod-parsed) and then checks referential
- * integrity across the fixtures. Wired into `pnpm build` via the `validate-content`
- * script. A validator that silently passes bad content is worse than none.
+ * Reads every /content bridge file (so every file is zod-parsed) and then checks
+ * referential integrity across the fixtures. Wired into `pnpm build` via the
+ * `validate-content` script, and it is the gate the seed passes content through
+ * before importing it into the database. A validator that silently passes bad
+ * content is worse than none.
  */
 import {
-  getAccounts,
-  getPosts,
-  getKillList,
-  getTripwires,
-  getSources,
-  getResearchPages,
-} from '../src/lib/content';
+  readAccounts,
+  readPosts,
+  readKillList,
+  readTripwires,
+  readSources,
+  readResearchPages,
+} from '../src/lib/fixtures';
 
 function main(): void {
   const errors: string[] = [];
 
   let accounts, posts, killList, tripwires, sources, research;
   try {
-    accounts = getAccounts();
-    posts = getPosts();
-    killList = getKillList();
-    tripwires = getTripwires();
-    sources = getSources();
-    research = getResearchPages();
+    accounts = readAccounts();
+    posts = readPosts();
+    killList = readKillList();
+    tripwires = readTripwires();
+    sources = readSources();
+    research = readResearchPages();
   } catch (err) {
     console.error('✗ schema validation failed:\n' + (err as Error).message);
     process.exit(1);

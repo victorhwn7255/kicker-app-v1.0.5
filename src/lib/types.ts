@@ -43,6 +43,8 @@ export const AccountSchema = z.object({
   freshness: z.string().optional(),
   research_slug: z.string().optional(),
   supply_chain: z.array(handle).optional(),
+  // "What @X knows" - the account's key claims, each tier-chipped (profile header).
+  knows: z.array(z.object({ claim: nonEmpty, tier: TierSchema })).optional(),
 });
 export type Account = z.infer<typeof AccountSchema>;
 

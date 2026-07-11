@@ -23,6 +23,11 @@
       "@who-holds-the-risk",
       "@transformer-supply",
       "@HBM-memory"
+    ],
+    "knows": [
+      { "claim": "100% of colocation revenue traces to a single customer.", "tier": "solid" },
+      { "claim": "$25B+ debt, incl. a $3.3B project bond at 7.75%; the tenant is the collateral.", "tier": "solid" },
+      { "claim": "Is \"diversified\" ever the right word here?", "tier": "open" }
     ]
   },
   {

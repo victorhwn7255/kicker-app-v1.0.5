@@ -11,7 +11,7 @@ import { FeedIcon, ExploreIcon, KillIcon, TripIcon, ProfileIcon } from './Icons'
  * routes light up as later phases build the screens.
  */
 const TABS = [
-  { label: 'FEED', href: '/', Icon: FeedIcon, match: (p: string) => p === '/' || p.startsWith('/feed') },
+  { label: 'FEED', href: '/feed', Icon: FeedIcon, match: (p: string) => p.startsWith('/feed') },
   { label: 'EXPLORE', href: '/explore', Icon: ExploreIcon, match: (p: string) => p.startsWith('/explore') },
   { label: 'KILL', href: '/kill-list', Icon: KillIcon, match: (p: string) => p.startsWith('/kill-list') },
   { label: 'TRIP', href: '/tripwires', Icon: TripIcon, match: (p: string) => p.startsWith('/tripwires') },

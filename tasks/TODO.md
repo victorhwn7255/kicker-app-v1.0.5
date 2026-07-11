@@ -42,8 +42,8 @@
 | 0 | Scaffold & foundations | done |
 | 1 | Design system & core components | done |
 | 2 | Content layer & fixtures | done |
-| 3 | Static screens (read-only product) | not started |
-| 4 | Database & live content | not started |
+| 3 | Static screens (read-only product) | done |
+| 4 | Database & live content | done |
 | 5 | The tweet engine | not started |
 | 6 | Auth, follows & onboarding | not started |
 | 7 | Payments & paywall | not started |
@@ -117,18 +117,18 @@
 
 Build each screen against its wireframe + screenshot. Mobile (375px) and desktop (1280px); collapse rails first between breakpoints; reading measures 640px (feed) / 600px (permalink, research) as max-widths.
 
-- [ ] `/` Landing - hero, live feed preview panel, trust trio cards, pricing teaser. (`Landing.dc.html`)
-- [ ] `/feed` Home feed - Everything mode from fixtures, right rail (kill-list highlight, tripwires, Reader upsell), terminator at the end. Toggle renders but Following mode can stub to Everything until Phase 6. (`Home Feed.dc.html`)
-- [ ] `/p/[postId]` Permalink - post + attached receipt panel (opened state), reply below with salmon connector, first-time-visitor explainer strip + "how to read this" rail card. (`Post Permalink.dc.html`)
-- [ ] `/u/[handle]` Profile - persona header, "What @X knows" tier-chipped claims card, research-door black card, post history, supply-chain chip cloud (desktop rail). (`Account Profile.dc.html`)
-- [ ] `/research/[slug]` Research page - sticky TOC with lock states + tier legend, free section 1 ending on a hard edge, the honest gate, legible locked-section list. All sections render locked for now (real gating in Phase 7). Receipt links from posts deep-link to `#section` anchors. (`Research Page.dc.html`)
-- [ ] `/kill-list` - filter chips (All/Killed/Survived/Partly, active = pink), 2-col desktop grid. (`Kill List Board.dc.html`)
-- [ ] `/tripwires` - count summary + legend, account-grouped rows, fired rows link to their post. (`Tripwire Board.dc.html`)
-- [ ] `/explore` - search bar (client-side filter over fixtures), kind + domain filter chips, AccountTile sections. (`Explore Directory.dc.html`)
-- [ ] `/pricing` - Free / Reader / Pro columns, Reader elevated with badge, honest footer. CTAs link to auth (stub). (`Pricing.dc.html`)
-- [ ] SEO: metadata per route; OpenGraph tags; permalinks get OG images that render the PostCard (the shareable unit; use `@vercel/og` or `next/og`).
-- [ ] Wire the daily loop: feed → receipt tap → research section → back → terminator. Must match `Daily Loop Prototype.dc.html`.
-- [ ] Playwright: one E2E per screen (renders, no console errors) + the daily-loop flow test.
+- [x] `/` Landing - hero, live feed preview panel, trust trio cards, pricing teaser. (`Landing.dc.html`)
+- [x] `/feed` Home feed - Everything mode from fixtures, right rail (kill-list highlight, tripwires, Reader upsell), terminator at the end. Toggle renders but Following mode can stub to Everything until Phase 6. (`Home Feed.dc.html`)
+- [x] `/p/[postId]` Permalink - post + attached receipt panel (opened state), reply below with salmon connector, first-time-visitor explainer strip + "how to read this" rail card. (`Post Permalink.dc.html`)
+- [x] `/u/[handle]` Profile - persona header, "What @X knows" tier-chipped claims card, research-door black card, post history, supply-chain chip cloud (desktop rail). (`Account Profile.dc.html`)
+- [x] `/research/[slug]` Research page - sticky TOC with lock states + tier legend, free section 1 ending on a hard edge, the honest gate, legible locked-section list. All sections render locked for now (real gating in Phase 7). Receipt links from posts deep-link to `#section` anchors. (`Research Page.dc.html`)
+- [x] `/kill-list` - filter chips (All/Killed/Survived/Partly, active = pink), 2-col desktop grid. (`Kill List Board.dc.html`)
+- [x] `/tripwires` - count summary + legend, account-grouped rows, fired rows link to their post. (`Tripwire Board.dc.html`)
+- [x] `/explore` - search bar (client-side filter over fixtures), kind + domain filter chips, AccountTile sections. (`Explore Directory.dc.html`)
+- [x] `/pricing` - Free / Reader / Pro columns, Reader elevated with badge, honest footer. CTAs link to auth (stub). (`Pricing.dc.html`)
+- [x] SEO: metadata per route; OpenGraph tags; permalinks get OG images that render the PostCard (the shareable unit; use `@vercel/og` or `next/og`).
+- [x] Wire the daily loop: feed → receipt tap → research section → back → terminator. Must match `Daily Loop Prototype.dc.html`.
+- [x] Playwright: one E2E per screen (renders, no console errors) + the daily-loop flow test.
 
 **Definition of done:** every screen matches its screenshot in `design/screenshots/` on both breakpoints; the daily loop completes by tap/click only; Lighthouse accessibility ≥ 95 on feed, permalink, research; all E2E green.
 
@@ -138,12 +138,18 @@ Build each screen against its wireframe + screenshot. Mobile (375px) and desktop
 
 **Goal:** swap fixtures for Supabase so content can grow without deploys. The app renders identically before/after.
 
-- [ ] `[HUMAN]` Create the Supabase project (user's account) and provide the URL + keys via `.env.local` / Vercel env.
-- [ ] Define the schema via SQL migrations (committed to the repo): `accounts`, `sources`, `posts`, `post_history`, `kill_list`, `tripwires`, `wiki_pages` (+ `users`, `follows`, `subscriptions` created now, used in Phases 6-7).
-- [ ] RLS enabled from day one: public read on published content tables; no public writes; service-role for the engine and import scripts.
-- [ ] `scripts/seed.ts` - imports the `content/` fixtures into Supabase. Idempotent (safe to re-run).
-- [ ] Repoint loaders: pages read from Supabase (server-side) with ISR/revalidation; feed revalidates on new posts. Keep zod parsing at the boundary.
-- [ ] `content/` + the validator remain the ingestion path: bridge files land in `content/`, validated, then imported by the seed/import script. (The vault-side publish skill that produces these files is EXTERNAL to this repo; fixtures stand in until it exists.)
+- [x] `[HUMAN]` Create the Supabase project (user's account) and provide the URL + keys via `.env.local` / Vercel env.
+  - Project created; new publishable/secret API keys in `.env.local`. Applying DDL migrations needs the DB connection string (`SUPABASE_DB_URL`) - PostgREST cannot run DDL.
+- [x] Define the schema via SQL migrations (committed to the repo): `accounts`, `sources`, `posts`, `post_history`, `kill_list`, `tripwires`, `wiki_pages` (+ `users`, `follows`, `subscriptions` created now, used in Phases 6-7).
+  - `supabase/migrations/0001_init.sql`; applied by `pnpm db:migrate`. Locally smoke-tested on Postgres 16 (idempotent, all tables + FKs + checks apply clean).
+- [x] RLS enabled from day one: public read on published content tables; no public writes; service-role for the engine and import scripts.
+  - Locally verified with `set role anon`: reads published content, cannot write, cannot read the private `sources`/`post_history` reservoir; `service_role` (secret key) does both.
+- [x] `scripts/seed.ts` - imports the `content/` fixtures into Supabase. Idempotent (safe to re-run).
+  - Verified live: a second run leaves exact row counts (accounts 7 · sources 1 · posts 6 · kill_list 4 · tripwires 6 · wiki_pages 1). NOTE (deferred): seed is upsert-only and does not reconcile deletions - a fixture row removed then re-seeded persists in the DB (append/superset model; retirement is a kill-list verdict, not a delete). Safe for the current fixture bridge; add reconciliation when the real vault bridge lands (Phase 9).
+- [x] Repoint loaders: pages read from Supabase (server-side) with ISR/revalidation; feed revalidates on new posts. Keep zod parsing at the boundary.
+  - `content.ts` loaders are async + `unstable_cache` (revalidate 300s) + tagged so Phase 5's engine can `revalidateTag('posts')` on publish. Every page/component converted to await.
+- [x] `content/` + the validator remain the ingestion path: bridge files land in `content/`, validated, then imported by the seed/import script. (The vault-side publish skill that produces these files is EXTERNAL to this repo; fixtures stand in until it exists.)
+  - Split: `src/lib/fixtures.ts` reads + validates the `content/` files; the validator and `scripts/seed.ts` both go through it. `content.ts` now serves from the DB.
 
 **Definition of done:** app renders identically to Phase 3 (E2E suite still green) with data served from Supabase; re-running the seed does not duplicate rows; RLS verified (anonymous key cannot write).
 

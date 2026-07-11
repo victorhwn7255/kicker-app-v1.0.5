@@ -5,7 +5,7 @@ test('home page renders with chrome on both breakpoints and loads brand fonts', 
 
   // Desktop chrome: yellow top bar carrying the TICKER wordmark.
   await page.setViewportSize({ width: 1280, height: 900 });
-  await expect(page.getByRole('link', { name: 'TICKER' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'TICKER', exact: true })).toBeVisible();
 
   // Mobile chrome: yellow bottom nav with all five tabs.
   await page.setViewportSize({ width: 375, height: 812 });

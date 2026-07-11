@@ -11,10 +11,14 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  // Test against a production build, not `next dev`: the pages are the real
+  // static/ISR output served from Supabase, so results are deterministic and
+  // free of dev's on-demand cold-compile races. A separately-running `pnpm dev`
+  // is still reused locally for a fast iteration loop.
   webServer: {
-    command: 'pnpm dev',
+    command: 'pnpm build && pnpm start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
   },
 });

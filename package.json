@@ -8,9 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "validate-content": "tsx scripts/validate-content.ts",
+    "db:migrate": "tsx scripts/db-migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:verify-rls": "tsx scripts/verify-rls.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.2",
     "next": "^15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -19,11 +23,14 @@
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@types/node": "^20.17.12",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^17.4.2",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.1.6",
+    "pg": "^8.22.0",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.23.0",
