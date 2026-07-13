@@ -79,15 +79,34 @@ const DEFAULT_LANES: Record<LaneKey, ModelLane> = {
   },
 };
 
-/** Parse a "provider:model-id" override; returns null if unset/malformed. */
+/**
+ * Parse a lane override: "provider:model-id[:maxOutputTokens[:pacingMs]]".
+ * The two optional numeric segments exist because the base lanes' token budgets
+ * and pacing encode GROQ free-tier limits - switching a lane to another provider
+ * (e.g. NVIDIA, whose limit is per-model CONCURRENCY, not tokens/min) usually
+ * wants different numbers. If the provider changes and no explicit pacing is
+ * given, pacing drops to a light 1500ms default instead of inheriting Groq's.
+ */
 function laneOverride(base: ModelLane, raw: string | undefined): ModelLane {
   if (!raw) return base;
-  const idx = raw.indexOf(':');
-  if (idx <= 0) return base;
-  const provider = raw.slice(0, idx) as Provider;
-  const modelId = raw.slice(idx + 1);
+  const parts = raw.split(':');
+  if (parts.length < 2) return base;
+  const provider = parts[0] as Provider;
+  const modelId = parts[1];
   if (!['groq', 'google', 'nim', 'openrouter'].includes(provider) || !modelId) return base;
-  return { ...base, provider, modelId };
+  const maxOutputTokens = Number.parseInt(parts[2] ?? '', 10);
+  const pacingMs = Number.parseInt(parts[3] ?? '', 10);
+  return {
+    ...base,
+    provider,
+    modelId,
+    maxOutputTokens: Number.isFinite(maxOutputTokens) ? maxOutputTokens : base.maxOutputTokens,
+    pacingMs: Number.isFinite(pacingMs)
+      ? pacingMs
+      : provider !== base.provider
+        ? 1500
+        : base.pacingMs,
+  };
 }
 
 export function lane(key: LaneKey): ModelLane {
@@ -115,7 +134,11 @@ export function verifierLane(): ModelLane {
       maxOutputTokens: 1400,
       temperature: 0,
       reasoning: true,
-      pacingMs: 2000,
+      // 8k tokens/min free lane; a reasoning verify call runs ~2k tokens, so
+      // ~3-4/min is the ceiling -> >=18s between calls. Enforced by the min-gap
+      // pacer in liveDeps() (the runner only paces the generation lanes). A paid
+      // tier or a lighter (non-reasoning) verifier lets this drop.
+      pacingMs: 20_000,
     },
     process.env.MODEL_VERIFIER,
   );
@@ -137,8 +160,42 @@ export const EMBEDDING = {
   modelId: 'gemini-embedding-001',
 };
 
+/**
+ * The daily scheduler's knobs (see daily.ts). The feed should read organic, not
+ * metronomic: a randomized total inside [targetMin, targetMax] each day, spread
+ * unevenly - some accounts busy, some silent - at human-looking times.
+ */
+export const DAILY = {
+  /** The day's tweet total is drawn uniformly from this band. */
+  targetMin: 180,
+  targetMax: 300,
+  /** No account machine-guns: hard per-account daily cap (also capped by its source count). */
+  maxPerAccount: 5,
+  /** Minimum minutes between one account's posts. */
+  minGapMinutes: 30,
+  /** Optional salt so a re-seeded deploy reshuffles days (SCHEDULE_SEED env). */
+  seedSalt: process.env.SCHEDULE_SEED ?? '',
+
+  /**
+   * Live-loop pacing (used by the time-sliced tick + publisher). The day plan is
+   * one fixed schedule; each tick generates only the slice coming due soon and
+   * publishes the slice already due. These control how the day is drained across
+   * many short cron invocations without ever exceeding the function timeout.
+   */
+  /** Pre-generate a slot this many minutes before its scheduled time, so it is
+   *  verified and waiting when the slot arrives (also backfills past-due slots). */
+  lookAheadMinutes: Number.parseInt(process.env.ENGINE_LOOKAHEAD_MIN ?? '', 10) || 90,
+  /** Hard cap on how many slots ONE generation tick will attempt (timeout guard). */
+  maxPerTick: Number.parseInt(process.env.ENGINE_MAX_PER_TICK ?? '', 10) || 8,
+  /** Stop STARTING new generations after this much wall-clock in a tick, so the
+   *  in-flight one still finishes inside the platform's function timeout. */
+  softBudgetMs: Number.parseInt(process.env.ENGINE_SOFT_BUDGET_MS ?? '', 10) || 240_000,
+  /** How many recent posts per account seed the novelty memory (post_history). */
+  historyLimit: Number.parseInt(process.env.ENGINE_HISTORY_LIMIT ?? '', 10) || 40,
+};
+
 /** Version stamped onto every candidate so provenance survives prompt edits. */
-export const PROMPT_VERSION = 'p5.2026-07-11';
+export const PROMPT_VERSION = 'p6.2026-07-13';
 
 /**
  * Hard length gate, enforced in code. Floor is deliberately low (140) so posts

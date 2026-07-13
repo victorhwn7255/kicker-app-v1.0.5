@@ -1,11 +1,20 @@
-import { GENERATION_LANES, lane, engineEnabled, SIBLING_MAX_SIMILARITY, type LaneKey } from './config';
+import { GENERATION_LANES, lane, engineEnabled, SIBLING_MAX_SIMILARITY, DAILY, type LaneKey } from './config';
 import { planBatch } from './planner';
+import { buildDayPlan } from './daily';
 import { screenSource } from './guard';
 import { runCandidate } from './pipeline';
 import { jaccardSimilarity } from './novelty';
 import { liveDeps, type EngineDeps } from './deps';
-import { loadAccounts, loadPosts, loadSources, saveCandidates } from './data';
-import type { Candidate, EngineRunResult, GuardResult } from './types';
+import {
+  loadAccounts,
+  loadPosts,
+  loadSources,
+  saveCandidates,
+  loadAttemptedSlots,
+  loadRecentEmbeddings,
+  slotKey,
+} from './data';
+import type { Candidate, EngineRunResult, GuardResult, PlanItem } from './types';
 
 /**
  * Collapse near-identical siblings from the same source in one run: two models
@@ -57,27 +66,88 @@ export async function runTick(opts?: {
   persist?: boolean;
   pace?: boolean;
   runId?: string;
+  /**
+   * Daily mode: plan the run from the randomized day schedule (daily.ts) instead
+   * of the flat A/B work-queue. One lane per post (primary), with a fallback
+   * retry, deterministic per-day runId - the production shape of the feed.
+   */
+  daily?: boolean;
+  /** Inject a prebuilt plan (tests, or a pre-sliced day window). */
+  plan?: PlanItem[];
+  /** Retry an item on this lane when every generation lane dropped it. */
+  fallbackLaneKey?: LaneKey;
+  /** Wall-clock reference for the daily slice (defaults to now); tests inject it. */
+  nowMs?: number;
+  /** Pre-generate slots due within this many minutes (daily cron). */
+  lookAheadMinutes?: number;
+  /** Hard cap on slots one daily tick generates (timeout guard). */
+  maxPerTick?: number;
+  /** Stop STARTING new generations after this much wall-clock in a tick. */
+  softBudgetMs?: number;
 }): Promise<EngineRunResult> {
   const deps = opts?.deps ?? liveDeps();
-  const laneKeys = opts?.laneKeys ?? GENERATION_LANES;
   const persist = opts?.persist ?? true;
   const pace = opts?.pace ?? true;
-  const runId = opts?.runId ?? `run_${Date.now().toString(36)}`;
 
   const [accounts, sources, posts] = await Promise.all([loadAccounts(), loadSources(), loadPosts()]);
   const accountBy = new Map(accounts.map((a) => [a.handle, a]));
   const sourceBy = new Map(sources.map((s) => [s.id, s]));
 
-  const allPlan = planBatch({ accounts, sources, posts });
-  const n = allPlan.length || 1;
-  const offset = (((opts?.rotateBy ?? 0) % n) + n) % n;
-  const rotated = offset ? [...allPlan.slice(offset), ...allPlan.slice(0, offset)] : allPlan;
-  const plan = opts?.batchSize ? rotated.slice(0, opts.batchSize) : rotated;
+  const nowMs = opts?.nowMs ?? Date.now();
+  const dayPlan = opts?.daily
+    ? buildDayPlan({ accounts, sources, posts, ...(opts?.nowMs ? { date: new Date(nowMs) } : {}) })
+    : undefined;
+  const laneKeys = opts?.laneKeys ?? (opts?.daily ? (['primary'] as LaneKey[]) : GENERATION_LANES);
+  const fallbackLaneKey = opts?.fallbackLaneKey ?? (opts?.daily ? ('secondary' as LaneKey) : undefined);
+  const runId = opts?.runId ?? dayPlan?.runId ?? `run_${Date.now().toString(36)}`;
+
+  // Novelty memory: recent published-post embeddings per account (daily mode). Empty
+  // in flat/dry-run mode, so novelty stays inert until the feed has real history.
+  let historyByHandle = new Map<string, number[][]>();
+  let plan: PlanItem[];
+
+  if (opts?.plan) {
+    // Injected plan (tests / a pre-sliced window): use verbatim.
+    plan = opts.plan;
+  } else if (dayPlan) {
+    // Daily mode: slice the fixed day plan to the work due now, skipping every slot
+    // already attempted in this run. This is the idempotency guard AND the timeout
+    // guard: a slot is generated exactly once, and only a bounded slice runs per tick.
+    const attempted = await loadAttemptedSlots(runId);
+    const pending = dayPlan.items
+      .filter((it) => !attempted.has(slotKey(it.account, it.sourceId, it.trigger)))
+      .sort((a, b) => (a.scheduledAt ?? '').localeCompare(b.scheduledAt ?? ''));
+    if (opts?.batchSize != null) {
+      // Manual/test slice: the next N pending slots, ignoring the time window.
+      plan = pending.slice(0, opts.batchSize);
+    } else {
+      // Cron slice: slots coming due within the look-ahead window, capped per tick.
+      const dueBy = nowMs + (opts?.lookAheadMinutes ?? DAILY.lookAheadMinutes) * 60_000;
+      plan = pending
+        .filter((it) => (it.scheduledAt ? Date.parse(it.scheduledAt) : nowMs) <= dueBy)
+        .slice(0, opts?.maxPerTick ?? DAILY.maxPerTick);
+    }
+    const handles = [...new Set(plan.map((it) => it.account))];
+    historyByHandle = await loadRecentEmbeddings(handles);
+  } else {
+    // Flat A/B mode (unchanged): rotate the full work-queue, then take a batch.
+    const allPlan = planBatch({ accounts, sources, posts });
+    const nAll = allPlan.length || 1;
+    const offset = (((opts?.rotateBy ?? 0) % nAll) + nAll) % nAll;
+    const rotated = offset ? [...allPlan.slice(offset), ...allPlan.slice(0, offset)] : allPlan;
+    plan = opts?.batchSize ? rotated.slice(0, opts.batchSize) : rotated;
+  }
 
   const guardCache = new Map<string, GuardResult>();
   const candidates: Candidate[] = [];
+  let persistedCount = 0;
+  const t0 = Date.now();
+  const softBudgetMs = opts?.softBudgetMs ?? DAILY.softBudgetMs;
 
   for (const item of plan) {
+    // Timeout guard: stop STARTING new items before the platform kills the function;
+    // the in-flight item still finishes and persists. The next tick picks up the rest.
+    if (opts?.daily && candidates.length > 0 && Date.now() - t0 > softBudgetMs) break;
     const account = accountBy.get(item.account);
     const source = sourceBy.get(item.sourceId);
     if (!account || !source) continue;
@@ -89,10 +159,10 @@ export async function runTick(opts?: {
       guardCache.set(source.id, guard);
     }
 
-    // Novelty compares against previously GENERATED posts (post_history), which is
-    // empty until the engine has published; a first dry-run has no history to
-    // repeat, so we do not treat the human fixtures as history.
-    const historyEmbeddings: number[][] = [];
+    // Novelty compares against this account's recent PUBLISHED posts (post_history,
+    // loaded above). Empty until the engine has published, so a first dry-run has no
+    // history to repeat; once live, an account cannot echo its own recent takes.
+    const historyEmbeddings = historyByHandle.get(account.handle) ?? [];
     const recentPosts = posts.filter((p) => p.handle === account.handle);
     const sibling = item.replyToHandle ? posts.find((p) => p.handle === item.replyToHandle) : undefined;
     const replyToPost = sibling ? { handle: sibling.handle, body: sibling.body } : undefined;
@@ -116,10 +186,49 @@ export async function runTick(opts?: {
       // Respect the lane's free-tier rate pool (skipped when the source was quarantined).
       if (pace && !guard.flagged) await sleep(genLane.pacingMs);
     }
+
+    // Daily-mode resilience: if EVERY generation lane dropped this item (model
+    // hiccup, verifier rejection, truncation), retry it once on the fallback
+    // lane. Quarantined items never retry - that is a source problem, not a
+    // model problem. The fallback must be a lane that has NOT already run for
+    // this item: candidate ids are (run, account, source, trigger, LANE), so a
+    // same-lane retry would collide with its own row in one upsert batch.
+    if (fallbackLaneKey && !laneKeys.includes(fallbackLaneKey)) {
+      const mine = candidates.slice(-laneKeys.length);
+      if (mine.length > 0 && mine.every((c) => c.status === 'dropped')) {
+        const fb = lane(fallbackLaneKey);
+        candidates.push(
+          await runCandidate({
+            runId,
+            account,
+            source,
+            plan: item,
+            genLane: fb,
+            recentPosts,
+            replyToPost,
+            historyEmbeddings,
+            guard,
+            deps,
+          }),
+        );
+        if (pace && !guard.flagged) await sleep(fb.pacingMs);
+      }
+    }
+
+    // Kill-resilience for the live loop: persist each slot as it completes, so a
+    // tick killed at the timeout keeps its finished work (those slots count as
+    // attempted next tick, and any verified ones become publishable) instead of
+    // discarding the whole batch. Idempotent upsert by candidate id.
+    if (persist && opts?.daily) {
+      await saveCandidates(candidates.slice(persistedCount));
+      persistedCount = candidates.length;
+    }
   }
 
   dedupeSiblings(candidates);
 
+  // Final save: captures any dedupe status changes (flat mode) and is a no-op
+  // idempotent re-upsert in daily mode (single lane -> nothing to dedupe).
   if (persist) await saveCandidates(candidates);
 
   return {

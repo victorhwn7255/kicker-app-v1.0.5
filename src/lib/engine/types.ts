@@ -58,6 +58,8 @@ export interface PlanItem {
   /** For the conversation trigger: the sibling post being answered. */
   replyToHandle?: string;
   quotePostId?: string;
+  /** Daily-mode: when this post should go live (ISO, inside the plan's UTC day). */
+  scheduledAt?: string;
 }
 
 export type CandidateStatus = 'verified' | 'quarantined' | 'dropped';
@@ -89,6 +91,8 @@ export interface Candidate {
   status: CandidateStatus;
   attempts: number;
   droppedReason?: string;
+  /** Daily-mode: the slot this candidate is scheduled to fill (ISO). */
+  scheduledAt?: string;
 }
 
 /** Summary returned by a dry-run tick. */
@@ -124,6 +128,7 @@ export const CandidateRowSchema = z.object({
   dropped_reason: z.string().nullable(),
   reviewer_rating: z.number().nullable(),
   reviewer_note: z.string().nullable(),
+  scheduled_at: z.string().nullable().optional(),
   created_at: z.string(),
 });
 export type CandidateRow = z.infer<typeof CandidateRowSchema>;

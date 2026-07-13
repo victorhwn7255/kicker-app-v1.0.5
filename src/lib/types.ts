@@ -70,6 +70,10 @@ export const PostSchema = z.object({
   source: nonEmpty,
   freshness: nonEmpty,
   avatar: z.string().optional(),
+  // ISO publish time for engine-published posts; lets the feed order reverse-chron
+  // and render a LIVE relative stamp (the loader recomputes `time` from this).
+  // Absent on the human fixtures, which keep their static `time`.
+  postedAt: z.string().optional(),
   variant: z.enum(['original', 'quote', 'reply', 'thread', 'high']).optional(),
   following: z.boolean().optional(),
   replyTo: z.string().optional(),

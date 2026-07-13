@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { supabaseRead } from './supabase/read';
 import { supabaseAdmin } from './supabase/admin';
 import { permalinkHref, researchHref } from './links';
+import { relativeTime } from './engine/format';
 import {
   AccountSchema,
   PostSchema,
@@ -77,9 +78,22 @@ export const getAccount = unstable_cache(
 
 export const getPosts = unstable_cache(
   async (): Promise<Post[]> => {
-    const { data, error } = await supabaseRead().from('posts').select('obj:data').order('seq');
+    // Reverse-chron: engine-published posts (real published_at) newest-first, with
+    // the human fixtures (null published_at) kept below in their narrative seq order.
+    const { data, error } = await supabaseRead()
+      .from('posts')
+      .select('obj:data')
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('seq', { ascending: true });
     if (error) throw new Error(`Failed to load posts: ${error.message}`);
-    return parseRows(PostSchema, data as { obj: unknown }[], 'posts');
+    const posts = parseRows(PostSchema, data as { obj: unknown }[], 'posts');
+    // Render a LIVE relative stamp for engine posts (recomputed each revalidation),
+    // so "5m"/"2h" stay honest instead of freezing at publish time. Fixtures keep
+    // their hand-authored `time`.
+    const now = Date.now();
+    return posts.map((p) =>
+      p.postedAt ? { ...p, time: relativeTime(Date.parse(p.postedAt), now) } : p,
+    );
   },
   ['posts'],
   { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },

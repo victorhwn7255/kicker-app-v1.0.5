@@ -40,6 +40,9 @@ function nim() {
       baseURL: required('MODEL_BASE_URL'),
       apiKey: required('MODEL_API_KEY'),
       headers: { 'User-Agent': USER_AGENT },
+      // NVIDIA's endpoint accepts response_format json_schema (probed 2026-07-13);
+      // without this flag the SDK silently skips it and generateObject fails.
+      supportsStructuredOutputs: true,
     });
   return _nim;
 }

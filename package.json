@@ -18,6 +18,7 @@
     "engine:audit-sources": "tsx scripts/engine-audit-sources.ts",
     "engine:review": "tsx scripts/engine-review.ts",
     "engine:reveal": "tsx scripts/engine-reveal.ts",
+    "engine:publish": "tsx scripts/engine-publish.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {

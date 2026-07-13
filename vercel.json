@@ -1,8 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/engine/tick",
-      "schedule": "0 13 * * *"
+      "path": "/api/engine/tick?mode=daily",
+      "schedule": "*/10 * * * *"
     }
   ]
 }

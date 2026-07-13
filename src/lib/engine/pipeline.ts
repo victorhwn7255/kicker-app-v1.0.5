@@ -75,6 +75,7 @@ export async function runCandidate(args: {
     tier: source.tier,
     qualifier: source.qualifier,
     guardScore: guard.maxScore,
+    scheduledAt: plan.scheduledAt,
   };
 
   // Guard hit -> quarantine, never generate.
