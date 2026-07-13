@@ -21,6 +21,11 @@ export async function screenSource(
   deps: EngineDeps,
   signal?: AbortSignal,
 ): Promise<GuardResult> {
+  // Guard is optional (see config.GUARD). When off, sources are trusted curated
+  // vault content and pass straight to generation; the verifier remains the safety
+  // gate on the OUTPUT. Off by default keeps the engine entirely on NVIDIA.
+  if (!GUARD.enabled) return { flagged: false, maxScore: 0, chunkScores: [] };
+
   const chunks = chunkForGuard(sourceText);
   const chunkScores: number[] = [];
   for (const chunk of chunks) {

@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { checkLength } from './lengthGate';
 import { cosineSimilarity, checkNovelty, jaccardSimilarity } from './novelty';
 import { verdictPasses } from './types';
 import { chunkForGuard, screenSource } from './guard';
+import { GUARD } from './config';
 import { mockDeps, PASS_VERDICT, validBody } from './testkit';
 
 describe('lengthGate (enforced in code, never trusted to the model)', () => {
@@ -52,25 +53,42 @@ describe('verdictPasses (fail-closed truth table)', () => {
 describe('prompt guard', () => {
   it('chunks long text to the classifier window', () =>
     expect(chunkForGuard('a'.repeat(4000), 1500).length).toBe(3));
-  it('flags when a chunk scores at/above threshold (quarantine)', async () => {
-    const g = await screenSource('poison', mockDeps({ guardScore: async () => 0.997 }));
-    expect(g.flagged).toBe(true);
-    expect(g.maxScore).toBeCloseTo(0.997);
-  });
-  it('passes clean text', async () => {
-    const g = await screenSource('clean', mockDeps({ guardScore: async () => 0.0004 }));
+
+  it('is OFF by default: passes any source clean without a classifier call', async () => {
+    const guardScore = vi.fn(async () => 0.997);
+    const g = await screenSource('poison', mockDeps({ guardScore }));
     expect(g.flagged).toBe(false);
+    expect(guardScore).not.toHaveBeenCalled(); // no Groq call - engine stays on NVIDIA
   });
-  it('fails safe (quarantines) when the classifier throws', async () => {
-    const g = await screenSource(
-      'x',
-      mockDeps({
-        guardScore: async () => {
-          throw new Error('down');
-        },
-      }),
-    );
-    expect(g.flagged).toBe(true);
-    expect(g.maxScore).toBe(1);
+
+  // The classifier logic still exists for when GUARD_ENABLED=true; test that path.
+  describe('when enabled (GUARD_ENABLED=true)', () => {
+    beforeAll(() => {
+      GUARD.enabled = true;
+    });
+    afterAll(() => {
+      GUARD.enabled = false;
+    });
+    it('flags when a chunk scores at/above threshold (quarantine)', async () => {
+      const g = await screenSource('poison', mockDeps({ guardScore: async () => 0.997 }));
+      expect(g.flagged).toBe(true);
+      expect(g.maxScore).toBeCloseTo(0.997);
+    });
+    it('passes clean text', async () => {
+      const g = await screenSource('clean', mockDeps({ guardScore: async () => 0.0004 }));
+      expect(g.flagged).toBe(false);
+    });
+    it('fails safe (quarantines) when the classifier throws', async () => {
+      const g = await screenSource(
+        'x',
+        mockDeps({
+          guardScore: async () => {
+            throw new Error('down');
+          },
+        }),
+      );
+      expect(g.flagged).toBe(true);
+      expect(g.maxScore).toBe(1);
+    });
   });
 });

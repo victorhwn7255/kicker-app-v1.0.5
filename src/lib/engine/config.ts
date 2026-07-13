@@ -144,8 +144,16 @@ export function verifierLane(): ModelLane {
   );
 }
 
-/** The prompt-injection classifier lane. Groq-hosted; ~512-token context. */
+/**
+ * The prompt-injection classifier. It screens SOURCE text before generation - but
+ * the vault sources are our OWN curated content, so the risk it defends against (a
+ * source hijacking the generator) is low, and the verifier is the real safety gate
+ * on the OUTPUT. It is therefore OPTIONAL and OFF by default, which keeps the engine
+ * fully on NVIDIA (this classifier is Groq-hosted). Set GUARD_ENABLED=true (with a
+ * guard-capable provider key) to turn it back on.
+ */
 export const GUARD = {
+  enabled: process.env.GUARD_ENABLED === 'true',
   provider: 'groq' as Provider,
   modelId: 'meta-llama/llama-prompt-guard-2-86m',
   /** Score above this quarantines the source for human review (never a silent drop). */
@@ -154,10 +162,16 @@ export const GUARD = {
   chunkChars: 1500,
 };
 
-/** Embeddings for the novelty gate. Groq has no embedding endpoint; Google does. */
+/**
+ * Embeddings for the novelty gate - NVIDIA-hosted (OpenAI-compatible /embeddings),
+ * so the whole engine runs on one provider. nv-embedqa-e5-v5 requires an input_type;
+ * everything is embedded as "passage" so a candidate and the account's history are
+ * compared in the same space. Overridable via MODEL_EMBEDDING.
+ */
 export const EMBEDDING = {
-  provider: 'google' as Provider,
-  modelId: 'gemini-embedding-001',
+  provider: 'nim' as Provider,
+  modelId: process.env.MODEL_EMBEDDING ?? 'nvidia/nv-embedqa-e5-v5',
+  inputType: 'passage',
 };
 
 /**

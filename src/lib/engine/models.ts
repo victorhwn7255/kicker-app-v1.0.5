@@ -1,4 +1,4 @@
-import { generateText, generateObject, embedMany } from 'ai';
+import { generateText, generateObject } from 'ai';
 import type { LanguageModel } from 'ai';
 import { createGroq } from '@ai-sdk/groq';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
@@ -142,14 +142,28 @@ export async function guardScore(chunk: string, signal?: AbortSignal): Promise<n
   return score;
 }
 
-/** Embed a batch of texts for the novelty gate. */
+/**
+ * Embed a batch of texts for the novelty gate. Calls NVIDIA's OpenAI-compatible
+ * /embeddings endpoint directly (not via the AI SDK) because nv-embedqa requires an
+ * `input_type` field the SDK does not send. Keeps the whole engine on one provider.
+ */
 export async function embedTexts(values: string[], signal?: AbortSignal): Promise<number[][]> {
   if (values.length === 0) return [];
-  const { embeddings } = await embedMany({
-    model: google().embeddingModel(EMBEDDING.modelId),
-    values,
-    maxRetries: 2,
-    abortSignal: signal,
+  const base = required('MODEL_BASE_URL');
+  const key = required('MODEL_API_KEY');
+  const res = await fetch(`${base}/embeddings`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${key}`,
+      'User-Agent': USER_AGENT,
+    },
+    body: JSON.stringify({ model: EMBEDDING.modelId, input: values, input_type: EMBEDDING.inputType }),
+    signal,
   });
-  return embeddings;
+  if (!res.ok) {
+    throw new Error(`NVIDIA embeddings ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  }
+  const json = (await res.json()) as { data?: { embedding: number[] }[] };
+  return (json.data ?? []).map((d) => d.embedding);
 }
