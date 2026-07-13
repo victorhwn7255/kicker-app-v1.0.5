@@ -19,6 +19,7 @@
     "engine:review": "tsx scripts/engine-review.ts",
     "engine:reveal": "tsx scripts/engine-reveal.ts",
     "engine:publish": "tsx scripts/engine-publish.ts",
+    "engine:tick": "tsx scripts/engine-tick.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {

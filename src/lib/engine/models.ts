@@ -19,6 +19,35 @@ function required(name: string): string {
   return v;
 }
 
+/**
+ * Per-call timeout ceiling. A hosted model request has no built-in deadline, so a
+ * stalled connection (free-tier queueing, a wedged reasoning pass) can hang a whole
+ * tick indefinitely - fine on a serverless host that caps function time, fatal on a
+ * long-running worker/cron. This bounds every call: on timeout the request aborts,
+ * the pipeline sees an error, and its retry/drop logic takes over instead of hanging.
+ * A long generation legitimately runs tens of seconds; 120s only trips a true stall.
+ */
+const CALL_TIMEOUT_MS = Number.parseInt(process.env.MODEL_CALL_TIMEOUT_MS ?? '', 10) || 120_000;
+
+function timeoutSignal(signal?: AbortSignal, ms = CALL_TIMEOUT_MS): AbortSignal {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(new Error(`model call exceeded ${ms}ms`)), ms);
+  if (typeof timer.unref === 'function') timer.unref(); // never keep the process alive
+  if (signal) {
+    if (signal.aborted) ctrl.abort(signal.reason);
+    else
+      signal.addEventListener(
+        'abort',
+        () => {
+          clearTimeout(timer);
+          ctrl.abort(signal.reason);
+        },
+        { once: true },
+      );
+  }
+  return ctrl.signal;
+}
+
 let _groq: ReturnType<typeof createGroq> | null = null;
 let _google: ReturnType<typeof createGoogleGenerativeAI> | null = null;
 let _nim: ReturnType<typeof createOpenAICompatible> | null = null;
@@ -96,7 +125,7 @@ export async function generate(
     temperature: lane.temperature,
     maxOutputTokens: lane.maxOutputTokens,
     maxRetries: 2,
-    abortSignal: args.signal,
+    abortSignal: timeoutSignal(args.signal),
     providerOptions: providerOptions(lane),
   });
   return { text: res.text.trim(), finishReason: res.finishReason, usage: res.usage };
@@ -115,7 +144,7 @@ export async function generateStructured<T>(
     temperature: 0,
     maxOutputTokens: lane.maxOutputTokens,
     maxRetries: 2,
-    abortSignal: args.signal,
+    abortSignal: timeoutSignal(args.signal),
     providerOptions: providerOptions(lane),
   });
   return res.object;
@@ -133,7 +162,7 @@ export async function guardScore(chunk: string, signal?: AbortSignal): Promise<n
     temperature: 0,
     maxOutputTokens: 10,
     maxRetries: 2,
-    abortSignal: signal,
+    abortSignal: timeoutSignal(signal),
   });
   const score = Number.parseFloat(res.text.trim());
   if (Number.isNaN(score)) {
@@ -159,7 +188,7 @@ export async function embedTexts(values: string[], signal?: AbortSignal): Promis
       'User-Agent': USER_AGENT,
     },
     body: JSON.stringify({ model: EMBEDDING.modelId, input: values, input_type: EMBEDDING.inputType }),
-    signal,
+    signal: timeoutSignal(signal),
   });
   if (!res.ok) {
     throw new Error(`NVIDIA embeddings ${res.status}: ${(await res.text()).slice(0, 200)}`);
