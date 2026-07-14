@@ -1,11 +1,17 @@
+'use client';
+
+import { useState } from 'react';
 import { cn } from '@/lib/cn';
 import { AVATAR_STYLE, type Kind } from '@/lib/kinds';
 import { ThemeIcon } from './Icons';
 
 /**
- * Kind-keyed monogram tile. Company/chokepoint show a ticker/code monogram;
- * theme shows the nodes glyph. 2px border, 0 radius, mono 700. Decorative
- * (`aria-hidden`) - the adjacent handle carries the identity.
+ * Company accounts render their brand logo from `public/avatars/<TICKER>.png`,
+ * resolved off the handle. Chokepoint/theme accounts (no logo) fall back to the
+ * kind-keyed monogram tile or the theme nodes glyph - as does any company whose
+ * image fails to load. The frame carries a soft 3px corner curve; `rounded` swaps
+ * the hard 2px border for a hairline ring. Decorative (`aria-hidden`) - the
+ * adjacent handle carries the identity.
  */
 function monoFont(size: number): number {
   if (size <= 24) return 8;
@@ -31,25 +37,33 @@ function glyphSize(size: number): number {
 export function Avatar({
   kind,
   text,
+  handle,
   size = 42,
   rounded = false,
   className,
 }: {
   kind: Kind;
   text?: string;
+  /** `@TICKER`; when kind is `company`, resolves the logo at /avatars/TICKER.png. */
+  handle?: string;
   size?: number;
-  /** X-style: circular, hairline ring instead of the hard 2px border. */
+  /** X-style: hairline ring instead of the hard 2px border (still a soft 3px square). */
   rounded?: boolean;
   className?: string;
 }) {
+  const [imgError, setImgError] = useState(false);
+  const ticker = kind === 'company' ? handle?.replace(/^@/, '') : undefined;
+  const logoSrc = ticker ? `/avatars/${ticker}.png` : undefined;
+  const showImage = !!logoSrc && !imgError;
+
   const style = AVATAR_STYLE[kind];
   const showGlyph = kind === 'theme' && !text;
 
   return (
     <span
       className={cn(
-        'inline-flex flex-none items-center justify-center font-mono font-bold',
-        rounded ? 'rounded-full ring-1 ring-line' : 'border',
+        'inline-flex flex-none items-center justify-center overflow-hidden rounded-[3px] font-mono font-bold',
+        rounded ? 'ring-1 ring-line' : 'border',
         style.bg,
         style.color,
         className,
@@ -57,7 +71,21 @@ export function Avatar({
       style={{ width: size, height: size, fontSize: showGlyph ? undefined : monoFont(size) }}
       aria-hidden="true"
     >
-      {showGlyph ? <ThemeIcon size={glyphSize(size)} /> : text}
+      {showImage ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={logoSrc}
+          alt=""
+          width={size}
+          height={size}
+          className="h-full w-full object-cover"
+          onError={() => setImgError(true)}
+        />
+      ) : showGlyph ? (
+        <ThemeIcon size={glyphSize(size)} />
+      ) : (
+        text
+      )}
     </span>
   );
 }

@@ -93,10 +93,11 @@ export default async function ProfilePage({ params }: { params: Promise<Params> 
       {/* header */}
       <header className="border bg-card p-[16px] shadow md:p-[26px]">
         <div className="flex items-start gap-[14px] md:gap-[20px]">
-          <Avatar kind={account.kind} text={account.avatar} size={64} className="md:hidden" />
+          <Avatar kind={account.kind} text={account.avatar} handle={account.handle} size={64} className="md:hidden" />
           <Avatar
             kind={account.kind}
             text={account.avatar}
+            handle={account.handle}
             size={88}
             className="hidden md:inline-flex"
           />

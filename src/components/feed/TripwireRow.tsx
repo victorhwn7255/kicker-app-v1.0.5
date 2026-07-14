@@ -87,7 +87,7 @@ export function TripwireGroupHeader({
 }) {
   return (
     <div className={cn('flex items-center gap-[10px] border-b bg-band px-[16px] py-[9px]', className)}>
-      <Avatar kind={account.kind} text={account.avatar} size={28} />
+      <Avatar kind={account.kind} text={account.avatar} handle={account.handle} size={28} />
       <span className="font-mono font-bold text-[14px]">{account.handle}</span>
       <span className="font-mono text-[10px] uppercase tracking-[0.06em] text-muted">
         {KIND_LABEL[account.kind]}

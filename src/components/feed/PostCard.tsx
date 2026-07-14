@@ -77,7 +77,7 @@ export function PostCard({
       )}
 
       <div className="flex gap-3">
-        <Avatar kind={post.kind} text={post.avatar} size={44} rounded className="relative z-[1]" />
+        <Avatar kind={post.kind} text={post.avatar} handle={post.handle} size={44} rounded className="relative z-[1]" />
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-1.5 text-[15px] leading-tight">
@@ -97,7 +97,7 @@ export function PostCard({
           {q && (
             <div className="mt-2.5 rounded-2xl border border-line px-3 py-2.5">
               <div className="flex flex-wrap items-center gap-1.5 text-[13px]">
-                <Avatar kind={q.kind} text={q.avatar} size={20} rounded />
+                <Avatar kind={q.kind} text={q.avatar} handle={q.handle} size={20} rounded />
                 <span className="font-semibold text-ink">{q.handle}</span>
                 {q.time && <span className="text-muted">· {q.time}</span>}
               </div>

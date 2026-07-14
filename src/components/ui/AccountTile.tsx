@@ -26,7 +26,7 @@ export function AccountTile({
 }) {
   const identity = (
     <>
-      <Avatar kind={account.kind} text={account.avatar} size={40} rounded />
+      <Avatar kind={account.kind} text={account.avatar} handle={account.handle} size={40} rounded />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-[6px]">
           <span className="font-bold text-[14px]">{account.handle}</span>
