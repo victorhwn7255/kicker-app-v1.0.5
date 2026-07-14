@@ -102,10 +102,12 @@ describe('publishDue: live publish', () => {
     expect(rows[0].id).toBe('p-day-20260713-crwv-src-1-rotation');
     expect(rows[0].verified).toBe(true);
     expect(rows[0].model).toBe('nemotron-3-ultra');
-    expect(rows[0].published_at).toBe('2026-07-13T17:00:00Z');
-    // the stored Post object is source-attributed + carries the ISO stamp
+    // Posts are stamped with the ACTUAL publish moment (NOW), not the stale scheduled
+    // slot time (17:00) - so a late/backlogged post shows as fresh, never back-dated.
+    expect(rows[0].published_at).toBe(new Date(NOW).toISOString());
+    // the stored Post object is source-attributed + carries the live ISO stamp
     expect(rows[0].data.source).toBe('CRWV / Customer concentration');
-    expect(Date.parse(rows[0].data.postedAt as string)).toBe(Date.parse('2026-07-13T17:00:00Z'));
+    expect(Date.parse(rows[0].data.postedAt as string)).toBe(NOW);
     expect(data.markCandidatesPublished).toHaveBeenCalledOnce();
     expect(data.savePostHistory).toHaveBeenCalledOnce();
   });

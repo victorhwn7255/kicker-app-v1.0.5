@@ -22,10 +22,10 @@ export function relativeTime(fromMs: number, nowMs: number): string {
   return `${w}w`;
 }
 
-/** A freshness stamp for a freshly published post, e.g. "verified just now". */
+/** A freshness stamp for a published post, e.g. "posted just now". */
 export function freshnessStamp(fromMs: number, nowMs: number): string {
   const rel = relativeTime(fromMs, nowMs);
-  return rel === 'now' ? 'verified just now' : `verified ${rel} ago`;
+  return rel === 'now' ? 'posted just now' : `posted ${rel} ago`;
 }
 
 /** Make an arbitrary string safe as a URL-ish primary key: lower, alnum + dashes. */

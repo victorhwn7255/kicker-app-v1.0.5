@@ -24,10 +24,10 @@ describe('relativeTime', () => {
 describe('freshnessStamp', () => {
   const now = Date.parse('2026-07-13T12:00:00Z');
   it('is "just now" fresh at publish', () => {
-    expect(freshnessStamp(now, now)).toBe('verified just now');
+    expect(freshnessStamp(now, now)).toBe('posted just now');
   });
   it('ages with the post', () => {
-    expect(freshnessStamp(now - 3 * HOUR, now)).toBe('verified 3h ago');
+    expect(freshnessStamp(now - 3 * HOUR, now)).toBe('posted 3h ago');
   });
 });
 

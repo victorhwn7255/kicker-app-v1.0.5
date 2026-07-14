@@ -59,7 +59,7 @@ export function PostCard({
   return (
     <article
       className={cn(
-        'relative border-b border-line bg-card px-4 py-3 sm:px-5',
+        'relative border-b border-line bg-card px-4 py-4 sm:px-5',
         interactive && 'transition-colors hover:bg-wash',
         className,
       )}
@@ -120,7 +120,6 @@ export function PostCard({
               <span aria-hidden="true">↗</span>
               <span className="truncate">{post.source}</span>
             </a>
-            <span className="ml-auto flex-none text-[12px] text-muted-alt">{post.freshness}</span>
           </div>
         </div>
       </div>

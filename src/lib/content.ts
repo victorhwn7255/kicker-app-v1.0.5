@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { supabaseRead } from './supabase/read';
 import { supabaseAdmin } from './supabase/admin';
 import { permalinkHref, researchHref } from './links';
-import { relativeTime } from './engine/format';
+import { relativeTime, freshnessStamp } from './engine/format';
 import {
   AccountSchema,
   PostSchema,
@@ -51,11 +51,22 @@ function parseRows<T>(schema: z.ZodType<T>, rows: { obj: unknown }[] | null, lab
   return result.data;
 }
 
+/**
+ * Stored account/research `freshness` reads "research verified Nd ago". The vault
+ * DOES verify its research against primary sources at ingest, but to avoid echoing
+ * the (now-disabled) tweet verifier's wording we render it as "research updated Nd
+ * ago" at read time - no DB re-seed needed.
+ */
+function deVerifyFreshness<T extends { freshness?: string }>(row: T): T {
+  if (!row.freshness) return row;
+  return { ...row, freshness: row.freshness.replace(/^research verified\b/, 'research updated') } as T;
+}
+
 export const getAccounts = unstable_cache(
   async (): Promise<Account[]> => {
     const { data, error } = await supabaseRead().from('accounts').select('obj:data').order('seq');
     if (error) throw new Error(`Failed to load accounts: ${error.message}`);
-    return parseRows(AccountSchema, data as { obj: unknown }[], 'accounts');
+    return parseRows(AccountSchema, data as { obj: unknown }[], 'accounts').map(deVerifyFreshness);
   },
   ['accounts'],
   { revalidate: REVALIDATE_SECONDS, tags: ['accounts'] },
@@ -70,7 +81,7 @@ export const getAccount = unstable_cache(
       .maybeSingle();
     if (error) throw new Error(`Failed to load account ${handle}: ${error.message}`);
     if (!data) return undefined;
-    return AccountSchema.parse((data as { obj: unknown }).obj);
+    return deVerifyFreshness(AccountSchema.parse((data as { obj: unknown }).obj));
   },
   ['account'],
   { revalidate: REVALIDATE_SECONDS, tags: ['accounts'] },
@@ -92,7 +103,13 @@ export const getPosts = unstable_cache(
     // their hand-authored `time`.
     const now = Date.now();
     return posts.map((p) =>
-      p.postedAt ? { ...p, time: relativeTime(Date.parse(p.postedAt), now) } : p,
+      p.postedAt
+        ? {
+            ...p,
+            time: relativeTime(Date.parse(p.postedAt), now),
+            freshness: freshnessStamp(Date.parse(p.postedAt), now),
+          }
+        : p,
     );
   },
   ['posts'],
@@ -134,7 +151,7 @@ export const getResearchPages = unstable_cache(
   async (): Promise<ResearchPage[]> => {
     const { data, error } = await supabaseRead().from('wiki_pages').select('obj:data').order('seq');
     if (error) throw new Error(`Failed to load wiki_pages: ${error.message}`);
-    return parseRows(ResearchPageSchema, data as { obj: unknown }[], 'wiki_pages');
+    return parseRows(ResearchPageSchema, data as { obj: unknown }[], 'wiki_pages').map(deVerifyFreshness);
   },
   ['wiki_pages'],
   { revalidate: REVALIDATE_SECONDS, tags: ['wiki_pages'] },
@@ -149,7 +166,7 @@ export const getResearchPage = unstable_cache(
       .maybeSingle();
     if (error) throw new Error(`Failed to load wiki_page ${slug}: ${error.message}`);
     if (!data) return undefined;
-    return ResearchPageSchema.parse((data as { obj: unknown }).obj);
+    return deVerifyFreshness(ResearchPageSchema.parse((data as { obj: unknown }).obj));
   },
   ['wiki_page'],
   { revalidate: REVALIDATE_SECONDS, tags: ['wiki_pages'] },

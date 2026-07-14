@@ -180,9 +180,11 @@ export const EMBEDDING = {
  * unevenly - some accounts busy, some silent - at human-looking times.
  */
 export const DAILY = {
-  /** The day's tweet total is drawn uniformly from this band. */
-  targetMin: 180,
-  targetMax: 300,
+  /** The day's tweet total is drawn uniformly from this band. Right-sized to what
+   *  the free-tier engine can actually generate + publish in a day, so the schedule
+   *  never outruns throughput and builds a permanent backlog. Env-overridable. */
+  targetMin: Number.parseInt(process.env.ENGINE_TARGET_MIN ?? '', 10) || 140,
+  targetMax: Number.parseInt(process.env.ENGINE_TARGET_MAX ?? '', 10) || 200,
   /** No account machine-guns: hard per-account daily cap (also capped by its source count). */
   maxPerAccount: 5,
   /** Minimum minutes between one account's posts. */
@@ -206,10 +208,18 @@ export const DAILY = {
   softBudgetMs: Number.parseInt(process.env.ENGINE_SOFT_BUDGET_MS ?? '', 10) || 240_000,
   /** How many recent posts per account seed the novelty memory (post_history). */
   historyLimit: Number.parseInt(process.env.ENGINE_HISTORY_LIMIT ?? '', 10) || 40,
+  /** Skip slots scheduled more than this many minutes in the past: a slow tick
+   *  abandons stale backlog instead of forever draining hours-old slots, so the
+   *  feed tracks wall-clock instead of falling permanently behind. */
+  maxBacklogMinutes: Number.parseInt(process.env.ENGINE_MAX_BACKLOG_MIN ?? '', 10) || 120,
+  /** How many slots one daily tick generates CONCURRENTLY. The free NVIDIA tier is
+   *  ~40 req/min, so a few generations in flight stays well within budget and is
+   *  ~Nx faster than serial generation of a slow reasoning model. */
+  concurrency: Number.parseInt(process.env.ENGINE_CONCURRENCY ?? '', 10) || 3,
 };
 
 /** Version stamped onto every candidate so provenance survives prompt edits. */
-export const PROMPT_VERSION = 'p6.2026-07-13';
+export const PROMPT_VERSION = 'p7.2026-07-14';
 
 /**
  * Hard length gate, enforced in code. Floor is deliberately low (140) so posts

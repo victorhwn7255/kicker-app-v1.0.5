@@ -65,26 +65,30 @@ function buildPost(
   parentPublished: boolean,
   nowMs: number,
 ): Post {
-  const scheduledMs = cand.scheduled_at ? Date.parse(cand.scheduled_at) : nowMs;
   const kind = account?.kind ?? 'company';
   const handleName = cand.account.replace(/^@/, '');
   const sectionTitle = source?.section_title ?? 'update';
   const isReply = cand.trigger === 'conversation' && !!cand.reply_to && parentPublished;
 
+  // Stamp the ACTUAL publish moment (nowMs), not the scheduled slot time. When the
+  // engine runs behind and drains past-due slots, the feed must show them as fresh
+  // ("now") and sort them by real go-live time - never back-date to a stale scheduled
+  // time, which is what made a live feed look frozen at "~10h ago". The reader
+  // recomputes the relative stamp from postedAt on every load, so these are baselines.
   const post: Post = {
     id: postIdOf(cand.id),
     handle: cand.account,
     kind,
-    time: relativeTime(scheduledMs, nowMs),
+    time: relativeTime(nowMs, nowMs),
     body: cand.body,
     tier: cand.tier as Post['tier'],
     ...(cand.qualifier ? { qualifier: cand.qualifier } : {}),
     source: `${handleName} / ${sectionTitle}`,
-    freshness: freshnessStamp(scheduledMs, nowMs),
+    freshness: freshnessStamp(nowMs, nowMs),
     ...(account?.avatar ? { avatar: account.avatar } : {}),
     variant: isReply ? 'reply' : 'original',
     ...(isReply ? { replyTo: cand.reply_to! } : {}),
-    postedAt: new Date(scheduledMs).toISOString(),
+    postedAt: new Date(nowMs).toISOString(),
   };
   // Validate at the boundary, exactly like the seed/loader do, so a malformed post
   // can never reach the feed table.
@@ -157,10 +161,11 @@ export async function publishDue(opts?: {
       tier: post.tier,
       source_id: cand.source_id,
       trigger: cand.trigger,
-      // Epoch seconds of the go-live time: monotonic, and always far above the
-      // handful of fixture seqs so live posts never collide with the demo feed.
+      // seq breaks ties among posts sharing a published_at (a tick publishes a batch
+      // at one nowIso): scheduled-time seconds keep that batch in schedule order, and
+      // stay far above the handful of fixture seqs so live posts never collide.
       seq: Math.floor((cand.scheduled_at ? Date.parse(cand.scheduled_at) : nowMs) / 1000),
-      published_at: cand.scheduled_at ?? nowIso,
+      published_at: nowIso,
       data: post,
       model: cand.model,
       provider: cand.provider,

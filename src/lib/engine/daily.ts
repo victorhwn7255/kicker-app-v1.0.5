@@ -71,17 +71,18 @@ export function dateKey(date: Date): string {
 }
 
 /**
- * One post's time-of-day, in ms from UTC midnight. A mixture, not a uniform:
- * 55% cluster on US business/afternoon hours, 30% on Asia/Europe hours (the
- * feed covers Japanese and Chinese filers too), 15% anywhere - so the feed has
- * believable peaks without ever being fully quiet.
+ * One post's time-of-day, in ms from UTC midnight. A flat-ish mixture: ~45% land
+ * ANYWHERE in the day so posting is spread evenly (and the slow free-tier engine
+ * never gets an hourly burst it cannot drain), and the rest lean on two BROAD
+ * geographic humps - US daytime + Asia/Europe (the feed covers Japanese and Chinese
+ * filers too) - so the feed still breathes without clustering into sharp peaks.
  */
 function sampleTimeMs(rng: () => number): number {
   const r = rng();
   let hour: number;
-  if (r < 0.55) hour = 16.5 + gauss(rng) * 2.2;
-  else if (r < 0.85) hour = 4.5 + gauss(rng) * 2.5;
-  else hour = rng() * 24;
+  if (r < 0.3) hour = 15.5 + gauss(rng) * 3.5; // US daytime (UTC), broad
+  else if (r < 0.55) hour = 6.0 + gauss(rng) * 3.5; // Asia/Europe morning, broad
+  else hour = rng() * 24; // 45%: anywhere -> even spread across the day
   hour = ((hour % 24) + 24) % 24; // wrap into [0, 24)
   return Math.floor(hour * 3_600_000);
 }
