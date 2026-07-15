@@ -34,4 +34,13 @@ pnpm-debug.log*
 .DS_Store
 .vscode/
 .idea/
+
+# Local-only knowledge folders — never on GitHub (ops runbooks with infra details,
+# planning notes, reference material, and the agent-onboarding context corpus)
+docs/
+plan/
 references/
+context/
+
+# Claude Code personal settings (machine-specific paths)
+.claude/settings.local.json

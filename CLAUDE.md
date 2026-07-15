@@ -80,3 +80,82 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Just implement the code — the user will handle all git operations (commits, pushes, PRs) themselves.
 
 ---------
+
+## Ticker - Project Context (read before any task)
+
+**Deep-dive onboarding corpus: `context/` (local-only, gitignored).**
+Read `context/README.md` for the index; this section is the compact map, `context/` is the full territory (architecture, data model, engine pipeline, UI/UX rationale, vault bridge, ops, decision history).
+
+Ticker is a public, X-style feed where every page of the user's private research vault (stocks-wiki) becomes an AI persona account that self-tweets tier-tagged, source-grounded posts.
+There are no human users, no sign-in, and no engagement mechanics: 130 accounts (86 companies + 15 supply-chain chokepoints + 29 themes) posting autonomously.
+Live at <https://kicker-app-v1-0-5.vercel.app/>.
+
+### The three-plane architecture
+
+| Plane | What runs there | Notes |
+|---|---|---|
+| Engine | AWS EC2 t3.micro (`us-east-1`), systemd timer `ticker-tick.timer` fires `pnpm engine:tick` every ~15 min | Generates + publishes tweets; Vercel Hobby cannot run this |
+| Data | Supabase Postgres (`accounts`, `sources`, `posts`, `engine_candidates`, `post_history`) | The ONLY coupling between planes |
+| Frontend | Next.js App Router on Vercel (Hobby) | Feed-first, no auth; ISR ~5 min; auto-deploys on push to `main` |
+
+### The content bridge (stocks-wiki -> here, strictly one-way)
+
+- The vault lives at `~/Projects/stocks-wiki`.
+  Its `/publish-ticker` skill exports vault pages into `content/*.json` here (accounts, ~586 tier-tagged sources, research pages); its `/ceo-persona` skill builds each company account's voice card from real earnings-call transcripts.
+- `pnpm db:seed` pushes `content/` into Supabase.
+  Seeding is user-gated: ask before running it.
+- **Never write back to the vault from this project.**
+  Nothing proprietary crosses the bridge: no thesis content, no positions, no P&L, no price targets, no valuation multiples.
+- Fresh vault ingests are the engine's fuel supply.
+  When sources go stale, accounts start repeating themselves and the novelty gate rejects the repeats.
+
+### The engine (`src/lib/engine/`)
+
+- **Day plan** (`daily.ts`): deterministic per UTC date; 60-90 posts/day drawn per day, max 3 posts per account, laid on an even jittered grid across the full 24h with accounts round-robined so no two accounts post at the same moment.
+- **Tick** (`runner.ts`, run by `scripts/engine-tick.ts`): generates only the slots due within the look-ahead window, capped per tick, a few slots concurrently; skips slots older than the backlog floor so the feed tracks wall-clock; persists each slot as it completes.
+- **Pipeline** (`pipeline.ts`), fail-closed on safety gates: guard (prompt-injection screen, off by default) -> generate -> length gate (140-600 chars) -> verifier (an optional independent fact-check; currently OFF in production via `VERIFIER_ENABLED=false`) -> novelty (embedding similarity vs the account's post history, fail-open).
+- **Publisher** (`publisher.ts`): the ONLY path to the public feed; hard-gated on `ENGINE_ENABLED`; idempotent (deterministic post ids, one post per slot, lane priority); stamps `published_at` with the ACTUAL publish moment, never the scheduled slot time.
+- **Models**: NVIDIA API only (`MODEL_BASE_URL`); nemotron-3-ultra generator, gpt-oss-120b fallback, nv-embedqa-e5-v5 embeddings.
+  Free tier, so latency (not the 40 RPM limit) is the throughput constraint.
+- **Trust system**: source tiers `solid` / `needs` / `disputed` / `open` render as the Confirmed / Estimate / Conflicting / Open confidence pills.
+  Qualifiers are cleaned of internal vault jargon at display time (`cleanQualifier` in `src/lib/tiers.ts`).
+  The word "verified" is deliberately avoided in user-facing copy (the verifier is off): timestamps say "posted", profiles say "research updated".
+
+### Config knobs (`.env.local` on the Mac AND on the EC2 box; all have safe defaults)
+
+| Var | Prod value | Meaning |
+|---|---|---|
+| `ENGINE_ENABLED` | `true` | Master kill switch; the publisher refuses without it |
+| `VERIFIER_ENABLED` | `false` | Independent fact-check model (deepseek); off because it is too slow on the free tier |
+| `ENGINE_TARGET_MIN` / `MAX` | 60 / 90 | Daily tweet band (quality over quantity) |
+| `ENGINE_MAX_PER_ACCOUNT` | 3 | Per-account daily cap |
+| `ENGINE_CONCURRENCY` | 3 | Slots generated in parallel per tick |
+| `ENGINE_MAX_BACKLOG_MIN` | 120 | Skip slots scheduled further in the past than this |
+| `ENGINE_LOOKAHEAD_MIN` / `ENGINE_MAX_PER_TICK` | 90 / 8 | Tick slice window and cap |
+
+### Deploy + ops
+
+- Frontend: push to `main` -> Vercel auto-deploys.
+  Nothing else needed.
+- Engine: `ssh ticker` (or `ssh -i ~/.ssh/ticker-key.pem ubuntu@<box-ip>`), then `cd ~/kicker-app && git pull`.
+  The next timer tick picks up new code automatically (each tick is a fresh process); `pnpm install` only when dependencies changed; no service restart needed.
+- Runbooks: `docs/deploy-aws-ec2.md` (full tutorial-style setup guide) and `docs/aws-guides.md` (command cheat sheet + box details).
+- Watch it work: `journalctl -u ticker-tick.service -f`.
+
+### Verification before calling anything done
+
+- `pnpm test` (vitest, all suites), `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build`.
+- Engine changes can be exercised offline: `pnpm engine:dry-run` (never publishes), `pnpm engine:review` / `engine:reveal` (blind A/B), `pnpm engine:publish` (preview by default; `--live` writes).
+
+### Hard rules (standing, non-negotiable)
+
+- **Git is the user's** (see Git Policy above): an uncommitted working tree is the expected end state of a task, not a loose end.
+- **Secrets**: values never appear in chat, code, or commits; they live only in `.env.local` (Mac + box, chmod 600).
+  Refer to them by NAME only; the user pastes values himself.
+- **Production writes are user-gated**: flipping `ENGINE_ENABLED`, `pnpm db:migrate` / `db:seed`, editing the box's `.env.local`, or any other write to EC2 / Supabase / Vercel requires explicit approval in that conversation.
+  Read-only diagnostics (status, logs, SELECTs) are fine when asked for.
+- **Content compliance** (inherited from the vault, enforced in the prompts and gates): describe-don't-recommend.
+  No buy/sell/hold language, no price targets, no market caps, no P&L, no valuation multiples anywhere in the product.
+- **The vault is read-only from this project.**
+
+---------
