@@ -13,9 +13,9 @@ import { DAILY } from './config';
  *  - heavy-tailed allocation across accounts (lognormal weights): a few accounts
  *    have a busy day (up to DAILY.maxPerAccount), most post once or twice, and a
  *    real fraction stay SILENT that day,
- *  - each planned post gets a scheduled_at time drawn from a two-peak day curve
- *    (US hours + Asia/Europe hours + a small anytime tail), with a minimum gap
- *    between one account's posts so nobody machine-guns the feed.
+ *  - posts are laid on an EVEN, jittered grid across the whole 24h day (round-robin
+ *    by account), so the feed is a steady drip - quality over quantity - and no two
+ *    accounts ever post at the same moment.
  *
  * Everything is seeded by the DATE: random across days, deterministic within a
  * day. A crashed or re-run cron rebuilds the identical plan, and because
@@ -68,23 +68,6 @@ function shuffle<T>(arr: T[], rng: () => number): T[] {
 /** UTC date key, e.g. "20260713". */
 export function dateKey(date: Date): string {
   return date.toISOString().slice(0, 10).replaceAll('-', '');
-}
-
-/**
- * One post's time-of-day, in ms from UTC midnight. A flat-ish mixture: ~45% land
- * ANYWHERE in the day so posting is spread evenly (and the slow free-tier engine
- * never gets an hourly burst it cannot drain), and the rest lean on two BROAD
- * geographic humps - US daytime + Asia/Europe (the feed covers Japanese and Chinese
- * filers too) - so the feed still breathes without clustering into sharp peaks.
- */
-function sampleTimeMs(rng: () => number): number {
-  const r = rng();
-  let hour: number;
-  if (r < 0.3) hour = 15.5 + gauss(rng) * 3.5; // US daytime (UTC), broad
-  else if (r < 0.55) hour = 6.0 + gauss(rng) * 3.5; // Asia/Europe morning, broad
-  else hour = rng() * 24; // 45%: anywhere -> even spread across the day
-  hour = ((hour % 24) + 24) % 24; // wrap into [0, 24)
-  return Math.floor(hour * 3_600_000);
 }
 
 /** A post "references" a source when its source string names the section (planner's rule). */
@@ -156,45 +139,61 @@ export function buildDayPlan(input: {
     allocated++;
   }
 
-  // Pick WHICH sources each account posts about: fresh (never-referenced) ones
-  // first - the planner's ingest priority - then rotation, shuffled within each
-  // group so the same source does not lead every single day.
-  const items: DailyPlanItem[] = [];
+  // Pick WHICH sources each account posts about: fresh (never-referenced) ones first
+  // - the planner's ingest priority - then rotation, shuffled within each group so the
+  // same source does not lead every day. Times are NOT assigned here: timing is a
+  // GLOBAL decision (below) so the whole feed stays evenly spread, not per-account.
+  type Pending = { account: string; sourceId: string; trigger: TriggerType; keyFact: string; replyToHandle?: string };
+  const byAccount = new Map<string, Pending[]>();
   for (const [handle, count] of counts) {
     const accountSources = sourcesByAccount.get(handle)!;
     const account = eligible.find((a) => a.handle === handle)!;
     const fresh = shuffle(accountSources.filter((s) => !referenced(posts, s)), rng);
     const used = shuffle(accountSources.filter((s) => referenced(posts, s)), rng);
     const picked = [...fresh, ...used].slice(0, count);
-
-    // Schedule this account's posts with a minimum gap between them.
-    const times: number[] = [];
-    for (let i = 0; i < picked.length; i++) {
-      let t = sampleTimeMs(rng);
-      for (let tries = 0; tries < 8; tries++) {
-        if (times.every((x) => Math.abs(x - t) >= DAILY.minGapMinutes * 60_000)) break;
-        t = sampleTimeMs(rng);
-      }
-      times.push(t);
-    }
-
-    picked.forEach((source, i) => {
-      const trigger: TriggerType = referenced(posts, source) ? 'rotation' : 'ingest';
-      // Occasionally answer a supply-chain sibling that has a recent post - the
-      // feed's reply threads - instead of a standalone take on the same source.
-      const sibling = (account.supply_chain ?? []).find((h) => recentPostByHandle.has(h));
-      const conversational = sibling && rng() < 0.15;
-      items.push({
-        account: handle,
-        sourceId: source.id,
-        trigger: conversational ? 'conversation' : trigger,
-        keyFact: selectKeyFact(source),
-        ...(conversational ? { replyToHandle: sibling } : {}),
-        scheduledAt: new Date(dayStartMs + times[i]).toISOString(),
-      });
-    });
+    byAccount.set(
+      handle,
+      picked.map((source) => {
+        const trigger: TriggerType = referenced(posts, source) ? 'rotation' : 'ingest';
+        // Occasionally answer a supply-chain sibling that has a recent post (reply thread).
+        const sibling = (account.supply_chain ?? []).find((h) => recentPostByHandle.has(h));
+        const conversational = sibling && rng() < 0.15;
+        return {
+          account: handle,
+          sourceId: source.id,
+          trigger: conversational ? 'conversation' : trigger,
+          keyFact: selectKeyFact(source),
+          ...(conversational ? { replyToHandle: sibling } : {}),
+        } as Pending;
+      }),
+    );
   }
 
+  // Round-robin across accounts so one account's posts land far apart, then lay every
+  // post on an EVEN, jittered grid across the full 24h. Result: a steady drip through
+  // the day (quality over quantity), the same account never machine-guns, and no two
+  // accounts share a moment.
+  const order = shuffle([...byAccount.keys()], rng);
+  const queue: Pending[] = [];
+  for (let round = 0, more = true; more; round++) {
+    more = false;
+    for (const h of order) {
+      const list = byAccount.get(h)!;
+      if (round < list.length) {
+        queue.push(list[round]);
+        more = true;
+      }
+    }
+  }
+
+  const N = queue.length || 1;
+  const spacing = 86_400_000 / N; // even slot width across the day
+  const items: DailyPlanItem[] = queue.map((it, i) => {
+    // Jitter within the slot's front 60% keeps it organic while guaranteeing a gap of
+    // at least ~0.4x the slot between consecutive posts, so nothing is ever simultaneous.
+    const t = Math.min(i * spacing + rng() * spacing * 0.6, 86_399_000);
+    return { ...it, scheduledAt: new Date(dayStartMs + t).toISOString() };
+  });
   items.sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt));
   return { dateKey: key, runId: `day_${key}`, target, items };
 }

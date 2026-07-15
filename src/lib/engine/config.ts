@@ -180,14 +180,16 @@ export const EMBEDDING = {
  * unevenly - some accounts busy, some silent - at human-looking times.
  */
 export const DAILY = {
-  /** The day's tweet total is drawn uniformly from this band. Right-sized to what
-   *  the free-tier engine can actually generate + publish in a day, so the schedule
-   *  never outruns throughput and builds a permanent backlog. Env-overridable. */
-  targetMin: Number.parseInt(process.env.ENGINE_TARGET_MIN ?? '', 10) || 140,
-  targetMax: Number.parseInt(process.env.ENGINE_TARGET_MAX ?? '', 10) || 200,
-  /** No account machine-guns: hard per-account daily cap (also capped by its source count). */
-  maxPerAccount: 5,
-  /** Minimum minutes between one account's posts. */
+  /** The day's tweet total is drawn uniformly from this band. Deliberately LOW -
+   *  quality over quantity: fewer, better, more-spread-out posts beat a firehose, and
+   *  a smaller total keeps each account well inside its fresh-source supply so takes
+   *  stay distinct (novelty-gate friendly). Env-overridable. */
+  targetMin: Number.parseInt(process.env.ENGINE_TARGET_MIN ?? '', 10) || 60,
+  targetMax: Number.parseInt(process.env.ENGINE_TARGET_MAX ?? '', 10) || 90,
+  /** Hard per-account daily cap (also capped by its source count), so no single account
+   *  takes a big slice of the small daily budget. Env-overridable. */
+  maxPerAccount: Number.parseInt(process.env.ENGINE_MAX_PER_ACCOUNT ?? '', 10) || 3,
+  /** Minimum minutes between one account's posts (the even-spread grid exceeds this). */
   minGapMinutes: 30,
   /** Optional salt so a re-seeded deploy reshuffles days (SCHEDULE_SEED env). */
   seedSalt: process.env.SCHEDULE_SEED ?? '',
