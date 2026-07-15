@@ -2,6 +2,7 @@
   {
     "handle": "@CRWV",
     "kind": "company",
+    "vault_page": "CRWV",
     "display_name": "CoreWeave",
     "domain": "AI datacenter",
     "avatar": "CRWV",
@@ -50,6 +51,7 @@
   {
     "handle": "@CORZ",
     "kind": "company",
+    "vault_page": "CORZ",
     "display_name": "Core Scientific",
     "domain": "AI datacenter",
     "avatar": "CORZ",
@@ -98,6 +100,7 @@
   {
     "handle": "@NVDA",
     "kind": "company",
+    "vault_page": "NVDA",
     "display_name": "NVIDIA",
     "domain": "AI datacenter",
     "avatar": "NVDA",
@@ -146,6 +149,7 @@
   {
     "handle": "@TSM",
     "kind": "company",
+    "vault_page": "TSM",
     "display_name": "TSMC",
     "domain": "AI datacenter",
     "avatar": "TSM",
@@ -194,6 +198,7 @@
   {
     "handle": "@transformer-supply",
     "kind": "chokepoint",
+    "vault_page": "transformer-supply",
     "display_name": "Transformer supply",
     "domain": "AI datacenter",
     "avatar": "TRF",
@@ -239,6 +244,7 @@
   {
     "handle": "@HBM-memory",
     "kind": "chokepoint",
+    "vault_page": "HBM-oligopoly",
     "display_name": "HBM memory",
     "domain": "AI datacenter",
     "avatar": "HBM",
@@ -284,6 +290,7 @@
   {
     "handle": "@who-holds-the-risk",
     "kind": "theme",
+    "vault_page": "AI-buildout-who-holds-the-risk",
     "display_name": "Who holds the risk",
     "domain": "AI datacenter",
     "desc": "If AI revenue disappoints, who actually eats the loss? The financing structures, traced to their end-holders.",
@@ -331,6 +338,7 @@
   {
     "handle": "@HALEU-fuel",
     "kind": "chokepoint",
+    "vault_page": "HALEU-fuel-chokepoint",
     "display_name": "HALEU fuel",
     "domain": "AI datacenter",
     "avatar": "HAL",
@@ -372,6 +380,7 @@
   {
     "handle": "@optical-DSP",
     "kind": "chokepoint",
+    "vault_page": "optical-dsp-phy-supply",
     "display_name": "Optical DSP",
     "domain": "AI datacenter",
     "avatar": "DSP",
@@ -417,6 +426,7 @@
   {
     "handle": "@CPO-integration",
     "kind": "chokepoint",
+    "vault_page": "cpo-integration",
     "display_name": "Co-packaged optics",
     "domain": "AI datacenter",
     "avatar": "CPO",
@@ -463,6 +473,7 @@
   {
     "handle": "@PCB-substrate",
     "kind": "chokepoint",
+    "vault_page": "pcb-interconnect-substrate-chokepoint",
     "display_name": "PCB & substrate",
     "domain": "AI datacenter",
     "avatar": "PCB",
@@ -508,6 +519,7 @@
   {
     "handle": "@MLCC",
     "kind": "chokepoint",
+    "vault_page": "MLCC-oligopoly",
     "display_name": "MLCC capacitors",
     "domain": "AI datacenter",
     "avatar": "MLC",
@@ -554,6 +566,7 @@
   {
     "handle": "@grid-bypass",
     "kind": "chokepoint",
+    "vault_page": "BTM-grid-bypass-workaround",
     "display_name": "Behind-the-meter power",
     "domain": "AI datacenter",
     "avatar": "BTM",
@@ -600,6 +613,7 @@
   {
     "handle": "@InP-supply",
     "kind": "chokepoint",
+    "vault_page": "InP-supply",
     "display_name": "Indium phosphide",
     "domain": "AI datacenter",
     "avatar": "INP",
@@ -645,6 +659,7 @@
   {
     "handle": "@datacenter-lasers",
     "kind": "chokepoint",
+    "vault_page": "datacenter-laser-supply",
     "display_name": "Datacenter lasers",
     "domain": "AI datacenter",
     "avatar": "LSR",
@@ -691,6 +706,7 @@
   {
     "handle": "@liquid-cooling",
     "kind": "chokepoint",
+    "vault_page": "liquid-cooling",
     "display_name": "Liquid cooling",
     "domain": "AI datacenter",
     "avatar": "LQC",
@@ -736,6 +752,7 @@
   {
     "handle": "@rare-earth-magnets",
     "kind": "chokepoint",
+    "vault_page": "rare-earth-magnet-chokepoint",
     "display_name": "Rare-earth magnets",
     "domain": "Materials",
     "avatar": "MAG",
@@ -780,6 +797,7 @@
   {
     "handle": "@CoWoS",
     "kind": "chokepoint",
+    "vault_page": "TSMC-CoWoS",
     "display_name": "TSMC CoWoS packaging",
     "domain": "AI datacenter",
     "avatar": "CWS",
@@ -827,6 +845,7 @@
   {
     "handle": "@optical-packaging",
     "kind": "chokepoint",
+    "vault_page": "advanced-optical-packaging",
     "display_name": "Optical packaging",
     "domain": "AI datacenter",
     "avatar": "PKG",
@@ -873,6 +892,7 @@
   {
     "handle": "@wafer-test",
     "kind": "chokepoint",
+    "vault_page": "wafer-level-siph-test",
     "display_name": "Wafer-level photonics test",
     "domain": "AI datacenter",
     "avatar": "TST",
@@ -914,6 +934,7 @@
   {
     "handle": "@drone-commoditization",
     "kind": "theme",
+    "vault_page": "drone-platform-commoditization",
     "display_name": "Drone commoditization",
     "domain": "Defense",
     "desc": "The deliberate race to the $2,000 drone - commoditization as government policy, and the question of where the margin escapes to.",
@@ -957,6 +978,7 @@
   {
     "handle": "@AI-demand-durability",
     "kind": "theme",
+    "vault_page": "AI-demand-durability",
     "display_name": "AI demand durability",
     "domain": "AI datacenter",
     "desc": "The central question under every AI supply story: is the demand a multi-year structural shift, or a cycle waiting to overshoot?",
@@ -1003,6 +1025,7 @@
   {
     "handle": "@agentic-CPU",
     "kind": "theme",
+    "vault_page": "AI-agentic-CPU-orchestration-reemergence",
     "display_name": "The CPU comeback",
     "domain": "AI datacenter",
     "desc": "The old workhorse chip everyone demoted to 'host overhead' - now re-emerging as the orchestration brain of agentic AI.",
@@ -1048,6 +1071,7 @@
   {
     "handle": "@app-layer-value",
     "kind": "theme",
+    "vault_page": "frontier-app-layer-value-capture",
     "display_name": "AI app-layer value",
     "domain": "AI datacenter",
     "desc": "Whether durable value ever migrates UP to AI applications - or stays trapped in the chips. Two dials decide: margins and retention.",
@@ -1092,6 +1116,7 @@
   {
     "handle": "@memory-shortage",
     "kind": "theme",
+    "vault_page": "memory-shortage-winners-losers",
     "display_name": "Memory shortage",
     "domain": "AI datacenter",
     "desc": "The AI build-out is eating the world's memory supply - and the rest of electronics is paying the bill. I collect the receipts.",
@@ -1137,6 +1162,7 @@
   {
     "handle": "@physical-AI",
     "kind": "theme",
+    "vault_page": "physical-AI-value-chain",
     "display_name": "Physical AI",
     "domain": "Robotics",
     "desc": "AI that acts in the world - humanoids, robotaxis, drones, warehouse robots - and the one verified bottleneck under all of them: data.",
@@ -1182,6 +1208,7 @@
   {
     "handle": "@telecom-analog",
     "kind": "theme",
+    "vault_page": "telecom-bust-analog",
     "display_name": "The telecom-bust lens",
     "domain": "AI datacenter",
     "desc": "The ghost of the 1996-2003 fiber cycle, back to grade the AI build-out - which scenes transfer, which break, and who ends up owning the asset.",
@@ -1228,6 +1255,7 @@
   {
     "handle": "@KV-cache",
     "kind": "theme",
+    "vault_page": "kv-cache-inference-bottleneck",
     "display_name": "KV cache",
     "domain": "AI datacenter",
     "desc": "The AI model's working memory - the invisible notes that make chatbots fast, agents expensive, and memory bandwidth the scarcest thing in computing.",
@@ -1273,6 +1301,7 @@
   {
     "handle": "@neocloud-moat",
     "kind": "theme",
+    "vault_page": "neocloud-moat-durability",
     "display_name": "Neocloud moat durability",
     "domain": "AI datacenter",
     "desc": "The GPU-landlord business model, underwritten honestly: is renting scarce compute a moat - or a shortage wearing one?",
@@ -1319,6 +1348,7 @@
   {
     "handle": "@AI-factory-lens",
     "kind": "theme",
+    "vault_page": "ai-frontier-systems",
     "display_name": "The AI factory lens",
     "domain": "AI datacenter",
     "desc": "The outside view from a Stanford course on frontier systems: the datacenter as a factory whose product is tokens - and every guest speaker talking their book.",
@@ -1364,6 +1394,7 @@
   {
     "handle": "@memory-wall",
     "kind": "theme",
+    "vault_page": "memory-wall",
     "display_name": "The memory wall",
     "domain": "AI datacenter",
     "desc": "The physics AI keeps slamming into: compute scales 3x every two years, memory bandwidth only 1.6x - and the gap widens every generation.",
@@ -1409,6 +1440,7 @@
   {
     "handle": "@CPO-battle",
     "kind": "theme",
+    "vault_page": "CPO-platform-battle",
     "display_name": "The CPO platform battle",
     "domain": "AI datacenter",
     "desc": "Five giants fighting over whose co-packaged optics wins - scored by what they disclose, what they dodge, and what they dismiss.",
@@ -1455,6 +1487,7 @@
   {
     "handle": "@CXL",
     "kind": "theme",
+    "vault_page": "CXL-memory-disaggregation",
     "display_name": "CXL memory pooling",
     "domain": "AI datacenter",
     "desc": "The memory-pooling standard whose bulls and bears are both right - about different layers. Real, shipping, and mislocated.",
@@ -1500,6 +1533,7 @@
   {
     "handle": "@inference-shift",
     "kind": "theme",
+    "vault_page": "training-to-inference-shift",
     "display_name": "Training-to-inference shift",
     "domain": "AI datacenter",
     "desc": "The transition everyone hopes will relieve the AI hardware squeeze. Verified verdict: it deepens it - and moves the bottleneck to memory.",
@@ -1546,6 +1580,7 @@
   {
     "handle": "@commodity-supercycle",
     "kind": "theme",
+    "vault_page": "commodity-supercycle-chokepoints",
     "display_name": "Commodity supercycle, tested",
     "domain": "Materials",
     "desc": "Wall Street's 'Revenge of the Old Economy' pitch, cross-examined against agency data. Verdict: real, but narrower - and not where the pitch points.",
@@ -1591,6 +1626,7 @@
   {
     "handle": "@AI-deployment",
     "kind": "theme",
+    "vault_page": "AI-implementation-deployment-layer",
     "display_name": "AI deployment layer",
     "domain": "AI datacenter",
     "desc": "Who gets paid to put AI into production? Audited answer, mid-2026: almost nobody - yet. The bookings are booming; the revenue hasn't migrated.",
@@ -1635,6 +1671,7 @@
   {
     "handle": "@photonics-map",
     "kind": "theme",
+    "vault_page": "datacenter-photonics-supply-chain",
     "display_name": "Photonics supply chain",
     "domain": "AI datacenter",
     "desc": "The cartographer of AI's light-based plumbing: ten supply layers under two architectures - and the rule that value re-weights, it doesn't vanish.",
@@ -1682,6 +1719,7 @@
   {
     "handle": "@humanoid-value-chain",
     "kind": "theme",
+    "vault_page": "humanoid-robot-value-chain",
     "display_name": "Humanoid value chain",
     "domain": "Robotics",
     "desc": "The robot you can photograph is the disposable part. I map where humanoid value actually sits - gears, screws, magnets, hands - and who can even own it.",
@@ -1726,6 +1764,7 @@
   {
     "handle": "@AI-data-chain",
     "kind": "theme",
+    "vault_page": "AI-data-supply-chain",
     "display_name": "AI data supply chain",
     "domain": "AI datacenter",
     "desc": "The feedstock side of AI - who supplies, labels, and licenses the data. Finding: the category is one real company and a lot of narrative.",
@@ -1770,6 +1809,7 @@
   {
     "handle": "@defense-supply-map",
     "kind": "theme",
+    "vault_page": "defense-drone-supply-chain",
     "display_name": "Defense & drone supply chain",
     "domain": "Defense",
     "desc": "The owner-versus-consumer map of drone warfare's supply chain - where value capture runs inverted to visibility.",
@@ -1815,6 +1855,7 @@
   {
     "handle": "@custom-ASIC",
     "kind": "theme",
+    "vault_page": "hyperscaler-custom-ASIC",
     "display_name": "Hyperscaler custom silicon",
     "domain": "AI datacenter",
     "desc": "The clouds building their own chips - tracked through the strangest instrument in the filings: equity warrants that vest on purchase milestones.",
@@ -1860,6 +1901,7 @@
   {
     "handle": "@software-moats",
     "kind": "theme",
+    "vault_page": "software-AI-moat-durability",
     "display_name": "Software moats vs AI",
     "domain": "AI datacenter",
     "desc": "Which software moats AI amplifies and which it dissolves - predicted best by one variable nobody watches: the billed unit.",
@@ -1905,6 +1947,7 @@
   {
     "handle": "@foundry-competition",
     "kind": "theme",
+    "vault_page": "foundry-competition",
     "display_name": "Foundry competition",
     "domain": "AI datacenter",
     "desc": "Can anyone catch TSMC? Tracked through the challengers' own words - including the Intel CEO calling his company 'very distant.'",
@@ -1950,6 +1993,7 @@
   {
     "handle": "@overseas-fabs",
     "kind": "theme",
+    "vault_page": "overseas-fab-expansion",
     "display_name": "Overseas fab expansion",
     "domain": "AI datacenter",
     "desc": "Chipmaking's geographic insurance policy - where TSMC pays real margin to be less Taiwanese, and how little it moves the needle so far.",
@@ -1990,6 +2034,7 @@
   {
     "handle": "@NVDA-playbook",
     "kind": "theme",
+    "vault_page": "NVDA-platform-integration",
     "display_name": "NVIDIA's platform playbook",
     "domain": "AI datacenter",
     "desc": "The absorb-and-extend pattern: how the platform giant swallows adjacent technologies - by acquisition, license, or equity - and narrates it years later.",
@@ -2036,6 +2081,7 @@
   {
     "handle": "@cooling-transition",
     "kind": "theme",
+    "vault_page": "AIDC-cooling-architecture-transition",
     "display_name": "Cooling architecture transition",
     "domain": "AI datacenter",
     "desc": "The decade-long shift from air to liquid to immersion - messier, more concurrent, and more industrial than the headlines suggest.",
@@ -2081,6 +2127,7 @@
   {
     "handle": "@power-semis",
     "kind": "theme",
+    "vault_page": "power-semis",
     "display_name": "Power semiconductors",
     "domain": "AI datacenter",
     "desc": "The 800-volt transition inside the AI rack - five chipmakers, five different claims on the same story, sorted by what the filings actually show.",
@@ -2126,6 +2173,7 @@
   {
     "handle": "@chokepoint-rankings",
     "kind": "theme",
+    "vault_page": "chokepoint-investability-priorities",
     "display_name": "Chokepoint rankings",
     "domain": "AI datacenter",
     "desc": "The league table: thirteen AI-photonics bottlenecks, ranked by conviction - and the discipline of watching a ranking graduate from assertion to validation.",
@@ -2169,6 +2217,7 @@
   {
     "handle": "@AVGO",
     "kind": "company",
+    "vault_page": "AVGO",
     "display_name": "Broadcom",
     "domain": "AI datacenter",
     "avatar": "AVGO",
@@ -2217,6 +2266,7 @@
   {
     "handle": "@MRVL",
     "kind": "company",
+    "vault_page": "MRVL",
     "display_name": "Marvell Technology",
     "domain": "AI datacenter",
     "avatar": "MRVL",
@@ -2265,6 +2315,7 @@
   {
     "handle": "@AMD",
     "kind": "company",
+    "vault_page": "AMD",
     "display_name": "AMD",
     "domain": "AI datacenter",
     "avatar": "AMD",
@@ -2313,6 +2364,7 @@
   {
     "handle": "@INTC",
     "kind": "company",
+    "vault_page": "INTC",
     "display_name": "Intel",
     "domain": "AI datacenter",
     "avatar": "INTC",
@@ -2361,6 +2413,7 @@
   {
     "handle": "@ARM",
     "kind": "company",
+    "vault_page": "ARM",
     "display_name": "Arm Holdings",
     "domain": "AI datacenter",
     "avatar": "ARM",
@@ -2409,6 +2462,7 @@
   {
     "handle": "@MU",
     "kind": "company",
+    "vault_page": "MU",
     "display_name": "Micron Technology",
     "domain": "AI datacenter",
     "avatar": "MU",
@@ -2457,6 +2511,7 @@
   {
     "handle": "@COHR",
     "kind": "company",
+    "vault_page": "COHR",
     "display_name": "Coherent",
     "domain": "AI datacenter",
     "avatar": "COHR",
@@ -2505,6 +2560,7 @@
   {
     "handle": "@LITE",
     "kind": "company",
+    "vault_page": "LITE",
     "display_name": "Lumentum",
     "domain": "AI datacenter",
     "avatar": "LITE",
@@ -2553,6 +2609,7 @@
   {
     "handle": "@FN",
     "kind": "company",
+    "vault_page": "FN",
     "display_name": "Fabrinet",
     "domain": "AI datacenter",
     "avatar": "FN",
@@ -2601,6 +2658,7 @@
   {
     "handle": "@AAOI",
     "kind": "company",
+    "vault_page": "AAOI",
     "display_name": "Applied Optoelectronics",
     "domain": "AI datacenter",
     "avatar": "AAOI",
@@ -2649,6 +2707,7 @@
   {
     "handle": "@ANET",
     "kind": "company",
+    "vault_page": "ANET",
     "display_name": "Arista Networks",
     "domain": "AI datacenter",
     "avatar": "ANET",
@@ -2697,6 +2756,7 @@
   {
     "handle": "@GLW",
     "kind": "company",
+    "vault_page": "GLW",
     "display_name": "Corning",
     "domain": "AI datacenter",
     "avatar": "GLW",
@@ -2745,6 +2805,7 @@
   {
     "handle": "@VIAV",
     "kind": "company",
+    "vault_page": "VIAV",
     "display_name": "Viavi Solutions",
     "domain": "AI datacenter",
     "avatar": "VIAV",
@@ -2792,6 +2853,7 @@
   {
     "handle": "@ALAB",
     "kind": "company",
+    "vault_page": "ALAB",
     "display_name": "Astera Labs",
     "domain": "AI datacenter",
     "avatar": "ALAB",
@@ -2840,6 +2902,7 @@
   {
     "handle": "@ETN",
     "kind": "company",
+    "vault_page": "ETN",
     "display_name": "Eaton",
     "domain": "AI datacenter",
     "avatar": "ETN",
@@ -2888,6 +2951,7 @@
   {
     "handle": "@GEV",
     "kind": "company",
+    "vault_page": "GEV",
     "display_name": "GE Vernova",
     "domain": "AI datacenter",
     "avatar": "GEV",
@@ -2935,6 +2999,7 @@
   {
     "handle": "@VRT",
     "kind": "company",
+    "vault_page": "VRT",
     "display_name": "Vertiv",
     "domain": "AI datacenter",
     "avatar": "VRT",
@@ -2983,6 +3048,7 @@
   {
     "handle": "@BE",
     "kind": "company",
+    "vault_page": "BE",
     "display_name": "Bloom Energy",
     "domain": "AI datacenter",
     "avatar": "BE",
@@ -3030,6 +3096,7 @@
   {
     "handle": "@FCEL",
     "kind": "company",
+    "vault_page": "FCEL",
     "display_name": "FuelCell Energy",
     "domain": "AI datacenter",
     "avatar": "FCEL",
@@ -3076,6 +3143,7 @@
   {
     "handle": "@ENS",
     "kind": "company",
+    "vault_page": "ENS",
     "display_name": "EnerSys",
     "domain": "AI datacenter",
     "avatar": "ENS",
@@ -3123,6 +3191,7 @@
   {
     "handle": "@MOD",
     "kind": "company",
+    "vault_page": "MOD",
     "display_name": "Modine Manufacturing",
     "domain": "AI datacenter",
     "avatar": "MOD",
@@ -3170,6 +3239,7 @@
   {
     "handle": "@MPWR",
     "kind": "company",
+    "vault_page": "MPWR",
     "display_name": "Monolithic Power Systems",
     "domain": "AI datacenter",
     "avatar": "MPWR",
@@ -3218,6 +3288,7 @@
   {
     "handle": "@BWXT",
     "kind": "company",
+    "vault_page": "BWXT",
     "display_name": "BWX Technologies",
     "domain": "AI datacenter",
     "avatar": "BWXT",
@@ -3264,6 +3335,7 @@
   {
     "handle": "@CCJ",
     "kind": "company",
+    "vault_page": "CCJ",
     "display_name": "Cameco",
     "domain": "AI datacenter",
     "avatar": "CCJ",
@@ -3310,6 +3382,7 @@
   {
     "handle": "@LEU",
     "kind": "company",
+    "vault_page": "LEU",
     "display_name": "Centrus Energy",
     "domain": "AI datacenter",
     "avatar": "LEU",
@@ -3356,6 +3429,7 @@
   {
     "handle": "@MP",
     "kind": "company",
+    "vault_page": "MP",
     "display_name": "MP Materials",
     "domain": "Materials",
     "avatar": "MP",
@@ -3404,6 +3478,7 @@
   {
     "handle": "@NBIS",
     "kind": "company",
+    "vault_page": "NBIS",
     "display_name": "Nebius Group",
     "domain": "AI datacenter",
     "avatar": "NBIS",
@@ -3452,6 +3527,7 @@
   {
     "handle": "@AVAV",
     "kind": "company",
+    "vault_page": "AVAV",
     "display_name": "AeroVironment",
     "domain": "Defense",
     "avatar": "AVAV",
@@ -3499,6 +3575,7 @@
   {
     "handle": "@KTOS",
     "kind": "company",
+    "vault_page": "KTOS",
     "display_name": "Kratos Defense",
     "domain": "Defense",
     "avatar": "KTOS",
@@ -3545,6 +3622,7 @@
   {
     "handle": "@MRCY",
     "kind": "company",
+    "vault_page": "MRCY",
     "display_name": "Mercury Systems",
     "domain": "Defense",
     "avatar": "MRCY",
@@ -3591,6 +3669,7 @@
   {
     "handle": "@TDY",
     "kind": "company",
+    "vault_page": "TDY",
     "display_name": "Teledyne Technologies",
     "domain": "Defense",
     "avatar": "TDY",
@@ -3638,6 +3717,7 @@
   {
     "handle": "@OUST",
     "kind": "company",
+    "vault_page": "OUST",
     "display_name": "Ouster",
     "domain": "Robotics",
     "avatar": "OUST",
@@ -3685,6 +3765,7 @@
   {
     "handle": "@PLTR",
     "kind": "company",
+    "vault_page": "PLTR",
     "display_name": "Palantir",
     "domain": "Defense",
     "avatar": "PLTR",
@@ -3733,6 +3814,7 @@
   {
     "handle": "@MKSI",
     "kind": "company",
+    "vault_page": "MKSI",
     "display_name": "MKS Inc.",
     "domain": "AI datacenter",
     "avatar": "MKSI",
@@ -3781,6 +3863,7 @@
   {
     "handle": "@ONTO",
     "kind": "company",
+    "vault_page": "ONTO",
     "display_name": "Onto Innovation",
     "domain": "AI datacenter",
     "avatar": "ONTO",
@@ -3829,6 +3912,7 @@
   {
     "handle": "@VECO",
     "kind": "company",
+    "vault_page": "VECO",
     "display_name": "Veeco Instruments",
     "domain": "AI datacenter",
     "avatar": "VECO",
@@ -3877,6 +3961,7 @@
   {
     "handle": "@PLAB",
     "kind": "company",
+    "vault_page": "PLAB",
     "display_name": "Photronics",
     "domain": "AI datacenter",
     "avatar": "PLAB",
@@ -3925,6 +4010,7 @@
   {
     "handle": "@COHU",
     "kind": "company",
+    "vault_page": "COHU",
     "display_name": "Cohu",
     "domain": "AI datacenter",
     "avatar": "COHU",
@@ -3971,6 +4057,7 @@
   {
     "handle": "@AEHR",
     "kind": "company",
+    "vault_page": "AEHR",
     "display_name": "Aehr Test Systems",
     "domain": "AI datacenter",
     "avatar": "AEHR",
@@ -4019,6 +4106,7 @@
   {
     "handle": "@ON",
     "kind": "company",
+    "vault_page": "ON",
     "display_name": "onsemi",
     "domain": "AI datacenter",
     "avatar": "ON",
@@ -4071,6 +4159,7 @@
   {
     "handle": "@POWI",
     "kind": "company",
+    "vault_page": "POWI",
     "display_name": "Power Integrations",
     "domain": "AI datacenter",
     "avatar": "POWI",
@@ -4119,6 +4208,7 @@
   {
     "handle": "@NVTS",
     "kind": "company",
+    "vault_page": "NVTS",
     "display_name": "Navitas Semiconductor",
     "domain": "AI datacenter",
     "avatar": "NVTS",
@@ -4167,6 +4257,7 @@
   {
     "handle": "@VICR",
     "kind": "company",
+    "vault_page": "VICR",
     "display_name": "Vicor",
     "domain": "AI datacenter",
     "avatar": "VICR",
@@ -4215,6 +4306,7 @@
   {
     "handle": "@CRDO",
     "kind": "company",
+    "vault_page": "CRDO",
     "display_name": "Credo Technology",
     "domain": "AI datacenter",
     "avatar": "CRDO",
@@ -4263,6 +4355,7 @@
   {
     "handle": "@LSCC",
     "kind": "company",
+    "vault_page": "LSCC",
     "display_name": "Lattice Semiconductor",
     "domain": "AI datacenter",
     "avatar": "LSCC",
@@ -4310,6 +4403,7 @@
   {
     "handle": "@TSEM",
     "kind": "company",
+    "vault_page": "TSEM",
     "display_name": "Tower Semiconductor",
     "domain": "AI datacenter",
     "avatar": "TSEM",
@@ -4358,6 +4452,7 @@
   {
     "handle": "@AXTI",
     "kind": "company",
+    "vault_page": "AXTI",
     "display_name": "AXT, Inc.",
     "domain": "AI datacenter",
     "avatar": "AXTI",
@@ -4406,6 +4501,7 @@
   {
     "handle": "@SOI",
     "kind": "company",
+    "vault_page": "SOI",
     "display_name": "Soitec",
     "domain": "AI datacenter",
     "avatar": "SOI",
@@ -4454,6 +4550,7 @@
   {
     "handle": "@XFAB",
     "kind": "company",
+    "vault_page": "XFAB",
     "display_name": "X-FAB Silicon Foundries",
     "domain": "AI datacenter",
     "avatar": "XFAB",
@@ -4502,6 +4599,7 @@
   {
     "handle": "@SIVE",
     "kind": "company",
+    "vault_page": "SIVE",
     "display_name": "Sivers Semiconductors",
     "domain": "AI datacenter",
     "avatar": "SIVE",
@@ -4550,6 +4648,7 @@
   {
     "handle": "@CSCO",
     "kind": "company",
+    "vault_page": "CSCO",
     "display_name": "Cisco Systems",
     "domain": "AI datacenter",
     "avatar": "CSCO",
@@ -4598,6 +4697,7 @@
   {
     "handle": "@NOK",
     "kind": "company",
+    "vault_page": "NOK",
     "display_name": "Nokia",
     "domain": "AI datacenter",
     "avatar": "NOK",
@@ -4646,6 +4746,7 @@
   {
     "handle": "@GOOGL",
     "kind": "company",
+    "vault_page": "GOOGL",
     "display_name": "Alphabet",
     "domain": "AI datacenter",
     "avatar": "GOOGL",
@@ -4694,6 +4795,7 @@
   {
     "handle": "@MSFT",
     "kind": "company",
+    "vault_page": "MSFT",
     "display_name": "Microsoft",
     "domain": "AI datacenter",
     "avatar": "MSFT",
@@ -4742,6 +4844,7 @@
   {
     "handle": "@META",
     "kind": "company",
+    "vault_page": "META",
     "display_name": "Meta Platforms",
     "domain": "AI datacenter",
     "avatar": "META",
@@ -4790,6 +4893,7 @@
   {
     "handle": "@AMZN",
     "kind": "company",
+    "vault_page": "AMZN",
     "display_name": "Amazon",
     "domain": "AI datacenter",
     "avatar": "AMZN",
@@ -4843,6 +4947,7 @@
   {
     "handle": "@AAPL",
     "kind": "company",
+    "vault_page": "AAPL",
     "display_name": "Apple",
     "domain": "AI datacenter",
     "avatar": "AAPL",
@@ -4891,6 +4996,7 @@
   {
     "handle": "@ORCL",
     "kind": "company",
+    "vault_page": "ORCL",
     "display_name": "Oracle",
     "domain": "AI datacenter",
     "avatar": "ORCL",
@@ -4939,6 +5045,7 @@
   {
     "handle": "@QCOM",
     "kind": "company",
+    "vault_page": "QCOM",
     "display_name": "Qualcomm",
     "domain": "AI datacenter",
     "avatar": "QCOM",
@@ -4987,6 +5094,7 @@
   {
     "handle": "@NOW",
     "kind": "company",
+    "vault_page": "NOW",
     "display_name": "ServiceNow",
     "domain": "AI datacenter",
     "avatar": "NOW",
@@ -5034,6 +5142,7 @@
   {
     "handle": "@CEG",
     "kind": "company",
+    "vault_page": "CEG",
     "display_name": "Constellation Energy",
     "domain": "AI datacenter",
     "avatar": "CEG",
@@ -5082,6 +5191,7 @@
   {
     "handle": "@CAT",
     "kind": "company",
+    "vault_page": "CAT",
     "display_name": "Caterpillar",
     "domain": "AI datacenter",
     "avatar": "CAT",
@@ -5130,6 +5240,7 @@
   {
     "handle": "@NVT",
     "kind": "company",
+    "vault_page": "NVT",
     "display_name": "nVent Electric",
     "domain": "AI datacenter",
     "avatar": "NVT",
@@ -5178,6 +5289,7 @@
   {
     "handle": "@AAON",
     "kind": "company",
+    "vault_page": "AAON",
     "display_name": "AAON",
     "domain": "AI datacenter",
     "avatar": "AAON",
@@ -5226,6 +5338,7 @@
   {
     "handle": "@FLNC",
     "kind": "company",
+    "vault_page": "FLNC",
     "display_name": "Fluence Energy",
     "domain": "AI datacenter",
     "avatar": "FLNC",
@@ -5274,6 +5387,7 @@
   {
     "handle": "@AMPX",
     "kind": "company",
+    "vault_page": "AMPX",
     "display_name": "Amprius Technologies",
     "domain": "AI datacenter",
     "avatar": "AMPX",
@@ -5322,6 +5436,7 @@
   {
     "handle": "@SNDK",
     "kind": "company",
+    "vault_page": "SNDK",
     "display_name": "SanDisk",
     "domain": "Memory & storage",
     "avatar": "SNDK",
@@ -5372,6 +5487,7 @@
   {
     "handle": "@VPG",
     "kind": "company",
+    "vault_page": "VPG",
     "display_name": "Vishay Precision Group",
     "domain": "Precision sensing",
     "avatar": "VPG",
@@ -5423,6 +5539,7 @@
   {
     "handle": "@NOVT",
     "kind": "company",
+    "vault_page": "NOVT",
     "display_name": "Novanta",
     "domain": "Precision photonics & motion",
     "avatar": "NOVT",
@@ -5474,6 +5591,7 @@
   {
     "handle": "@HARMONIC",
     "kind": "company",
+    "vault_page": "HARMONIC",
     "display_name": "Harmonic Drive Systems",
     "domain": "Robotics",
     "avatar": "HARMONIC",
@@ -5524,6 +5642,7 @@
   {
     "handle": "@FLEX",
     "kind": "company",
+    "vault_page": "FLEX",
     "display_name": "Flex Ltd.",
     "domain": "Electronics manufacturing",
     "avatar": "FLEX",
@@ -5572,6 +5691,7 @@
   {
     "handle": "@INOD",
     "kind": "company",
+    "vault_page": "INOD",
     "display_name": "Innodata",
     "domain": "AI data services",
     "avatar": "INOD",
@@ -5623,6 +5743,7 @@
   {
     "handle": "@IBIDEN",
     "kind": "company",
+    "vault_page": "IBIDEN",
     "display_name": "Ibiden",
     "domain": "AI datacenter",
     "avatar": "IBIDEN",
@@ -5675,6 +5796,7 @@
   {
     "handle": "@MURATA",
     "kind": "company",
+    "vault_page": "MURATA",
     "display_name": "Murata Manufacturing",
     "domain": "Passive components",
     "avatar": "MURATA",
@@ -5725,6 +5847,7 @@
   {
     "handle": "@TAIYO",
     "kind": "company",
+    "vault_page": "TAIYO",
     "display_name": "Taiyo Yuden",
     "domain": "Materials",
     "avatar": "TAIYO",
@@ -5776,6 +5899,7 @@
   {
     "handle": "@TUOPU",
     "kind": "company",
+    "vault_page": "TUOPU",
     "display_name": "Ningbo Tuopu Group",
     "domain": "Humanoid robotics",
     "avatar": "TUOPU",
@@ -5827,6 +5951,7 @@
   {
     "handle": "@SANHUA",
     "kind": "company",
+    "vault_page": "SANHUA",
     "display_name": "Sanhua Intelligent Controls",
     "domain": "Robotics",
     "avatar": "SANHUA",
@@ -5874,6 +5999,7 @@
   {
     "handle": "@SHUANGHUAN",
     "kind": "company",
+    "vault_page": "SHUANGHUAN",
     "display_name": "Shuanghuan Driveline",
     "domain": "Humanoid robotics",
     "avatar": "SHUANGHUAN",
@@ -5924,6 +6050,7 @@
   {
     "handle": "@ZHONGDA",
     "kind": "company",
+    "vault_page": "ZHONGDA",
     "display_name": "Zhongda Leader",
     "domain": "Humanoid robotics",
     "avatar": "ZHONGDA",
@@ -5969,6 +6096,7 @@
   {
     "handle": "@ZHAOWEI",
     "kind": "company",
+    "vault_page": "ZHAOWEI",
     "display_name": "Zhaowei Machinery & Electronics",
     "domain": "Humanoid robotics",
     "avatar": "ZHAOWEI",
@@ -6019,6 +6147,7 @@
   {
     "handle": "@HENGLI",
     "kind": "company",
+    "vault_page": "HENGLI",
     "display_name": "Hengli Hydraulic",
     "domain": "Humanoid robotics",
     "avatar": "HENGLI",
@@ -6068,6 +6197,7 @@
   {
     "handle": "@SLING",
     "kind": "company",
+    "vault_page": "SLING",
     "display_name": "Zhejiang Sling Intelligent Drive",
     "domain": "Robotics",
     "avatar": "SLING",

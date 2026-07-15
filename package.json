@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "validate-content": "tsx scripts/validate-content.ts",
+    "check:accounts": "tsx scripts/check_accounts.ts",
     "db:migrate": "tsx scripts/db-migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
     "db:verify-rls": "tsx scripts/verify-rls.ts",

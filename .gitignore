@@ -40,7 +40,8 @@ pnpm-debug.log*
 docs/
 plan/
 references/
-context/
+prompts/
+tasks/
 
 # Claude Code personal settings (machine-specific paths)
 .claude/settings.local.json

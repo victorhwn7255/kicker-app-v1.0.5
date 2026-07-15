@@ -108,6 +108,8 @@ Live at <https://kicker-app-v1-0-5.vercel.app/>.
   Nothing proprietary crosses the bridge: no thesis content, no positions, no P&L, no price targets, no valuation multiples.
 - Fresh vault ingests are the engine's fuel supply.
   When sources go stale, accounts start repeating themselves and the novelty gate rejects the repeats.
+- Coverage check: `pnpm check:accounts` (the `/check-accounts` skill) lists vault pages with no Ticker account yet.
+  The join key is each account's `vault_page` field (the originating wiki page stem, stamped by the exporter).
 
 ### The engine (`src/lib/engine/`)
 

@@ -33,6 +33,10 @@ export type PersonaCard = z.infer<typeof PersonaCardSchema>;
 export const AccountSchema = z.object({
   handle,
   kind: KindSchema,
+  // Originating stocks-wiki page (filename stem under wiki/<kind-plural>/) - the
+  // mechanical join key for scripts/check_accounts.ts; stamped by the vault's
+  // publish-ticker exporter. Optional so legacy fixtures without it still parse.
+  vault_page: z.string().optional(),
   display_name: z.string().optional(),
   domain: z.string().optional(),
   // Monogram for company/chokepoint tiles; omit for theme (renders the nodes glyph).
