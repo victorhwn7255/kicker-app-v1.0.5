@@ -7,6 +7,8 @@ This file is the operational summary an agent needs to act safely.
 
 | Fact | Value |
 |---|---|
+| Public URL | `https://ticker.thevixguy.com` (Cloudflare DNS-only CNAME -> Vercel; `kicker-app-v1-0-5.vercel.app` = alias) |
+| GitHub repo | `victorhwn7255/ticker-app-v1.0.8` (renamed 2026-07-16 from `kicker-app-v1.0.5`; the box's remote may still hold the old URL - GitHub redirects it, but run `git remote set-url origin git@github.com:victorhwn7255/ticker-app-v1.0.8.git` on the box when next SSH'd in) |
 | Instance | t3.micro (free tier year 1), Ubuntu 26.04, `us-east-1` |
 | Public IP | `54.91.170.188` - CHANGES if the instance is stopped/started (reboot keeps it); if SSH times out, the user's home IP may also have changed (security group allows SSH from "My IP" only) |
 | SSH | `ssh -i ~/.ssh/ticker-key.pem ubuntu@<ip>` (alias `ssh ticker` if ~/.ssh/config is set) |
