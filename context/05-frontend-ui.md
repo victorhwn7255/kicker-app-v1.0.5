@@ -10,7 +10,7 @@ All auth/marketing chrome was removed in the same revamp: the landing page IS th
 
 | Route | What it renders |
 |---|---|
-| `/` | The feed: `getPosts()` filtered to real posts (`p.postedAt`), PostCards + Terminator ("caught up") in a 600px column |
+| `/` | The feed, X-style infinite scroll (2026-07-16): server renders the newest 30 via `getFeedPage` (cursor-paged, engine posts only); `FeedStream` (client) appends pages from `/api/posts` on an IntersectionObserver sentinel + spinner; Terminator renders only at the true end. 600px column |
 | `/p/[postId]` | Post permalink: the PostCard + ReceiptPanel (source location, research excerpt, tier chip, freshness, link into research) + replies |
 | `/p/[postId]/opengraph-image` | Social share card (dynamic OG image with body + tier label) |
 | `/u/[handle]` | Profile: big avatar, bio, KindBadge, "research updated Nd ago" line, "what @X knows" tier-chipped claims, the account's posts |

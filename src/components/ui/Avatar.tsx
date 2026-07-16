@@ -78,6 +78,8 @@ export function Avatar({
           alt=""
           width={size}
           height={size}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}
         />

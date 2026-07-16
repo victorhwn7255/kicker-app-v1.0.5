@@ -116,6 +116,76 @@ export const getPosts = unstable_cache(
   { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
 );
 
+/* ---- Cursor-paged feed (the X-style timeline pattern) ---- */
+
+export const FEED_PAGE_SIZE = 30;
+
+/**
+ * Opaque feed cursor: "<published_at ISO>|<seq>" of the last row the client holds.
+ * A tick publishes its batch under ONE published_at (seq = schedule-second breaks
+ * ties), so the cursor must be composite - a timestamp alone would skip or repeat
+ * posts when a page boundary lands inside a batch.
+ */
+export function encodeFeedCursor(ts: string, seq: number): string {
+  return `${ts}|${seq}`;
+}
+
+export function decodeFeedCursor(cursor: string): { ts: string; seq: number } | null {
+  const i = cursor.lastIndexOf('|');
+  if (i < 0) return null;
+  const ts = cursor.slice(0, i);
+  const seq = Number(cursor.slice(i + 1));
+  if (!ts || Number.isNaN(Date.parse(ts)) || !Number.isFinite(seq)) return null;
+  return { ts, seq };
+}
+
+export type FeedPage = { posts: Post[]; nextCursor: string | null };
+
+/**
+ * One feed page, newest-first from the cursor. Engine posts only (fixtures have no
+ * published_at). Fetches limit+1 rows so "is there another page?" needs no second
+ * query. Cached per cursor - and older pages are append-stable (new posts only ever
+ * land above the newest cursor), so they cache cleanly.
+ */
+export const getFeedPage = unstable_cache(
+  async (cursor: string | null, limit: number = FEED_PAGE_SIZE): Promise<FeedPage> => {
+    let q = supabaseRead()
+      .from('posts')
+      .select('obj:data, published_at, seq')
+      .not('published_at', 'is', null)
+      .order('published_at', { ascending: false })
+      .order('seq', { ascending: true })
+      .limit(limit + 1);
+    const c = cursor ? decodeFeedCursor(cursor) : null;
+    if (c) {
+      // Strictly after the cursor in feed order: an older batch, or same batch + later seq.
+      q = q.or(`published_at.lt."${c.ts}",and(published_at.eq."${c.ts}",seq.gt.${c.seq})`);
+    }
+    const { data, error } = await q;
+    if (error) throw new Error(`Failed to load feed page: ${error.message}`);
+    const rows = (data ?? []) as unknown as { obj: unknown; published_at: string; seq: number }[];
+    const pageRows = rows.slice(0, limit);
+    const posts = parseRows(PostSchema, pageRows, 'posts');
+    // Same live relative stamps as getPosts, recomputed each revalidation.
+    const now = Date.now();
+    const stamped = posts.map((p) =>
+      p.postedAt
+        ? {
+            ...p,
+            time: relativeTime(Date.parse(p.postedAt), now),
+            freshness: freshnessStamp(Date.parse(p.postedAt), now),
+          }
+        : p,
+    );
+    const last = pageRows[pageRows.length - 1];
+    const nextCursor =
+      rows.length > limit && last ? encodeFeedCursor(last.published_at, last.seq) : null;
+    return { posts: stamped, nextCursor };
+  },
+  ['feed_page'],
+  { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
+);
+
 export const getKillList = unstable_cache(
   async (): Promise<KillListEntry[]> => {
     const { data, error } = await supabaseRead().from('kill_list').select('obj:data').order('seq');
