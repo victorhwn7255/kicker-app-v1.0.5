@@ -124,10 +124,18 @@ export function buildDayPlan(input: {
 
   // Heavy-tailed activity weights: lognormal spread is what makes SOME accounts
   // loud today and others silent, instead of everyone politely posting once.
+  // The account's cadence bucket ("more"/"normal"/"less", accounts.json) scales
+  // its weight - a standing bias on the dice, while the lognormal keeps every
+  // day random: a "more" account still has quiet days, a "less" one still speaks.
   const eligible = accounts.filter((a) => (sourcesByAccount.get(a.handle)?.length ?? 0) > 0);
-  const weights = eligible.map(() => Math.exp(gauss(rng)));
+  const weights = eligible.map(
+    (a) => DAILY.cadenceWeight[a.cadence ?? 'normal'] * Math.exp(gauss(rng)),
+  );
   const capFor = (a: Account) =>
-    Math.min(DAILY.maxPerAccount, sourcesByAccount.get(a.handle)!.length);
+    Math.min(
+      a.cadence === 'less' ? DAILY.cadenceCapLess : DAILY.maxPerAccount,
+      sourcesByAccount.get(a.handle)!.length,
+    );
 
   // Weighted draws with per-account caps. A draw that hits a capped account is
   // re-drawn; if the pool saturates we stop short of target (never force it).

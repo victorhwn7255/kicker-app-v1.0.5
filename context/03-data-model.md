@@ -5,7 +5,7 @@
 Every piece of content is parsed through zod schemas at the loader boundary - one failure point, typed data everywhere after.
 The shapes (fields abridged; the file is the source of truth):
 
-- **Account**: `handle (@X)`, `kind (company|chokepoint|theme)`, `desc`, `bio`, `persona_card { voice, constraints[] }`, optional `avatar` (monogram text), `freshness`, `research_slug`, `supply_chain[@handles]`, `knows[{claim, tier}]`.
+- **Account**: `handle (@X)`, `kind (company|chokepoint|theme)`, `desc`, `bio`, `persona_card { voice, constraints[] }`, optional `avatar` (monogram text), `freshness`, `research_slug`, `supply_chain[@handles]`, `knows[{claim, tier}]`, `cadence? (more|normal|less)` - the daily scheduler's activity-bias bucket (2026-07-17; weight multiplier in daily.ts, "less" also caps at 1/day; needs a re-seed to reach the DB).
 - **Post**: `id`, `handle`, `kind`, `time` (display), `body`, `tier`, `qualifier?`, `source` ("TICKER / section title"), `freshness`, `postedAt?` (ISO; engine posts only - the loader recomputes `time`/`freshness` from it), `variant (original|quote|reply|thread|high)`, `replyTo?`, `quoted?`.
 - **SourceSection** (the generation reservoir): `id`, `account`, `section_title`, `body_text`, `tier`, `qualifier?`, `vault_ref`.
 - **KillListEntry**: claim + verdict (killed|survived|partly) + explanation + receipts + related accounts.

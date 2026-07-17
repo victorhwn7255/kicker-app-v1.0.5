@@ -147,6 +147,73 @@ describe('buildDayPlan (the randomized, realistic day schedule)', () => {
   });
 });
 
+describe('cadence buckets (per-account activity bias)', () => {
+  // A fleet where every account has PLENTY of sources (so source depth never caps
+  // anyone) and the buckets are the only difference between the three cohorts.
+  function cadenceFleet(): { accounts: Account[]; sources: SourceSection[] } {
+    const accounts: Account[] = [];
+    const sources: SourceSection[] = [];
+    const bucket = (i: number) => (i < 10 ? 'more' : i < 20 ? 'less' : undefined);
+    for (let i = 0; i < 60; i++) {
+      const handle = `@ACC${i}`;
+      accounts.push(makeAccount({ handle, ...(bucket(i) ? { cadence: bucket(i) } : {}) }));
+      for (let j = 0; j < 6; j++) {
+        sources.push(
+          makeSource({ id: `src-${i}-${j}`, account: handle, section_title: `Section ${i}-${j}` }),
+        );
+      }
+    }
+    return { accounts, sources };
+  }
+
+  it('biases allocation (more > normal > less over many days) while staying random per day', () => {
+    const { accounts, sources } = cadenceFleet();
+    const totals = { more: 0, normal: 0, less: 0 };
+    for (let d = 1; d <= 30; d++) {
+      const date = new Date(Date.UTC(2026, 7, d));
+      const plan = buildDayPlan({ accounts, sources, posts: [], date });
+      for (const item of plan.items) {
+        const idx = Number(item.account.slice(4));
+        totals[idx < 10 ? 'more' : idx < 20 ? 'less' : 'normal'] += 1;
+      }
+    }
+    // Per-account averages so cohort sizes (10/10/40) don't skew the comparison.
+    const perMore = totals.more / 10;
+    const perNormal = totals.normal / 40;
+    const perLess = totals.less / 10;
+    expect(perMore).toBeGreaterThan(perNormal * 1.3);
+    expect(perNormal).toBeGreaterThan(perLess * 1.3);
+  });
+
+  it('caps a "less" account at 1 post per day (quiet means no burst days)', () => {
+    const { accounts, sources } = cadenceFleet();
+    for (let d = 1; d <= 30; d++) {
+      const plan = buildDayPlan({ accounts, sources, posts: [], date: new Date(Date.UTC(2026, 7, d)) });
+      const perAcct = new Map<string, number>();
+      for (const item of plan.items) perAcct.set(item.account, (perAcct.get(item.account) ?? 0) + 1);
+      for (const [h, n] of perAcct) {
+        const idx = Number(h.slice(4));
+        if (idx >= 10 && idx < 20) expect(n).toBeLessThanOrEqual(1);
+        else expect(n).toBeLessThanOrEqual(DAILY.maxPerAccount);
+      }
+    }
+  });
+
+  it('keeps the day total inside the band (buckets redistribute, never inflate)', () => {
+    const { accounts, sources } = cadenceFleet();
+    const plan = buildDayPlan({ accounts, sources, posts: [], date: new Date(Date.UTC(2026, 7, 5)) });
+    expect(plan.items.length).toBeLessThanOrEqual(DAILY.targetMax);
+  });
+
+  it('an all-normal fleet is unaffected (default = existing behavior)', () => {
+    const { accounts, sources } = fleet();
+    const withExplicitNormal = accounts.map((a) => ({ ...a, cadence: 'normal' as const }));
+    const a = buildDayPlan({ accounts, sources, posts: [], date: DATE_A });
+    const b = buildDayPlan({ accounts: withExplicitNormal, sources, posts: [], date: DATE_A });
+    expect(b.items).toEqual(a.items);
+  });
+});
+
 describe('makeRng (seeded determinism)', () => {
   it('same seed -> same stream; different seed -> different stream', () => {
     const a = makeRng('x');

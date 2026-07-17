@@ -15,6 +15,7 @@ Critically, its inputs are FROZEN at the day boundary: fresh/used classification
 
 - Daily total drawn uniformly from **60-90** (`ENGINE_TARGET_MIN/MAX`). Deliberately low: quality over quantity, and it keeps each account inside its fresh-source supply.
 - **Heavy-tailed allocation** (lognormal weights): some accounts busy, most post once or twice, a real fraction stay silent that day. Hard cap **3/account/day** (`ENGINE_MAX_PER_ACCOUNT`), also capped by the account's source count.
+- **Cadence buckets (2026-07-17):** an account's optional `cadence` field (`more` 2.0x / `normal` 1.0x / `less` 0.4x weight, `DAILY.cadenceWeight`) scales its lognormal draw - a standing bias, still random per day. `less` accounts are additionally capped at **1/day** (`DAILY.cadenceCapLess`). The day total stays inside the band; buckets only redistribute it. validate-content warns when `more` sits on an account with <6 sources (recycling risk).
 - Source pick per account: fresh (never-referenced) sources first = trigger `ingest`; already-referenced = `rotation`; ~15% chance to reply to a supply-chain sibling with a recent post = `conversation`.
 - **Timing (the even-spread design, 2026-07-15):** all posts are laid on an even, jittered grid across the full 24h, with accounts round-robined. Guarantees: no two accounts post at the same moment (gaps ~12-38 min at 60/day), and one account's posts land hours apart (>= ~1.8h). Jitter stays inside the front 60% of each slot so consecutive posts keep >= ~0.4x slot spacing.
 

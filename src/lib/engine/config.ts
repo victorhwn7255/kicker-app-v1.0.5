@@ -191,6 +191,12 @@ export const DAILY = {
   maxPerAccount: Number.parseInt(process.env.ENGINE_MAX_PER_ACCOUNT ?? '', 10) || 3,
   /** Minimum minutes between one account's posts (the even-spread grid exceeds this). */
   minGapMinutes: 30,
+  /** Cadence buckets (accounts.json `cadence` field): multiplies the account's
+   *  daily lognormal weight. A bias on the dice, never a schedule - the day total
+   *  stays inside [targetMin, targetMax]; buckets only redistribute who fills it. */
+  cadenceWeight: { more: 2.0, normal: 1.0, less: 0.4 } as Record<'more' | 'normal' | 'less', number>,
+  /** A "less" account also gets a tighter daily cap - quiet must mean no burst days. */
+  cadenceCapLess: 1,
   /** Optional salt so a re-seeded deploy reshuffles days (SCHEDULE_SEED env). */
   seedSalt: process.env.SCHEDULE_SEED ?? '',
 

@@ -30,6 +30,15 @@ export const PersonaCardSchema = z.object({
 });
 export type PersonaCard = z.infer<typeof PersonaCardSchema>;
 
+/**
+ * Cadence bucket: how often this account tends to tweet, relative to the fleet.
+ * A BIAS on the daily scheduler's random dice (weight multiplier in daily.ts),
+ * never a schedule - a "more" account still has quiet days, a "less" account
+ * still occasionally speaks. Absent = "normal".
+ */
+export const CadenceSchema = z.enum(['more', 'normal', 'less']);
+export type Cadence = z.infer<typeof CadenceSchema>;
+
 export const AccountSchema = z.object({
   handle,
   kind: KindSchema,
@@ -37,6 +46,7 @@ export const AccountSchema = z.object({
   // mechanical join key for scripts/check_accounts.ts; stamped by the vault's
   // publish-ticker exporter. Optional so legacy fixtures without it still parse.
   vault_page: z.string().optional(),
+  cadence: CadenceSchema.optional(),
   display_name: z.string().optional(),
   domain: z.string().optional(),
   // Monogram for company/chokepoint tiles; omit for theme (renders the nodes glyph).

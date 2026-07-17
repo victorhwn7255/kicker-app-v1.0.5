@@ -69,10 +69,22 @@ function main(): void {
   }
   for (const s of sources) unknownAccount(`source ${s.id}`, s.account);
   for (const r of research) unknownAccount(`research ${r.slug}`, r.account);
+  const sourceCounts = new Map<string, number>();
+  for (const s of sources) sourceCounts.set(s.account, (sourceCounts.get(s.account) ?? 0) + 1);
+
+  const warnings: string[] = [];
   for (const a of accounts) {
     for (const h of a.supply_chain ?? []) unknownAccount(`account ${a.handle} supply_chain`, h);
     if (a.research_slug && !slugs.has(a.research_slug))
       errors.push(`account ${a.handle} research_slug references unknown page ${a.research_slug}`);
+    // A "more"-cadence account burns fresh sources ~2x faster; with a thin page it
+    // slides into recycled takes the novelty gate then drops. Warn, don't fail.
+    // Threshold 5 = the fleet's depth range is 3-6, so this flags only the
+    // genuinely thin (3-4 source) pages, not the standard-depth cohort.
+    if (a.cadence === 'more' && (sourceCounts.get(a.handle) ?? 0) < 5)
+      warnings.push(
+        `account ${a.handle} has cadence "more" but only ${sourceCounts.get(a.handle) ?? 0} sources - expect recycling/novelty drops (consider "normal" or a deeper vault export)`,
+      );
   }
 
   const fired = tripwires.filter((t) => t.status === 'fired').length;
@@ -85,6 +97,10 @@ function main(): void {
       `  sources: ${sources.length}\n` +
       `  research pages: ${research.length}`,
   );
+
+  if (warnings.length) {
+    console.warn(`\n⚠ ${warnings.length} warning(s):\n` + warnings.map((w) => '  - ' + w).join('\n'));
+  }
 
   if (errors.length) {
     console.error(`\n✗ ${errors.length} referential error(s):\n` + errors.map((e) => '  - ' + e).join('\n'));

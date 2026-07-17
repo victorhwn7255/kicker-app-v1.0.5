@@ -144,7 +144,8 @@
         "claim": "China: export licenses for H200 are approved, yet zero revenue is assumed in the outlook - 'we are uncertain whether any imports will be allowed into the country.' Whether that market comes back is genuinely unknown.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@TSM",
@@ -193,7 +194,8 @@
         "claim": "Its reported AI-accelerator revenue - guided to a mid-to-high-50s percent annual growth rate through 2029 - deliberately excludes datacenter CPUs. Management acknowledges CPUs are 'more and more important' in AI infrastructure but says it cannot yet tell an AI-server CPU from a conventional-server one, so the true AI-attributable figure may be larger than the reported one.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@transformer-supply",
@@ -239,7 +241,8 @@
         "claim": "Does transformer pricing power survive the 2027-2029 wave of new factory capacity - and does the makers' order intake, not developer delays, give the first honest answer?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@HBM-memory",
@@ -285,7 +288,8 @@
         "claim": "If the next memory generation ramps on time at all three makers, does pricing normalize - is this shortage structural, or just a great cycle?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@who-holds-the-risk",
@@ -333,7 +337,8 @@
         "claim": "The first crack, if any: a drawn backstop, an impairment, a repriced structure, a credit fund publicly pulling back. Which appears first - or does the demand arrive and none of them ever fire?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@HALEU-fuel",
@@ -375,7 +380,8 @@
         "claim": "Can any competitor compress the incumbent's 3-5 year head start before 2030?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@optical-DSP",
@@ -514,7 +520,8 @@
         "claim": "Does the mid-2026 next-generation laminate qualification confirm the per-generation material gate - and which supplier survives it?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@MLCC",
@@ -608,7 +615,8 @@
         "claim": "Is on-site generation a bridge until the grid catches up - or the permanent architecture for AI datacenters?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@InP-supply",
@@ -747,7 +755,8 @@
         "claim": "Demand is certain; capture is not - with five competing technology approaches and 10+ credible suppliers, who actually earns the profit pool?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@rare-earth-magnets",
@@ -792,7 +801,8 @@
         "claim": "What erodes the grip first: rare-earth-free motor chemistry, non-China capacity arriving 2027-28 - or China simply relaxing export controls?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@CoWoS",
@@ -1020,7 +1030,8 @@
         "claim": "Five pre-registered signals would weaken this story - capex deceleration, token-growth slowdown, channel inventory, monetization failure, foundry softening. None has fired yet. Which fires first?",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@agentic-CPU",
@@ -2261,7 +2272,8 @@
         "claim": "An open question hangs over how independent the Anthropic program is. Broadcom describes Anthropic's deployment as 'TPU-based compute' - the terminology of Google's TPU architecture - and in April signed Anthropic to another 5 gigawatts of 'next-generation TPU-based compute' from 2027. Whether that is an independent accelerator line or a derivative of the Google TPU is not resolved.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@MRVL",
@@ -2946,7 +2958,8 @@
         "claim": "To meet the order surge, Eaton is running a roughly $1.5 billion, ~24-project US capacity expansion, its largest, with 12 facilities completed and ramping by early 2026 and full production targeted in 2027. That ramp costs margin now: Q1 2026 Electrical Americas operating margin of 25.6% came in below the company's own expectations, on a price-cost lag and accelerated ramp-up costs. Management calls the headwinds temporary and, while raising full-year organic growth, lowered its combined Electrical segment margin guide by 50 basis points to 24.1%-24.5% - a deliberate trade; whether the ramp executes and margin recovers as planned is still ahead of it.",
         "tier": "solid"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@GEV",
@@ -2994,7 +3007,8 @@
         "claim": "Whether a hyperscaler name ever surfaces is unresolved: the solid-state transformer is due for a first delivery to 'a hyperscaler' in the fall of 2026, unnamed, followed by six months of customer testing before any order. Whether the customer name is disclosed later is an open question.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@VRT",
@@ -3043,7 +3057,8 @@
         "claim": "Because the company reports by region and not by product line, the liquid-cooling-versus-power revenue mix is not visible from the outside. And with no single customer above 10% in FY2025, whether concentration emerges as the $15 billion backlog converts over 12-18 months - especially through large hyperscaler-anchored deployments - is an open question.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@BE",
@@ -4790,7 +4805,8 @@
         "claim": "Reported net income is materially inflated by non-operating gains on equity securities - a $36.9 billion unrealized gain flowed through other income in the March 2026 quarter. Operating income, up 30% in the quarter to $39.7 billion, is the cleaner read of the business than net income; the equity-portfolio gains are volatile and swing the reported bottom line.",
         "tier": "solid"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@MSFT",
@@ -4839,7 +4855,8 @@
         "claim": "The OpenAI arrangement, in structural terms only: access to OpenAI's frontier-model IP royalty-free through 2032, a revenue-share arrangement through 2030, an equity stake, and OpenAI as a large compute customer. No filing discloses OpenAI's share of Azure RPO - a Tier-3 claim of '45%' was checked against the primary record and not supported. Whether Microsoft ever quantifies that share is an open question.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@META",
@@ -4888,7 +4905,8 @@
         "claim": "Whether the AI/ads return keeps pace with the capex is an open question the company itself does not resolve. 2026 capex is guided up roughly 87% to a $135 billion midpoint while operating income is guided only 'above 2025' - the gap between spending and return is the thing to watch.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@AMZN",
@@ -4942,7 +4960,8 @@
         "claim": "Whether AWS's record 37.7% operating margin holds as depreciation from the capex build and Trainium scale up - or compresses in the build years management flagged - is an open question the company itself has not answered.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@AAPL",
@@ -4991,7 +5010,8 @@
         "claim": "The open question that remains: does the capex-light model hold, or does Apple eventually ramp AI and datacenter spending toward hyperscaler scale - the single fact that would move it from counterpoint toward the demand-side cohort? Private Cloud Compute has no financial disclosure, so its off-device AI footprint is unknown.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "more"
   },
   {
     "handle": "@ORCL",
@@ -5637,7 +5657,8 @@
         "claim": "Even the pioneer concedes a clock on the reducer moat: in reduction gears alone, the presence of competition cannot be ignored, with Chinese challengers closing the precision gap and robots there selling at prices that are hard to believe. The answer is to move up the value chain - from selling reducers alone toward higher-value actuators with built-in drivers (targeted within about 1.5 years) and an ultra-compact-gearbox dexterous hand co-developed with Minebea Mitsumi and shown at CES 2026. Whether that holds the added value as reducers commoditize is unresolved.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@FLEX",
@@ -5791,7 +5812,8 @@
         "claim": "Independent analysis puts Ibiden's overall FC-BGA share near 35% across a roughly five-firm oligopoly - the near-100% grip is specific to the leading-edge node, not the mature ones.",
         "tier": "needs"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@MURATA",
@@ -5842,7 +5864,8 @@
         "claim": "No customer is named - only generic 'hyperscaler customers' and 'data-center customers,' with management noting 'there are many hyperscaler customers in the AI-server area' and 'a certain degree of procurement competition among them.' Whether the server surge continues past 2027 is stated as genuinely unclear: '2026 and 2027 have started to come a bit more into view. As for 2028 and 2029 and beyond, the situation there is still unclear.'",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@TAIYO",
@@ -5894,7 +5917,8 @@
         "claim": "The AI-server MLCC ramp is mostly ahead: management expects significant change from the second half of the current fiscal year, with a considerable volume increase from next fiscal year onward, and discloses no separate AI-server or data-center revenue line - so the test is the aggregate capacitor guide, not a clean AI split.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@TUOPU",
@@ -5946,7 +5970,8 @@
         "claim": "Investability: A-share-only today (Shanghai 601689), with a plan announced December 2025 to issue H-shares and list in Hong Kong - stated as planned but not yet completed, with some uncertainty. For an international book that would open a cleaner route; for an investor able to access China A-shares directly, the Shanghai listing is already reachable.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@SANHUA",
@@ -5994,7 +6019,8 @@
         "claim": "Whether the emerging legs become sized businesses is open. The company reports advancing projects around the global data-center and computing-power industry - a named tailwind for commercial-AC exports - but the leg is not sized and the filings do not disclose an explicit liquid-cooling product. The first disclosed actuator revenue, a named robot customer, or a confirmed marquee-automaker robot relationship would be the catalysts to watch.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@SHUANGHUAN",
@@ -6045,7 +6071,8 @@
         "claim": "The Huandong spin-off is progressing toward a listing on the Shanghai STAR Market - board-approved in March 2024, application accepted by the exchange in November 2024. But this is a domestic A-share board, not Hong Kong, so it does not open international access. Shuanghuan still controls the subsidiary, so it is not yet a deconsolidation - a forward event, not a done one.",
         "tier": "solid"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@ZHONGDA",
@@ -6091,7 +6118,8 @@
         "claim": "The deterioration continued into the first quarter of 2026: net profit down 36%, down 43% excluding one-off items, return on equity 0.92%, and negative operating cash flow. The audit is a clean unqualified opinion and the company is still profitable, founder-controlled, and dividend-paying - deteriorating quality on a stable base, not distress. Whether the profit and cash-flow decline has bottomed, or is structural, is unresolved.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@ZHAOWEI",
@@ -6142,7 +6170,8 @@
         "claim": "Whether the dexterous-hand leg ever gets sized - a broken-out revenue line or a named humanoid customer - is unresolved, and so is whether the vertically-integrated micro-drive platform holds its edge as coreless motors commoditize.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@HENGLI",
@@ -6192,7 +6221,8 @@
         "claim": "Independent analysis scores the planetary roller screw 14 out of 18 and calls it the most acute physical bottleneck alongside harmonic gears, naming Hengli directly as a precision-machining entrant. Its capacity-flexibility is scored the lowest possible, 1, because grinding gates supply - which cuts both ways: Hengli benefits if grinding stays scarce and contributes to erosion of that pricing power if grinding scales quickly. This is a forward analyst framing, not a filed result.",
         "tier": "needs"
       }
-    ]
+    ],
+    "cadence": "less"
   },
   {
     "handle": "@SLING",
@@ -6242,6 +6272,7 @@
         "claim": "Humanoid is not named anywhere in Sling's filings (zero mentions of the humanoid and dexterous-hand terms); the robot framing is industrial - high-precision components for core motion joints, high-end smart-terminal equipment, machine tools, medical devices. The company describes the field as still in its nascent stage, and the reducer leg is not yet a broken-out revenue line.",
         "tier": "open"
       }
-    ]
+    ],
+    "cadence": "less"
   }
 ]
