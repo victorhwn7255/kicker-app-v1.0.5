@@ -1,0 +1,68 @@
+# The Ticker engine tick as a GitHub Actions cron - the $0 replacement for the
+# EC2 box. Public repo => unlimited free scheduled minutes on standard runners.
+#
+# Design notes:
+# - The tick was BUILT for a jittery scheduler: deterministic day plan, idempotent
+#   generation (attempted-slot guard), idempotent publisher (deterministic post
+#   ids + published_at guard), 120-min backlog floor. A late or skipped run
+#   self-heals on the next one; overlapping schedulers cannot double-post - which
+#   is also why a parallel trial alongside the EC2 timer is safe.
+# - `concurrency` serializes runs (a new run queues instead of overlapping).
+# - Scheduled runs are gated on the repo VARIABLE ENGINE_CRON_ENABLED == 'true'
+#   (Settings -> Secrets and variables -> Actions -> Variables). Manual runs
+#   (workflow_dispatch) always work - that's the smoke test.
+# - Secrets required (Settings -> Secrets and variables -> Actions -> Secrets):
+#     MODEL_API_KEY, GROQ_API_KEY, GOOGLE_GENERATIVE_AI_API_KEY,
+#     SUPABASE_SECRET_KEY, NEXT_PUBLIC_SUPABASE_URL,
+#     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+# - GitHub disables schedules after ~60 days without repo activity (it emails a
+#   warning first; one click re-enables). Normal push cadence keeps it alive.
+
+name: engine-tick
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+concurrency:
+  group: engine-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    if: github.event_name == 'workflow_dispatch' || vars.ENGINE_CRON_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: engine tick (generate due slice + publish due posts)
+        run: pnpm engine:tick
+        env:
+          ENGINE_ENABLED: 'true'
+          VERIFIER_ENABLED: 'false'
+          # NVIDIA-only lanes (same values the box runs; model ids are not secrets)
+          MODEL_PROVIDER: 'groq'
+          MODEL_BASE_URL: 'https://integrate.api.nvidia.com/v1'
+          MODEL_PRIMARY: 'nim:nvidia/nemotron-3-ultra-550b-a55b:3000:1500'
+          MODEL_SECONDARY: 'nim:openai/gpt-oss-120b:4000:1500'
+          MODEL_VERIFIER: 'nim:deepseek-ai/deepseek-v4-pro:900:1500'
+          # Credentials - GitHub encrypted secrets only, never in the repo
+          MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}

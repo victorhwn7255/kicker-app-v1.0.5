@@ -63,9 +63,22 @@ A healthy tick log line sequence: `[tick] start` -> `[tick] generated @Ns: plann
 3. Tick duration 4-9 min; longer = model latency degradation.
 4. Disk below ~90%; journal under its 200M cap.
 
-## Costs (as of 2026-07)
+## Costs (as of 2026-07-18)
 
-- Year 1: ~$0/month (EC2 free tier covers t3.micro 750h + 30GB EBS + IPv4 750h; NVIDIA API free tier; Supabase free; Vercel Hobby).
-- After free tier: ~$12/month (t3.micro ~$7.60 + EBS ~$0.65 + public IPv4 ~$3.65). Cost is UPTIME-based - tweet volume does not affect it (inference is free-tier NVIDIA).
-- Cheapest trims if ever needed: drop the public IP (use SSM Session Manager) ~-$3.65; t4g.micro (ARM) ~-$1.50; a Savings Plan ~-30% compute.
-- A billing alarm (AWS Budgets) is the recommended guard.
+- CORRECTION: the account is NOT on the legacy 12-month free tier (AWS retired it for
+  accounts created after mid-2025) - the box bills on-demand from day one: ~$12/month
+  (t3.micro ~$7.60 + public IPv4 ~$3.65 under "VPC" + EBS ~$0.65). Cost is
+  UPTIME-based - tweet volume does not affect it. The separate "Lightsail" line on the
+  AWS bill is the user's OTHER project (option-harvest), not Ticker.
+- **Planned end-state: engine on GitHub Actions, EC2 terminated -> Ticker infra $0/mo.**
+  `.github/workflows/engine-tick.yml` (built 2026-07-18): cron */15, same
+  `pnpm engine:tick`, concurrency-serialized, gated on repo VARIABLE
+  `ENGINE_CRON_ENABLED='true'`; manual workflow_dispatch always works (smoke test).
+  6 secrets in GitHub (names in the workflow header). Free because the repo is PUBLIC -
+  making the repo private changes the math. Actions cron jitters 5-15 min (rarely skips) -
+  the tick's idempotency + backlog floor absorb it.
+- Migration runbook: user adds the 6 secrets -> manual dispatch run (smoke) -> set
+  ENGINE_CRON_ENABLED=true -> 2-3 day parallel trial with the box (idempotent slot keys
+  make double-posting impossible) -> user TERMINATES the instance (terminate, not stop -
+  stop keeps billing EBS; terminate also releases the IP) -> AWS bill = Lightsail only.
+- A billing alarm (AWS Budgets, e.g. $6/mo with email at 80%/100%) is the standing guard.
