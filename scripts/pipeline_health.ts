@@ -114,17 +114,27 @@ async function main() {
   const distinctSlots = new Set(planRows.map((r) => r.scheduled_at)).size;
 
   // ---- deterministic red flags (pre-verdicts for the synthesis agent) ----
+  // PUBLISHED volume floor: Vic's accepted healthy range is ~40-60/day (decision
+  // 2026-07-18). The DAILY 60-90 band is a SLOT target - the novelty/length gates
+  // eat ~1/3 of candidates (by design, quality over quantity), so published lands
+  // below it. Flag only genuine anomalies: under 40 or above the slot-band max.
+  const PUBLISHED_MIN_HEALTHY = 40;
   const flags: string[] = [];
   const yCount = perDay[yesterday] ?? 0;
-  if (yCount && (yCount < DAILY.targetMin * 0.8 || yCount > DAILY.targetMax * 1.3))
-    flags.push(`yesterday's volume ${yCount} is outside the ${DAILY.targetMin}-${DAILY.targetMax} band`);
+  if (yCount && (yCount < PUBLISHED_MIN_HEALTHY || yCount > DAILY.targetMax * 1.3))
+    flags.push(
+      `yesterday's volume ${yCount} is outside the accepted ${PUBLISHED_MIN_HEALTHY}-${DAILY.targetMax} published range`,
+    );
   const ySpacing = spacing(yesterday);
   if (ySpacing.gaps && ySpacing.under2min / ySpacing.gaps > 0.3)
     flags.push(`bursty publishing yesterday: ${ySpacing.under2min}/${ySpacing.gaps} gaps under 2 min`);
   if (maxPerAccount(yesterday) > DAILY.maxPerAccount)
     flags.push(`per-account cap exceeded yesterday: ${maxPerAccount(yesterday)} > ${DAILY.maxPerAccount}`);
   if (freshnessMin !== null && freshnessMin > 120) flags.push(`newest post is ${freshnessMin} min old (engine stalled?)`);
-  if (cands.length && verified / cands.length < 0.45)
+  // Ship-rate floor 30%: with cadence buckets concentrating slots on deep accounts,
+  // novelty/length drops eating ~half of rotation-heavy days is by-design (same
+  // 2026-07-18 decision). Below 30% suggests a real problem (model/infra), not gates.
+  if (cands.length && verified / cands.length < 0.3)
     flags.push(`ship rate ${Math.round((100 * verified) / cands.length)}% is low`);
   if ((drops['generation error'] ?? 0) > 20) flags.push(`generation errors elevated: ${drops['generation error']}/24h`);
   if (distinctSlots > DAILY.targetMax * 1.3) flags.push(`today's plan has ${distinctSlots} slots (> band max ${DAILY.targetMax}) - plan instability?`);
