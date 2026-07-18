@@ -12,9 +12,12 @@
 #   (Settings -> Secrets and variables -> Actions -> Variables). Manual runs
 #   (workflow_dispatch) always work - that's the smoke test.
 # - Secrets required (Settings -> Secrets and variables -> Actions -> Secrets):
-#     MODEL_API_KEY, GROQ_API_KEY, GOOGLE_GENERATIVE_AI_API_KEY,
-#     SUPABASE_SECRET_KEY, NEXT_PUBLIC_SUPABASE_URL,
+#     MODEL_API_KEY, SUPABASE_SECRET_KEY, NEXT_PUBLIC_SUPABASE_URL,
 #     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+#   (GROQ_API_KEY / GOOGLE_GENERATIVE_AI_API_KEY deliberately absent: daily mode
+#   runs primary+secondary NVIDIA lanes only; the groq guard lane is disabled and
+#   the google fallback lane exists only in the old A/B batch mode. If either is
+#   ever re-enabled, add the key then - the error message will name it.)
 # - GitHub disables schedules after ~60 days without repo activity (it emails a
 #   warning first; one click re-enables). Normal push cadence keeps it alive.
 
@@ -61,8 +64,6 @@ jobs:
           MODEL_VERIFIER: 'nim:deepseek-ai/deepseek-v4-pro:900:1500'
           # Credentials - GitHub encrypted secrets only, never in the repo
           MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
