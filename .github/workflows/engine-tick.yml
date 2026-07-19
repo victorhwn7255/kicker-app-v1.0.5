@@ -25,7 +25,10 @@ name: engine-tick
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    # Offset minutes, NOT */15: GitHub throttles schedules at the congested
+    # :00/:15/:30/:45 marks (observed 2026-07-18: */15 degraded to ~hourly).
+    # Off-peak minutes get dispatched far more reliably.
+    - cron: '3,18,33,48 * * * *'
   workflow_dispatch: {}
 
 concurrency:
@@ -56,6 +59,9 @@ jobs:
         env:
           ENGINE_ENABLED: 'true'
           VERIFIER_ENABLED: 'false'
+          # 180s (default 120s): nemotron free-tier latency spikes were killing
+          # ~23 slots/day as "model call exceeded 120000ms" - patience is free here.
+          MODEL_CALL_TIMEOUT_MS: '180000'
           # NVIDIA-only lanes (same values the box runs; model ids are not secrets)
           MODEL_PROVIDER: 'groq'
           MODEL_BASE_URL: 'https://integrate.api.nvidia.com/v1'
