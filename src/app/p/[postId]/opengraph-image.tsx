@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { getPosts } from '@/lib/content';
+import { getPost } from '@/lib/content';
 import { tierLabel } from '@/lib/tiers';
 import type { Tier } from '@/lib/types';
 
@@ -17,7 +17,7 @@ const TIER_STYLE: Record<Tier, { glyph: string; glyphBg: string; glyphColor: str
 
 export default async function Image({ params }: { params: Promise<{ postId: string }> }) {
   const { postId } = await params;
-  const post = (await getPosts()).find((p) => p.id === postId);
+  const post = await getPost(postId);
 
   if (!post) {
     return new ImageResponse(

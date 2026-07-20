@@ -1,55 +1,43 @@
-# 07 - Operations (EC2, deploys, diagnostics, costs)
+# 07 - Operations (GitHub Actions engine, deploys, diagnostics, costs)
 
-Full tutorial-style setup history lives in `docs/deploy-aws-ec2.md`; the command cheat-sheet in `docs/aws-guides.md`.
 This file is the operational summary an agent needs to act safely.
+Historical: the engine ran on an AWS EC2 box 2026-07-13 -> 2026-07-20 (terminated;
+see "The EC2 era" at the bottom). `docs/deploy-aws-ec2.md` is the recipe to rebuild
+one if ever needed.
 
-## The box
+## The engine (GitHub Actions - since 2026-07-20)
 
 | Fact | Value |
 |---|---|
 | Public URL | `https://ticker.thevixguy.com` (Cloudflare DNS-only CNAME -> Vercel; `kicker-app-v1-0-5.vercel.app` = alias) |
-| GitHub repo | `victorhwn7255/ticker-app-v1.0.8` (renamed 2026-07-16 from `kicker-app-v1.0.5`; the box's remote may still hold the old URL - GitHub redirects it, but run `git remote set-url origin git@github.com:victorhwn7255/ticker-app-v1.0.8.git` on the box when next SSH'd in) |
-| Instance | t3.micro (free tier year 1), Ubuntu 26.04, `us-east-1` |
-| Public IP | `54.91.170.188` - CHANGES if the instance is stopped/started (reboot keeps it). No longer needed for shell access (SSM). |
-| SSH | **`ssh ticker`** - rides AWS SSM Session Manager (since 2026-07-17): ProxyCommand in `~/.ssh/config`, HostName = instance id `i-069408d8c6e2bf27f`, auth = the Mac's AWS credentials (IAM user `ceo-vic`) + the .pem key. Works from ANY network - no more security-group "My IP" dance. Needs: awscli + session-manager-plugin (installed), instance role `ticker-ssm-role` (AmazonSSMManagedInstanceCore). The old direct path (`ssh -i ~/.ssh/ticker-key.pem ubuntu@<ip>`) still works only while the port-22 SG rule exists and the source IP matches it - deletable once comfortable. |
-| App dir | `~/kicker-app` (git clone via read-only deploy key) |
-| Engine env | `~/kicker-app/.env.local` (chmod 600) - `ENGINE_ENABLED=true`, `VERIFIER_ENABLED=false`, `MODEL_*`, `SUPABASE_*` |
-| Service | `ticker-tick.service` (oneshot: `pnpm engine:tick`) |
-| Timer | `ticker-tick.timer`, `OnUnitActiveSec=15min` (fires ~15 min after each run finishes; no overlap) |
-| Memory | ~1GB RAM + 2GB swap file; ticks peak ~100MB |
-| Disk | ~7GB EBS at ~81% used (stable, not creeping); journald capped 200M via `/etc/systemd/journald.conf.d/00-size.conf` |
-| pnpm quirk | `pnpm config set verify-deps-before-run false` was needed on the box (pnpm 11 hard-fails otherwise) |
+| GitHub repo | `victorhwn7255/ticker-app-v1.0.8` (PUBLIC - that's what makes Actions free; renamed 2026-07-16 from `kicker-app-v1.0.5`) |
+| Workflow | `.github/workflows/engine-tick.yml` - checkout + pnpm install + `pnpm engine:tick` on a throwaway runner |
+| Schedule | cron `3,18,33,48 * * * *` - BUT GitHub throttles scheduled dispatch to ~hourly with occasional 2-4h gaps (observed + accepted, "no plan B" decision 2026-07-20). `workflow_dispatch` (manual Run workflow button / API) always starts within seconds |
+| Gate | repo VARIABLE `ENGINE_CRON_ENABLED='true'` gates scheduled runs; manual dispatch always works |
+| Secrets (4) | `MODEL_API_KEY`, `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (GitHub Settings -> Secrets; names must match exactly) |
+| Non-secret env | Baked into the workflow: NVIDIA lanes, `MODEL_CALL_TIMEOUT_MS=180000` (free-tier latency), `ENGINE_MAX_BACKLOG_MIN=360` (6h - late slots publish late instead of dropping across dispatch gaps) |
+| Volume expectation | ~30-60 published/day (accepted range), arriving in hourly-ish CLUSTERS not an even drip - a direct consequence of the throttled cron, accepted in the no-plan-B decision |
 
 ## Standard operations
 
-```bash
-# deploy new engine code (after the user pushes to main)
-ssh ticker 'cd ~/kicker-app && git pull'          # next tick picks it up; no restart
-# watch it work
-ssh ticker 'journalctl -u ticker-tick.service -f' # live logs (tick start/generated/published/done)
-# health reads (all safe)
-systemctl is-active ticker-tick.timer             # scheduler alive?
-systemctl list-timers ticker-tick.timer           # last/next run
-journalctl -u ticker-tick.service -n 50           # recent history
-df -h / ; free -h                                 # disk / memory
-# force a tick now instead of waiting (a WRITE - user-gated)
-sudo systemctl start ticker-tick.service
-# pause / resume tweeting (WRITES - user-gated)
-sudo systemctl stop  ticker-tick.timer
-sudo systemctl start ticker-tick.timer
-```
-
-A healthy tick log line sequence: `[tick] start` -> `[tick] generated @Ns: planned P -> verified V - dropped D` -> `[tick] published @Ns: X of X due slot(s)` -> `[tick] done in Ns` (typical 4-9 min with concurrency 3).
+- **Deploy = `git push`.** Every Actions run checks out fresh main; Vercel auto-builds the site. There is no second deploy step anymore.
+- **Watch it work**: repo -> Actions tab -> `engine-tick` runs (full logs kept per run; look for the `[tick]` lines). README badge shows latest-run status.
+- **Force a tick now**: Actions tab -> engine-tick -> Run workflow (or `gh workflow run engine-tick`) - user-gated like any production write.
+- **Pause tweeting**: set repo variable `ENGINE_CRON_ENABLED=false` (scheduled runs no-op; manual still works). Resume: set back to `true`.
+- **Health check from the Mac**: `pnpm pipeline:health` (deterministic; `--sample` feeds /inspect-tweet-pipeline).
+- A healthy tick log: `[tick] generated @Ns: planned P -> verified V - dropped D` -> `[tick] published @Ns: X of X due slot(s)` -> `[tick] done in Ns`.
+- **Failure alerting**: GitHub emails the workflow author on failed runs (Settings -> Notifications -> Actions, "failed only"). Covers run-failures, NOT "green runs but nothing publishing" - a feed-freshness alarm is still the Phase A gap.
+- **60-day rule**: GitHub pauses schedules on repos with no activity for ~60 days (emails first; one click resumes). Normal push cadence makes this theoretical.
 
 ## The permission model for agents (learned in practice)
 
-- **Read-only diagnostics** (status, journalctl, df, DB SELECTs) are fine once the user asks for a check.
-- **Any write** - forcing a tick, editing box env, `git pull` on the box, systemctl start/stop, DB migrate/seed, flipping `ENGINE_ENABLED` - needs the user's explicit go-ahead in that conversation. The auto-mode classifier WILL block unauthorized production writes; do not try to route around it.
+- **Read-only diagnostics** (run lists/logs, DB SELECTs, pipeline:health) are fine once the user asks for a check.
+- **Any write** - dispatching a run, editing secrets/variables, DB migrate/seed, flipping `ENGINE_CRON_ENABLED` - needs the user's explicit go-ahead in that conversation. The auto-mode classifier WILL block unauthorized production writes; do not try to route around it.
 
 ## Frontend / Vercel
 
-- Push to `main` -> Vercel auto-deploys (GitHub App integration). No cron there: `vercel.json` was deleted (the old `/api/engine/tick` cron is legacy; the route still exists, CRON_SECRET-gated, unused in prod).
-- Vercel env vars live in the dashboard (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, ...).
+- Push to `main` -> Vercel auto-deploys (GitHub App integration). `vercel.json` was deleted (the old `/api/engine/tick` cron is legacy; the route still exists, CRON_SECRET-gated, unused in prod).
+- Vercel env vars live in the dashboard (`NEXT_PUBLIC_SITE_URL=https://ticker.thevixguy.com`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, ...). Env edits need a redeploy to take effect.
 
 ## Database (Supabase)
 
@@ -58,27 +46,20 @@ A healthy tick log line sequence: `[tick] start` -> `[tick] generated @Ns: plann
 
 ## Health signals (what "working" looks like)
 
-1. Newest `posts.published_at` is minutes old (the feed's top post reads "now/Xm"). If the newest is HOURS old, the engine is stalled or backlogged - check timer + logs.
-2. `engine_candidates` ship rate around 2/3; drop mix dominated by novelty (fine) not generation errors (infra problem).
-3. Tick duration 4-9 min; longer = model latency degradation.
-4. Disk below ~90%; journal under its 200M cap.
+1. Newest `posts.published_at` within ~1-2h (hourly clusters are NORMAL under the throttled cron; many hours = check the Actions run history first).
+2. `engine_candidates` ship rate ~30-40%; drop mix dominated by novelty (fine) not generation errors (infra problem). pipeline_health flags published <30/day and ship rate <30%.
+3. Actions tick duration: seconds (no-op) to ~10 min (busy backlog).
 
-## Costs (as of 2026-07-18)
+## Costs (as of 2026-07-20 - the $0 end-state)
 
-- CORRECTION: the account is NOT on the legacy 12-month free tier (AWS retired it for
-  accounts created after mid-2025) - the box bills on-demand from day one: ~$12/month
-  (t3.micro ~$7.60 + public IPv4 ~$3.65 under "VPC" + EBS ~$0.65). Cost is
-  UPTIME-based - tweet volume does not affect it. The separate "Lightsail" line on the
-  AWS bill is the user's OTHER project (option-harvest), not Ticker.
-- **Planned end-state: engine on GitHub Actions, EC2 terminated -> Ticker infra $0/mo.**
-  `.github/workflows/engine-tick.yml` (built 2026-07-18): cron */15, same
-  `pnpm engine:tick`, concurrency-serialized, gated on repo VARIABLE
-  `ENGINE_CRON_ENABLED='true'`; manual workflow_dispatch always works (smoke test).
-  6 secrets in GitHub (names in the workflow header). Free because the repo is PUBLIC -
-  making the repo private changes the math. Actions cron jitters 5-15 min (rarely skips) -
-  the tick's idempotency + backlog floor absorb it.
-- Migration runbook: user adds the 6 secrets -> manual dispatch run (smoke) -> set
-  ENGINE_CRON_ENABLED=true -> 2-3 day parallel trial with the box (idempotent slot keys
-  make double-posting impossible) -> user TERMINATES the instance (terminate, not stop -
-  stop keeps billing EBS; terminate also releases the IP) -> AWS bill = Lightsail only.
-- A billing alarm (AWS Budgets, e.g. $6/mo with email at 80%/100%) is the standing guard.
+- **Ticker infra = $0/month**: GitHub Actions (public repo, free) + Supabase (free) + Vercel Hobby (free) + NVIDIA API (free) + Cloudflare DNS (free). Only real cost: the domain (~$10/yr).
+- The AWS account's remaining bill is **Lightsail only** (the user's OTHER project, option-harvest) + tax - under the $6/mo line. A $6 AWS Budget with email alerts is the standing guard.
+- Dependencies that keep it $0: repo stays PUBLIC (private -> Actions minutes are metered); NVIDIA free tier persists (paywall -> model-cost conversation).
+- If steadier rhythm is ever wanted again: "plan B" = a free external pinger (e.g. cron-job.org) POSTing to the workflow-dispatch API every 15 min with a fine-grained PAT (Actions: Read+write on this repo only) - dispatched runs start in seconds and don't throttle.
+
+## The EC2 era (historical, 2026-07-13 -> 2026-07-20)
+
+- t3.micro `us-east-1`, systemd timer every ~15 min, SSM Session Manager access (`ssh ticker`, since removed from `~/.ssh/config`). Terminated 2026-07-20 after a 2-day parallel trial with Actions (shared idempotent slot ledger made double-posting impossible).
+- Bill was ~$12/mo (the account is NOT on the legacy free tier - AWS retired it for accounts created after mid-2025).
+- AWS leftovers (free, harmless, deletable anytime): the security group, `ticker-ssm-role`, the `ticker-key` key pair.
+- Rebuild recipe if ever needed: `docs/deploy-aws-ec2.md` (~45 min).

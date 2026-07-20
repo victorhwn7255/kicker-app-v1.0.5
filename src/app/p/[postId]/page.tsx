@@ -1,16 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPosts } from '@/lib/content';
+import { getPost, getReplies, getFeedPage } from '@/lib/content';
 import { permalinkHref, profileHref, siteUrl } from '@/lib/links';
 import { PostCard } from '@/components/feed/PostCard';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ReceiptPanel } from './ReceiptPanel';
-
-async function getPost(postId: string) {
-  return (await getPosts()).find((p) => p.id === postId);
-}
 
 export async function generateMetadata({
   params,
@@ -27,8 +23,13 @@ export async function generateMetadata({
 
 export const revalidate = 300;
 
+/**
+ * Prerender only the newest page of permalinks; older posts render on demand
+ * (dynamicParams default) and are then ISR-cached. Keeps build time flat as
+ * the posts table grows instead of statically generating every post ever.
+ */
 export async function generateStaticParams() {
-  const posts = await getPosts();
+  const { posts } = await getFeedPage(null, 30);
   return posts.filter((p) => p.id).map((p) => ({ postId: p.id! }));
 }
 
@@ -41,7 +42,7 @@ export default async function PostPermalinkPage({
   const post = await getPost(postId);
   if (!post) notFound();
 
-  const replies = (await getPosts()).filter((p) => p.replyTo === post.handle);
+  const replies = await getReplies(post.handle);
 
   // schema.org: each permalink is a citable social post by a named research desk.
   const postLd = {

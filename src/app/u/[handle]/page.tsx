@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cn } from '@/lib/cn';
-import { getAccount, getPosts, getResearchPage, attachReceipts } from '@/lib/content';
+import { getAccount, getAccountPosts, getResearchPage, attachReceipts } from '@/lib/content';
 import { profileHref, researchHref, siteUrl } from '@/lib/links';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Account } from '@/lib/types';
@@ -84,7 +84,9 @@ export default async function ProfilePage({ params }: { params: Promise<Params> 
   const account = await getAccount('@' + handle);
   if (!account) notFound();
 
-  const posts = (await getPosts()).filter((p) => p.handle === account.handle);
+  // Bounded: this account's newest 30, a single indexed query - not a scan of
+  // the whole posts table (which grows ~35/day forever).
+  const posts = await getAccountPosts(account.handle);
   const items = await attachReceipts(posts);
   const research = account.research_slug ? await getResearchPage(account.research_slug) : undefined;
   const doorHref = account.research_slug ? researchHref(account.research_slug) : undefined;

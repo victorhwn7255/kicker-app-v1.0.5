@@ -87,10 +87,27 @@ export const getAccount = unstable_cache(
   { revalidate: REVALIDATE_SECONDS, tags: ['accounts'] },
 );
 
+/**
+ * LIVE relative stamps for engine posts (recomputed each revalidation), so
+ * "5m"/"2h" stay honest instead of freezing at publish time. Fixtures keep
+ * their hand-authored `time`.
+ */
+function stampLive(p: Post, now: number): Post {
+  return p.postedAt
+    ? {
+        ...p,
+        time: relativeTime(Date.parse(p.postedAt), now),
+        freshness: freshnessStamp(Date.parse(p.postedAt), now),
+      }
+    : p;
+}
+
 export const getPosts = unstable_cache(
   async (): Promise<Post[]> => {
     // Reverse-chron: engine-published posts (real published_at) newest-first, with
     // the human fixtures (null published_at) kept below in their narrative seq order.
+    // NOTE: loads the WHOLE table - reserved for whole-corpus consumers (sitemap).
+    // Screens use the bounded loaders below; do not add new getPosts() callers.
     const { data, error } = await supabaseRead()
       .from('posts')
       .select('obj:data')
@@ -98,21 +115,66 @@ export const getPosts = unstable_cache(
       .order('seq', { ascending: true });
     if (error) throw new Error(`Failed to load posts: ${error.message}`);
     const posts = parseRows(PostSchema, data as { obj: unknown }[], 'posts');
-    // Render a LIVE relative stamp for engine posts (recomputed each revalidation),
-    // so "5m"/"2h" stay honest instead of freezing at publish time. Fixtures keep
-    // their hand-authored `time`.
     const now = Date.now();
-    return posts.map((p) =>
-      p.postedAt
-        ? {
-            ...p,
-            time: relativeTime(Date.parse(p.postedAt), now),
-            freshness: freshnessStamp(Date.parse(p.postedAt), now),
-          }
-        : p,
-    );
+    return posts.map((p) => stampLive(p, now));
   },
   ['posts'],
+  { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
+);
+
+/** One post by id - a single-row fetch, not a scan (permalink + OG image path). */
+export const getPost = unstable_cache(
+  async (id: string): Promise<Post | undefined> => {
+    const { data, error } = await supabaseRead()
+      .from('posts')
+      .select('obj:data')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw new Error(`Failed to load post ${id}: ${error.message}`);
+    if (!data) return undefined;
+    return stampLive(PostSchema.parse((data as { obj: unknown }).obj), Date.now());
+  },
+  ['post'],
+  { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
+);
+
+/**
+ * One account's posts, newest first, BOUNDED (profile page). The `account`
+ * column is indexed by the publish-time index set, so this stays fast no
+ * matter how large the posts table grows.
+ */
+export const getAccountPosts = unstable_cache(
+  async (handle: string, limit: number = 30): Promise<Post[]> => {
+    const { data, error } = await supabaseRead()
+      .from('posts')
+      .select('obj:data')
+      .eq('account', handle)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('seq', { ascending: true })
+      .limit(limit);
+    if (error) throw new Error(`Failed to load posts for ${handle}: ${error.message}`);
+    const now = Date.now();
+    return parseRows(PostSchema, data as { obj: unknown }[], 'posts').map((p) => stampLive(p, now));
+  },
+  ['account_posts'],
+  { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
+);
+
+/** Replies TO an account (permalink page), bounded. replyTo lives in the data jsonb. */
+export const getReplies = unstable_cache(
+  async (handle: string, limit: number = 20): Promise<Post[]> => {
+    const { data, error } = await supabaseRead()
+      .from('posts')
+      .select('obj:data')
+      .eq('data->>replyTo', handle)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('seq', { ascending: true })
+      .limit(limit);
+    if (error) throw new Error(`Failed to load replies to ${handle}: ${error.message}`);
+    const now = Date.now();
+    return parseRows(PostSchema, data as { obj: unknown }[], 'posts').map((p) => stampLive(p, now));
+  },
+  ['replies'],
   { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
 );
 
