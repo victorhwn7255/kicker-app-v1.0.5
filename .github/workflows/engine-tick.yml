@@ -62,6 +62,12 @@ jobs:
           # 180s (default 120s): nemotron free-tier latency spikes were killing
           # ~23 slots/day as "model call exceeded 120000ms" - patience is free here.
           MODEL_CALL_TIMEOUT_MS: '180000'
+          # 6h stale-backlog window (default 120 min). GitHub throttles the cron to
+          # ~hourly with occasional 2-4h gaps (no-plan-B decision 2026-07-20): a slot
+          # stuck behind a long gap should publish LATE, not be dropped. Live publish
+          # timestamps make late honest; the 120-min guard predates them (frozen-feed
+          # era) and is too aggressive for a jittery scheduler.
+          ENGINE_MAX_BACKLOG_MIN: '360'
           # NVIDIA-only lanes (same values the box runs; model ids are not secrets)
           MODEL_PROVIDER: 'groq'
           MODEL_BASE_URL: 'https://integrate.api.nvidia.com/v1'

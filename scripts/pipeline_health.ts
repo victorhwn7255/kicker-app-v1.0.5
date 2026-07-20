@@ -114,11 +114,12 @@ async function main() {
   const distinctSlots = new Set(planRows.map((r) => r.scheduled_at)).size;
 
   // ---- deterministic red flags (pre-verdicts for the synthesis agent) ----
-  // PUBLISHED volume floor: Vic's accepted healthy range is ~40-60/day (decision
-  // 2026-07-18). The DAILY 60-90 band is a SLOT target - the novelty/length gates
-  // eat ~1/3 of candidates (by design, quality over quantity), so published lands
-  // below it. Flag only genuine anomalies: under 40 or above the slot-band max.
-  const PUBLISHED_MIN_HEALTHY = 40;
+  // PUBLISHED volume floor: Vic's accepted healthy range is ~30-60/day (widened
+  // from 40 on 2026-07-20). The DAILY 60-90 band is a SLOT target - the
+  // novelty/length gates eat ~2/3 of candidates (by design, quality over
+  // quantity), so published lands below it. Flag only genuine anomalies:
+  // under 30 or above the slot-band max.
+  const PUBLISHED_MIN_HEALTHY = 30;
   const flags: string[] = [];
   const yCount = perDay[yesterday] ?? 0;
   if (yCount && (yCount < PUBLISHED_MIN_HEALTHY || yCount > DAILY.targetMax * 1.3))
