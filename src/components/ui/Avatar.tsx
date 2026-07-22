@@ -38,6 +38,7 @@ export function Avatar({
   kind,
   text,
   handle,
+  logo,
   size = 42,
   rounded = false,
   className,
@@ -46,6 +47,10 @@ export function Avatar({
   text?: string;
   /** `@TICKER`; when kind is `company`, resolves the logo at /avatars/TICKER.png. */
   handle?: string;
+  /** Explicit logo stem (`public/avatars/<logo>.png`) for a non-company account that
+   *  carries a real brand mark - e.g. @youtube-buzz. Wins over the handle resolution;
+   *  a load failure still falls back to the monogram/glyph. */
+  logo?: string;
   size?: number;
   /** X-style: hairline ring instead of the hard 2px border (still a soft 3px square). */
   rounded?: boolean;
@@ -53,7 +58,8 @@ export function Avatar({
 }) {
   const [imgError, setImgError] = useState(false);
   const ticker = kind === 'company' ? handle?.replace(/^@/, '') : undefined;
-  const logoSrc = ticker ? `/avatars/${ticker}.png` : undefined;
+  const logoStem = logo ?? ticker;
+  const logoSrc = logoStem ? `/avatars/${logoStem}.png` : undefined;
   const showImage = !!logoSrc && !imgError;
 
   const style = AVATAR_STYLE[kind];

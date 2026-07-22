@@ -5353,5 +5353,113 @@
     "tier": "solid",
     "qualifier": "from the Q1 2026 earnings call",
     "vault_ref": "DDOG page / silicon heterogeneity"
+  },
+  {
+    "id": "src-yt-spender-de-rating",
+    "account": "@youtube-buzz",
+    "section_title": "How long will investors tolerate the capex?",
+    "body_text": "Two desks circling one question: how long will investors keep funding hyperscaler capex before they turn on it? Goldman's flow desk (Privorotsky) says the trade has split - the spenders 'have been punished,' the recipients of that spend 'have done very, very well' - and warns of reflexivity: let that gap run and the receivers eventually de-rate too. DataTrek's Nick Colas puts the same question at the center - capex is where the earnings growth comes from - while flagging semis as stretched, ~52x forward against the MAG-8's ~26x.",
+    "tier": "open",
+    "qualifier": "video commentary - not a filing",
+    "vault_ref": "video-intel: GS flow desk + DataTrek, 2026-07-15",
+    "source_date": "2026-07-15",
+    "video_links": [
+      {
+        "channel": "GS: The Macro Call",
+        "url": "https://youtu.be/mlPGrvruhfk"
+      },
+      {
+        "channel": "DataTrek",
+        "url": "https://youtu.be/tE4Z1TscZgU"
+      }
+    ]
+  },
+  {
+    "id": "src-yt-top-debate-cembalest-baker",
+    "account": "@youtube-buzz",
+    "section_title": "Top or not - two reads, same fortnight",
+    "body_text": "Same fortnight, opposite reads on how close we are to a top. JPM Asset Management's Michael Cembalest turned cautious on AI infrastructure, reaching for the 1999 Cisco-to-optical playbook: the hyperscaler buyers are 'starting to roll over even though the semiconductor index is zooming.' Atreides' Gavin Baker takes the other side - 'anyone who says we're in a valuation bubble is just not paying attention' (tech, he says, now trades at a discount to staples) - and argues being 'fundamentally short watts and wafers' may itself prevent an overbuild. Watch both.",
+    "tier": "open",
+    "qualifier": "video commentary - not a filing",
+    "vault_ref": "video-intel: The Compound + Generating Alpha, 2026-07-10",
+    "source_date": "2026-07-10",
+    "video_links": [
+      {
+        "channel": "The Compound",
+        "url": "https://youtu.be/-mRmA5ZUhmE"
+      },
+      {
+        "channel": "Generating Alpha",
+        "url": "https://youtu.be/FmLGYLQ6DFY"
+      }
+    ]
+  },
+  {
+    "id": "src-yt-memory-trade-cracked",
+    "account": "@youtube-buzz",
+    "section_title": "The memory trade cracked",
+    "body_text": "The memory trade cracked for the first time, per Ritholtz's Josh Brown and Michael Batnick: Samsung posted a 19-fold jump in profit - around $58B operating, topping its own record - and the stock still fell about 7%. Good news, no reward. Memory and storage names sit in 20-30% drawdowns off their highs even after Micron's blowout quarter, and the hosts concede the growth rate 'mathematically has to slow' - nobody quadruples prices twice - though they still read it as froth coming out, not a broken thesis.",
+    "tier": "open",
+    "qualifier": "video commentary - not a filing",
+    "vault_ref": "video-intel: The Compound (Brown & Batnick), 2026-07-07",
+    "source_date": "2026-07-07",
+    "video_links": [
+      {
+        "channel": "The Compound",
+        "url": "https://www.youtube.com/live/y8u0TZmVPEI"
+      }
+    ]
+  },
+  {
+    "id": "src-yt-capex-debt-credit",
+    "account": "@youtube-buzz",
+    "section_title": "The buildout bill reaches credit",
+    "body_text": "The bill for the buildout is turning up in credit. Goldman's cross-asset desk (Garrett) says the hyperscalers need to raise '$5.5 to $6 trillion' between 2025 and 2030, and that supply has just started to widen spreads - Goldman's hyperscaler bond basket +22bps in a week. Its flow desk pegs AI-related debt issuance at roughly $75B in the past month and $250B year-to-date, calling it 'a little indigestion on the credit complex.' Neither is ringing an alarm - just noting the concessions are no longer tight.",
+    "tier": "open",
+    "qualifier": "video commentary - not a filing",
+    "vault_ref": "video-intel: GS cross-asset + flow desks, 2026-07-17",
+    "source_date": "2026-07-17",
+    "video_links": [
+      {
+        "channel": "GS: The Markets",
+        "url": "https://youtu.be/MlwvbWyJJd0"
+      },
+      {
+        "channel": "GS: The Macro Call",
+        "url": "https://youtu.be/mlPGrvruhfk"
+      }
+    ]
+  },
+  {
+    "id": "src-yt-fed-less-hawkish",
+    "account": "@youtube-buzz",
+    "section_title": "The Fed, calmer than the tape",
+    "body_text": "The cluster's most authoritative macro voice is calmer than the tape. Goldman Research's chief US economist, David Mericle, has the Fed on hold through 2026 with the first move a cut in 2027 - and puts the odds of a hike at only about 25%, against the market's roughly 50-50. Inflation is running 'closer to 3% than 2%,' but he expects it to soften through the back half: tariff effects now 'pretty negligible,' oil off its peak, AI-demand price effects fading. His caveat - the Fed has 'not a lot of margin for error.'",
+    "tier": "open",
+    "qualifier": "video commentary - not a filing",
+    "vault_ref": "video-intel: GS Exchanges (Mericle), 2026-07-21",
+    "source_date": "2026-07-21",
+    "video_links": [
+      {
+        "channel": "GS: Exchanges",
+        "url": "https://youtu.be/BcEBLXYTlpc"
+      }
+    ]
+  },
+  {
+    "id": "src-yt-why-the-capex-cycle-exists",
+    "account": "@youtube-buzz",
+    "section_title": "Why the capex cycle exists at all",
+    "body_text": "A quieter point from DataTrek's Nick Colas that sits under the whole debate: the US hasn't had a recession in about 16 years, bar two pandemic months, and that stability 'is the entire source of the current AI capex cycle' - the hyperscalers only spend this hard because they no longer budget for a downturn. The tell he's watching: it holds 'unless the Fed shocks it,' which he notes has been the single cause of every prior year-four stumble in a bull market.",
+    "tier": "open",
+    "qualifier": "video commentary - not a filing",
+    "vault_ref": "video-intel: The Compound / DataTrek, 2026-07-13",
+    "source_date": "2026-07-13",
+    "video_links": [
+      {
+        "channel": "DataTrek",
+        "url": "https://youtu.be/tE4Z1TscZgU"
+      }
+    ]
   }
 ]

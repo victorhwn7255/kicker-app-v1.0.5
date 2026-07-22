@@ -23,7 +23,7 @@ one if ever needed.
 - **Deploy = `git push`.** Every Actions run checks out fresh main; Vercel auto-builds the site. There is no second deploy step anymore.
 - **Watch it work**: repo -> Actions tab -> `engine-tick` runs (full logs kept per run; look for the `[tick]` lines). README badge shows latest-run status.
 - **Force a tick now**: Actions tab -> engine-tick -> Run workflow (or `gh workflow run engine-tick`) - user-gated like any production write.
-- **Pause tweeting**: set repo variable `ENGINE_CRON_ENABLED=false` (scheduled runs no-op; manual still works). Resume: set back to `true`.
+- **Pause tweeting (CHANGED 2026-07-22 with plan B)**: the pinger dispatches via `workflow_dispatch`, which the workflow's `if:` allows UNCONDITIONALLY - so setting `ENGINE_CRON_ENABLED=false` alone NO LONGER pauses the engine (it only silences the hourly backup cron). To actually pause: **disable the cron-job.org job** ("ticker engine tick" -> toggle Enable off) - that stops the every-15-min heartbeat. For a hard stop also set `ENGINE_CRON_ENABLED=false` (kills the hourly backup) or push `ENGINE_ENABLED=false` in the workflow env. Resume: re-enable the cron-job.org job.
 - **Health check from the Mac**: `pnpm pipeline:health` (deterministic; `--sample` feeds /inspect-tweet-pipeline).
 - A healthy tick log: `[tick] generated @Ns: planned P -> verified V - dropped D` -> `[tick] published @Ns: X of X due slot(s)` -> `[tick] done in Ns`.
 - **Failure alerting**: GitHub emails the workflow author on failed runs (Settings -> Notifications -> Actions, "failed only"). Covers run-failures, NOT "green runs but nothing publishing" - a feed-freshness alarm is still the Phase A gap.

@@ -197,6 +197,12 @@ export const DAILY = {
   cadenceWeight: { more: 2.0, normal: 1.0, less: 0.4 } as Record<'more' | 'normal' | 'less', number>,
   /** A "less" account also gets a tighter daily cap - quiet must mean no burst days. */
   cadenceCapLess: 1,
+  /** Freshness window (days) for sources that carry a `source_date`. The day planner
+   *  skips any dated source older than this, so a time-bound account (@youtube-buzz,
+   *  keyed to recent finance-video commentary) auto-pauses when its sources age out
+   *  of the window and auto-resumes when fresh ones are exported. Sources without a
+   *  source_date are unaffected (they never expire). Env-overridable. */
+  freshWindowDays: Number.parseInt(process.env.ENGINE_FRESH_WINDOW_DAYS ?? '', 10) || 15,
   /** Optional salt so a re-seeded deploy reshuffles days (SCHEDULE_SEED env). */
   seedSalt: process.env.SCHEDULE_SEED ?? '',
 

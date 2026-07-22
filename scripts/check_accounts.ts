@@ -27,6 +27,14 @@ type Kind = 'company' | 'chokepoint' | 'theme';
 const DIRS: Record<Kind, string> = { company: 'companies', chokepoint: 'chokepoints', theme: 'themes' };
 const KINDS = Object.keys(DIRS) as Kind[];
 
+/**
+ * Accounts that intentionally have NO vault page. @youtube-buzz reworks the
+ * video-intel corpus (Tier-3/5 discovery notes, never canon), so it has no
+ * wiki/themes/ page by design and must not surface as ORPHANED. Skipped from the
+ * join entirely.
+ */
+const NO_VAULT_PAGE = new Set<string>(['@youtube-buzz']);
+
 interface AccountRow {
   handle: string;
   kind: Kind;
@@ -89,6 +97,7 @@ function main(): void {
   const orphaned: AccountRow[] = [];
 
   for (const a of accounts) {
+    if (NO_VAULT_PAGE.has(a.handle)) continue; // intentionally page-less; not a coverage gap
     const stems = pages.get(a.kind) ?? [];
     let stem: string | undefined;
     let viaFallback = false;

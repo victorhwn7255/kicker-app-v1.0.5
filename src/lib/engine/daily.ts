@@ -114,8 +114,23 @@ export function buildDayPlan(input: {
   // The day's total: a different number every day, inside the configured band.
   const target = DAILY.targetMin + Math.floor(rng() * (DAILY.targetMax - DAILY.targetMin + 1));
 
+  // Freshness window: a source that carries a `source_date` older than
+  // DAILY.freshWindowDays is dropped here, BEFORE the `eligible` filter below. So a
+  // time-bound account (@youtube-buzz, keyed to the last 15 days of finance-video
+  // commentary) whose sources have all aged out ends up with 0 sources -> not
+  // eligible -> silent auto-pause, and auto-resumes the day fresh notes are exported.
+  // Undated sources (every other account) are never filtered. Compared as YYYY-MM-DD
+  // strings, which order lexicographically.
+  const freshCutoff = new Date(dayStartMs - DAILY.freshWindowDays * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
   const sourcesByAccount = new Map<string, SourceSection[]>();
   for (const s of sources) {
+    // Only a well-formed YYYY-MM-DD gates the window; a malformed/empty date is treated
+    // as undated (never expires) rather than mis-sorting the lexicographic comparison.
+    // The exporter (publish_ticker.py) already enforces the format on entry; this is
+    // belt-and-suspenders for a hand-edited row.
+    if (s.source_date && /^\d{4}-\d{2}-\d{2}$/.test(s.source_date) && s.source_date < freshCutoff) continue;
     if (!sourcesByAccount.has(s.account)) sourcesByAccount.set(s.account, []);
     sourcesByAccount.get(s.account)!.push(s);
   }
@@ -131,9 +146,13 @@ export function buildDayPlan(input: {
   const weights = eligible.map(
     (a) => DAILY.cadenceWeight[a.cadence ?? 'normal'] * Math.exp(gauss(rng)),
   );
+  // Per-account daily ceiling: an explicit `maxDaily` (e.g. @youtube-buzz at 6) wins;
+  // otherwise a "less" account gets the tight cadence cap and everyone else the global
+  // default. Always also bounded by how many (in-window) sources the account actually
+  // has, so a cap can never exceed real supply.
   const capFor = (a: Account) =>
     Math.min(
-      a.cadence === 'less' ? DAILY.cadenceCapLess : DAILY.maxPerAccount,
+      a.maxDaily ?? (a.cadence === 'less' ? DAILY.cadenceCapLess : DAILY.maxPerAccount),
       sourcesByAccount.get(a.handle)!.length,
     );
 

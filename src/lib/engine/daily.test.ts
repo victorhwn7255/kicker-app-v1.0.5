@@ -214,6 +214,63 @@ describe('cadence buckets (per-account activity bias)', () => {
   });
 });
 
+describe('freshness window + maxDaily (the @youtube-buzz behaviors)', () => {
+  // WINDOW_DATE with the default 15-day window -> cutoff is 2026-07-07 (inclusive).
+  const WINDOW_DATE = new Date('2026-07-22T00:00:00Z');
+  const inWindow = '2026-07-20'; // 2 days back: inside the window
+  const stale = '2026-06-01'; // >15 days back: outside the window
+
+  // A single-account fleet: with only @yt eligible, total capacity == its cap, so the
+  // allocator saturates to exactly that cap - deterministic, no random-draw variance.
+  function ytOnly(over: Partial<Account>, sourceDate?: string, n = 8) {
+    const acc = makeAccount({ handle: '@yt', kind: 'theme', ...over });
+    const sources = Array.from({ length: n }, (_, j) =>
+      makeSource({
+        id: `yt-${j}`,
+        account: '@yt',
+        section_title: `YT ${j}`,
+        ...(sourceDate ? { source_date: sourceDate } : {}),
+      }),
+    );
+    return { accounts: [acc], sources };
+  }
+  const ytCount = (over: Partial<Account>, sourceDate?: string) => {
+    const { accounts, sources } = ytOnly(over, sourceDate);
+    return buildDayPlan({ accounts, sources, posts: [], date: WINDOW_DATE }).items.filter(
+      (i) => i.account === '@yt',
+    ).length;
+  };
+
+  it('maxDaily raises the per-account ceiling above the default cap', () => {
+    expect(ytCount({ maxDaily: 6 }, inWindow)).toBe(6);
+    expect(6).toBeGreaterThan(DAILY.maxPerAccount); // 6 exceeds the default 3
+  });
+
+  it('without maxDaily the same account caps at the default', () => {
+    expect(ytCount({}, inWindow)).toBe(DAILY.maxPerAccount);
+  });
+
+  it('auto-pauses when every dated source falls outside the freshness window', () => {
+    expect(ytCount({ maxDaily: 6 }, stale)).toBe(0);
+  });
+
+  it('the window boundary is inclusive of exactly freshWindowDays ago', () => {
+    // cutoff for 2026-07-22 at the default 15-day window is 2026-07-07.
+    expect(ytCount({ maxDaily: 6 }, '2026-07-07')).toBeGreaterThan(0); // exactly 15d ago: kept
+    expect(ytCount({ maxDaily: 6 }, '2026-07-06')).toBe(0); // 16d ago: dropped
+  });
+
+  it('sources WITHOUT a source_date are never filtered by the window', () => {
+    // A dated-but-stale @yt goes silent, yet undated filler accounts still post.
+    const { accounts, sources } = ytOnly({ maxDaily: 6 }, stale);
+    accounts.push(makeAccount({ handle: '@F0' }));
+    for (let j = 0; j < 4; j++) sources.push(makeSource({ id: `f-${j}`, account: '@F0', section_title: `F ${j}` }));
+    const plan = buildDayPlan({ accounts, sources, posts: [], date: WINDOW_DATE });
+    expect(plan.items.filter((i) => i.account === '@yt').length).toBe(0);
+    expect(plan.items.filter((i) => i.account === '@F0').length).toBeGreaterThan(0);
+  });
+});
+
 describe('makeRng (seeded determinism)', () => {
   it('same seed -> same stream; different seed -> different stream', () => {
     const a = makeRng('x');

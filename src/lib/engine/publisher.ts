@@ -86,6 +86,10 @@ function buildPost(
     source: `${handleName} / ${sectionTitle}`,
     freshness: freshnessStamp(nowMs, nowMs),
     ...(account?.avatar ? { avatar: account.avatar } : {}),
+    ...(account?.logo ? { logo: account.logo } : {}),
+    // Carry the source's "watch the footage" receipts onto the post so PostCard can
+    // render ▶ channel chips in place of the tier pill (opinion/commentary accounts).
+    ...(source?.video_links?.length ? { video_links: source.video_links } : {}),
     variant: isReply ? 'reply' : 'original',
     ...(isReply ? { replyTo: cand.reply_to! } : {}),
     postedAt: new Date(nowMs).toISOString(),

@@ -81,7 +81,7 @@ export function PostCard({
       )}
 
       <div className="flex gap-3">
-        <Avatar kind={post.kind} text={post.avatar} handle={post.handle} size={44} rounded className="relative z-[1]" />
+        <Avatar kind={post.kind} text={post.avatar} handle={post.handle} logo={post.logo} size={44} rounded className="relative z-[1]" />
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-1.5 text-[15px] leading-tight">
@@ -116,14 +116,35 @@ export function PostCard({
           )}
 
           <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-            <TierPill tier={post.tier} />
-            <a
-              href={receiptHref}
-              className="relative z-[1] inline-flex items-center gap-1 text-[13px] font-medium text-muted underline-offset-2 hover:text-ink hover:underline"
-            >
-              <span aria-hidden="true">↗</span>
-              Source
-            </a>
+            {post.video_links?.length ? (
+              // Opinion/commentary posts (e.g. @youtube-buzz): the receipt is the
+              // footage itself, so we show a ▶ channel chip per source video and drop
+              // the tier pill (confidence) - this content is opinion, not a graded
+              // claim. A disagreement post naturally shows two chips ("watch both").
+              post.video_links.map((v, i) => (
+                <a
+                  key={`${v.url}-${i}`}
+                  href={v.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative z-[1] inline-flex items-center gap-1 text-[13px] font-medium text-muted underline-offset-2 hover:text-ink hover:underline"
+                >
+                  <span aria-hidden="true">▶</span>
+                  {v.channel}
+                </a>
+              ))
+            ) : (
+              <>
+                <TierPill tier={post.tier} />
+                <a
+                  href={receiptHref}
+                  className="relative z-[1] inline-flex items-center gap-1 text-[13px] font-medium text-muted underline-offset-2 hover:text-ink hover:underline"
+                >
+                  <span aria-hidden="true">↗</span>
+                  Source
+                </a>
+              </>
+            )}
           </div>
         </div>
       </div>

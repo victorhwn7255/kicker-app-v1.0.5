@@ -14,6 +14,7 @@ import { verdictPasses } from './types';
 import type { EngineDeps } from './deps';
 import { generatorSystem, generatorPrompt, verifierSystem, verifierPrompt } from './prompts';
 import { checkLength } from './lengthGate';
+import { checkCompliance } from './compliance';
 import { checkNovelty } from './novelty';
 
 /**
@@ -129,6 +130,16 @@ export async function runCandidate(args: {
           : `Your previous attempt was ${len} characters - over the ${LENGTH.max} ceiling. Tighten it; cut restatement, keep the fact.`;
       if (attempts < totalAttempts) continue;
       return dropped(base, { body, charLen: len, verdict: null, attempts, reason: `length ${len} outside ${LENGTH.min}-${LENGTH.max}` });
+    }
+
+    // Always-on deterministic compliance backstop. Runs BEFORE (and independently of)
+    // the verifier, so advice language is caught even when VERIFIER_ENABLED=false.
+    // Fail-closed: regenerate with a hint, then drop.
+    const compliance = checkCompliance(body);
+    if (!compliance.ok) {
+      retryHint = `Your previous attempt used prohibited advice language (${compliance.label}). Ticker describes, never recommends: remove any buy/sell/hold, price target, or bullish/bearish framing and state only what the source says.`;
+      if (attempts < totalAttempts) continue;
+      return dropped(base, { body, charLen: len, verdict: null, attempts, reason: `compliance: ${compliance.label}` });
     }
 
     // The verifier is an optional safety gate (config.verifierEnabled). When off,

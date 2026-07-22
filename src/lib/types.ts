@@ -9,6 +9,15 @@ import { z } from 'zod';
 const handle = z.string().regex(/^@[A-Za-z0-9_-]+$/, 'handle must look like "@name"');
 const nonEmpty = z.string().min(1);
 
+/**
+ * A "watch the footage" receipt for opinion/commentary sources that have no filing
+ * to cite (e.g. @youtube-buzz reworking finance-video commentary). PostCard renders
+ * one ▶ channel chip per link, in place of the tier pill + generic Source link -
+ * the confidence-vs-provenance split: this content is opinion, so the receipt is the
+ * source video itself, not a confidence rating.
+ */
+const VideoLinkSchema = z.object({ channel: nonEmpty, url: nonEmpty });
+
 /* ---- shared enums (source of truth; kinds.ts / tiers.ts re-export the types) ---- */
 
 export const KindSchema = z.enum(['company', 'chokepoint', 'theme']);
@@ -47,10 +56,19 @@ export const AccountSchema = z.object({
   // publish-ticker exporter. Optional so legacy fixtures without it still parse.
   vault_page: z.string().optional(),
   cadence: CadenceSchema.optional(),
+  // Per-account daily post ceiling. Overrides the global DAILY.maxPerAccount cap in
+  // daily.ts, letting a high-signal account (e.g. @youtube-buzz) post more than the
+  // default 3/day when it has fresh sources. A ceiling, NOT a floor - the account is
+  // still capped by its in-window source count. Absent = the global default.
+  maxDaily: z.number().int().positive().optional(),
   display_name: z.string().optional(),
   domain: z.string().optional(),
   // Monogram for company/chokepoint tiles; omit for theme (renders the nodes glyph).
   avatar: z.string().optional(),
+  // Explicit brand-logo stem (public/avatars/<logo>.png) for a non-company account
+  // that has a real mark, e.g. @youtube-buzz -> "YOUTUBE". Company accounts resolve
+  // their logo from the ticker handle and do not need this.
+  logo: z.string().optional(),
   desc: nonEmpty, // one-line directory descriptor
   bio: nonEmpty, // first-person profile bio
   persona_card: PersonaCardSchema,
@@ -84,6 +102,9 @@ export const PostSchema = z.object({
   source: nonEmpty,
   freshness: nonEmpty,
   avatar: z.string().optional(),
+  // Brand-logo stem carried from the account (see AccountSchema.logo) so the feed's
+  // PostCard can render it without a second account lookup.
+  logo: z.string().optional(),
   // ISO publish time for engine-published posts; lets the feed order reverse-chron
   // and render a LIVE relative stamp (the loader recomputes `time` from this).
   // Absent on the human fixtures, which keep their static `time`.
@@ -95,6 +116,9 @@ export const PostSchema = z.object({
   threadNext: z.string().optional(),
   highLabel: z.string().optional(),
   quoted: QuotedPostSchema.optional(),
+  // Carried from the source for opinion/commentary posts: PostCard renders these as
+  // ▶ channel receipt chips in place of the tier pill (see VideoLinkSchema).
+  video_links: z.array(VideoLinkSchema).optional(),
 });
 export type Post = z.infer<typeof PostSchema>;
 
@@ -108,6 +132,15 @@ export const SourceSectionSchema = z.object({
   tier: TierSchema,
   qualifier: z.string().optional(),
   vault_ref: nonEmpty,
+  // ISO date (YYYY-MM-DD) of the source's underlying material. When present, the day
+  // planner (daily.ts) applies a freshness window: a source older than
+  // DAILY.freshWindowDays is skipped, so a time-bound account (@youtube-buzz, keyed to
+  // the last 15 days of video commentary) auto-pauses when its sources age out and
+  // auto-resumes when fresh ones are exported. Absent = the source never expires.
+  source_date: z.string().optional(),
+  // "Watch the footage" receipt(s) for opinion/commentary sources with no filing to
+  // cite; threaded onto the published Post so PostCard can render ▶ channel chips.
+  video_links: z.array(VideoLinkSchema).optional(),
 });
 export type SourceSection = z.infer<typeof SourceSectionSchema>;
 
