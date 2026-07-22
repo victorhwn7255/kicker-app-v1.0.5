@@ -12,11 +12,11 @@ one if ever needed.
 | Public URL | `https://ticker.thevixguy.com` (Cloudflare DNS-only CNAME -> Vercel; `kicker-app-v1-0-5.vercel.app` = alias) |
 | GitHub repo | `victorhwn7255/ticker-app-v1.0.8` (PUBLIC - that's what makes Actions free; renamed 2026-07-16 from `kicker-app-v1.0.5`) |
 | Workflow | `.github/workflows/engine-tick.yml` - checkout + pnpm install + `pnpm engine:tick` on a throwaway runner |
-| Schedule | cron `3,18,33,48 * * * *` - BUT GitHub throttles scheduled dispatch to ~hourly with occasional 2-4h gaps (observed + accepted, "no plan B" decision 2026-07-20). `workflow_dispatch` (manual Run workflow button / API) always starts within seconds |
+| Schedule | **Primary heartbeat = an external pinger (cron-job.org) POSTing the `workflow_dispatch` API every 15 min** (adopted 2026-07-22; dispatched runs bypass GitHub's schedule throttle and start in seconds). The native `schedule` cron is now `8 * * * *` - a once-hourly BACKUP only (so the feed degrades to hourly, not zero, if the pinger dies). The pinger uses a fine-grained PAT (`ticker-engine-pinger`, Actions:Read+write on this repo only, no expiry) stored ONLY in cron-job.org; its "notify on failure" email is the pinger's own dead-man alert. GitHub had throttled the pure-schedule setup to ~hourly with ~6h overnight gaps (the "no plan B" era, 2026-07-20 to 07-22). |
 | Gate | repo VARIABLE `ENGINE_CRON_ENABLED='true'` gates scheduled runs; manual dispatch always works |
 | Secrets (4) | `MODEL_API_KEY`, `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (GitHub Settings -> Secrets; names must match exactly) |
 | Non-secret env | Baked into the workflow: NVIDIA lanes, `MODEL_CALL_TIMEOUT_MS=180000` (free-tier latency), `ENGINE_MAX_BACKLOG_MIN=360` (6h - late slots publish late instead of dropping across dispatch gaps) |
-| Volume expectation | ~30-60 published/day (accepted range), arriving in hourly-ish CLUSTERS not an even drip - a direct consequence of the throttled cron, accepted in the no-plan-B decision |
+| Volume expectation | ~30-60 published/day (accepted range). With the pinger live (2026-07-22) posts spread on the even 15-min drip again rather than the hourly bursts of the throttle era. |
 
 ## Standard operations
 
@@ -55,7 +55,7 @@ one if ever needed.
 - **Ticker infra = $0/month**: GitHub Actions (public repo, free) + Supabase (free) + Vercel Hobby (free) + NVIDIA API (free) + Cloudflare DNS (free). Only real cost: the domain (~$10/yr).
 - The AWS account's remaining bill is **Lightsail only** (the user's OTHER project, option-harvest) + tax - under the $6/mo line. A $6 AWS Budget with email alerts is the standing guard.
 - Dependencies that keep it $0: repo stays PUBLIC (private -> Actions minutes are metered); NVIDIA free tier persists (paywall -> model-cost conversation).
-- If steadier rhythm is ever wanted again: "plan B" = a free external pinger (e.g. cron-job.org) POSTing to the workflow-dispatch API every 15 min with a fine-grained PAT (Actions: Read+write on this repo only) - dispatched runs start in seconds and don't throttle.
+- "Plan B" (the external pinger) is LIVE as of 2026-07-22 - see the Schedule row above. It is what restores the even 15-min cadence; $0 (cron-job.org free tier). If it ever breaks, cron-job.org emails you AND the native hourly backup cron keeps the feed alive.
 
 ## The EC2 era (historical, 2026-07-13 -> 2026-07-20)
 

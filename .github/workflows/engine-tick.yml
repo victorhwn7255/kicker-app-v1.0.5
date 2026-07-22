@@ -25,10 +25,14 @@ name: engine-tick
 
 on:
   schedule:
-    # Offset minutes, NOT */15: GitHub throttles schedules at the congested
-    # :00/:15/:30/:45 marks (observed 2026-07-18: */15 degraded to ~hourly).
-    # Off-peak minutes get dispatched far more reliably.
-    - cron: '3,18,33,48 * * * *'
+    # SPARSE HOURLY BACKUP ONLY (2026-07-22). The primary heartbeat is now an
+    # external pinger (cron-job.org) that POSTs the workflow_dispatch API every
+    # 15 min - dispatched runs bypass GitHub's schedule throttle (which degraded
+    # */15 to ~hourly with a ~6h overnight gap; see context/08). This native cron
+    # is kept only as a once-an-hour safety net so the feed degrades to hourly
+    # (not to zero) if the pinger ever dies. :08 dodges the pinger's :00/:15/:30/:45
+    # so the two rarely collide into a concurrency-cancel.
+    - cron: '8 * * * *'
   workflow_dispatch: {}
 
 concurrency:
