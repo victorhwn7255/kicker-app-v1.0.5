@@ -72,6 +72,13 @@ jobs:
           # timestamps make late honest; the 120-min guard predates them (frozen-feed
           # era) and is too aggressive for a jittery scheduler.
           ENGINE_MAX_BACKLOG_MIN: '360'
+          # Cap slots generated per tick at 6 (default 8). On the slow NVIDIA free tier
+          # each generation can take up to MODEL_CALL_TIMEOUT_MS (180s), so an 8-slot
+          # busy tick routinely ran past the 12-min job timeout and was cancelled
+          # (~39% of runs 2026-07-22). Smaller slices finish inside the window: more
+          # runs succeed, the backlog drains a touch slower, volume is unaffected
+          # (still 30-60/day - the day plan target is the ceiling, not this).
+          ENGINE_MAX_PER_TICK: '6'
           # NVIDIA-only lanes (same values the box runs; model ids are not secrets)
           MODEL_PROVIDER: 'groq'
           MODEL_BASE_URL: 'https://integrate.api.nvidia.com/v1'

@@ -15,6 +15,10 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Suppress the browser's own pull-to-refresh + scroll-chaining so our custom
+       pull-to-refresh (usePullToRefresh) owns the top-overscroll gesture. Chrome/
+       Android honor this; iOS Safari relies on the hook's touchmove preventDefault. */
+    overscroll-behavior-y: contain;
   }
 }
 

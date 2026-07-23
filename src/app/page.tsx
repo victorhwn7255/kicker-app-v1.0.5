@@ -13,7 +13,7 @@ import { FeedStream } from '@/components/feed/FeedStream';
 export const revalidate = 300;
 
 export default async function Home() {
-  const { posts, nextCursor } = await getFeedPage(null);
+  const { posts, nextCursor, headCursor } = await getFeedPage(null);
   const items = await attachReceipts(posts);
 
   return (
@@ -21,7 +21,7 @@ export default async function Home() {
       {items.length === 0 ? (
         <div className="px-4 py-16 text-center text-[15px] text-muted">Nothing has posted yet.</div>
       ) : (
-        <FeedStream initialItems={items} initialCursor={nextCursor} />
+        <FeedStream initialItems={items} initialCursor={nextCursor} initialHeadCursor={headCursor} />
       )}
     </div>
   );

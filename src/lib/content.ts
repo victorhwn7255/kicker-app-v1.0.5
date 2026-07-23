@@ -201,7 +201,7 @@ export function decodeFeedCursor(cursor: string): { ts: string; seq: number } | 
   return { ts, seq };
 }
 
-export type FeedPage = { posts: Post[]; nextCursor: string | null };
+export type FeedPage = { posts: Post[]; nextCursor: string | null; headCursor: string | null };
 
 /**
  * One feed page, newest-first from the cursor. Engine posts only (fixtures have no
@@ -242,11 +242,73 @@ export const getFeedPage = unstable_cache(
     const last = pageRows[pageRows.length - 1];
     const nextCursor =
       rows.length > limit && last ? encodeFeedCursor(last.published_at, last.seq) : null;
-    return { posts: stamped, nextCursor };
+    // The newest row's cursor: the boundary the client polls "newer than" from
+    // (pull-to-refresh / the new-posts pill). Only meaningful for the first page
+    // (cursor=null); older pages return their own top, which the client ignores.
+    const first = pageRows[0];
+    const headCursor = first ? encodeFeedCursor(first.published_at, first.seq) : null;
+    return { posts: stamped, nextCursor, headCursor };
   },
   ['feed_page'],
   { revalidate: REVALIDATE_SECONDS, tags: ['posts'] },
 );
+
+export type NewerFeed = {
+  posts: Post[];
+  /** The newest returned row's cursor (advance the client's head), or null if none newer. */
+  headCursor: string | null;
+  /** The oldest returned row's cursor - used to hard-reset the feed when hasMore. */
+  tailCursor: string | null;
+  /** More than `limit` newer posts exist (a gap since the client last looked). */
+  hasMore: boolean;
+};
+
+/**
+ * Posts strictly NEWER than `afterCursor`, newest-first - the pull-to-refresh and
+ * "new posts" pill path. Deliberately NOT wrapped in unstable_cache (unlike
+ * getFeedPage): the whole point is to surface posts published since the 300s-cached
+ * page, so every call hits the DB fresh. Fetches limit+1 to flag a gap (hasMore).
+ */
+export async function getNewerFeed(
+  afterCursor: string,
+  limit: number = FEED_PAGE_SIZE,
+): Promise<NewerFeed> {
+  const c = decodeFeedCursor(afterCursor);
+  if (!c) return { posts: [], headCursor: null, tailCursor: null, hasMore: false };
+  const { data, error } = await supabaseRead()
+    .from('posts')
+    .select('obj:data, published_at, seq')
+    .not('published_at', 'is', null)
+    // Strictly ABOVE the cursor in feed order: a newer batch, or the same batch with
+    // an earlier seq (smaller seq = higher in the feed). Mirror-image of getFeedPage.
+    .or(`published_at.gt."${c.ts}",and(published_at.eq."${c.ts}",seq.lt.${c.seq})`)
+    .order('published_at', { ascending: false })
+    .order('seq', { ascending: true })
+    .limit(limit + 1);
+  if (error) throw new Error(`Failed to load newer feed: ${error.message}`);
+  const rows = (data ?? []) as unknown as { obj: unknown; published_at: string; seq: number }[];
+  const hasMore = rows.length > limit;
+  const pageRows = rows.slice(0, limit);
+  const posts = parseRows(PostSchema, pageRows, 'posts');
+  const now = Date.now();
+  const stamped = posts.map((p) =>
+    p.postedAt
+      ? {
+          ...p,
+          time: relativeTime(Date.parse(p.postedAt), now),
+          freshness: freshnessStamp(Date.parse(p.postedAt), now),
+        }
+      : p,
+  );
+  const first = pageRows[0];
+  const last = pageRows[pageRows.length - 1];
+  return {
+    posts: stamped,
+    headCursor: first ? encodeFeedCursor(first.published_at, first.seq) : null,
+    tailCursor: last ? encodeFeedCursor(last.published_at, last.seq) : null,
+    hasMore,
+  };
+}
 
 export const getKillList = unstable_cache(
   async (): Promise<KillListEntry[]> => {
